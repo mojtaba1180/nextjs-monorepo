@@ -31,8 +31,12 @@ node scripts/add-app.js my-new-app
 4. ✅ ESLint config را تنظیم می‌کند
 5. ✅ TypeScript config را تنظیم می‌کند
 6. ✅ Next.js config را تنظیم می‌کند
-7. ✅ Tailwind CSS را پیکربندی می‌کند
-8. ✅ Dependencies را نصب می‌کند
+7. ✅ از workspace UI package استفاده می‌کند (globals.css حذف می‌شود)
+8. ✅ فایل providers.tsx برای theme management ایجاد می‌کند
+9. ✅ فایل components.json برای shadcn/ui تنظیم می‌کند
+10. ✅ پوشه‌های hooks و lib ایجاد می‌کند
+11. ✅ صفحه نمونه با workspace UI components ایجاد می‌کند
+12. ✅ Dependencies را نصب می‌کند
 
 ## قوانین نام‌گذاری
 
@@ -62,12 +66,24 @@ pnpm --filter my-new-app lint
 apps/my-new-app/
 ├── src/
 │   └── app/
-│       ├── globals.css
 │       ├── layout.tsx
-│       └── page.tsx
+│       ├── page.tsx
+│       └── favicon.ico
+├── components/
+│   └── providers.tsx
+├── hooks/
+├── lib/
 ├── package.json
 ├── tsconfig.json
 ├── eslint.config.mjs
 ├── next.config.ts
+├── components.json
 └── postcss.config.mjs
 ```
+
+### فایل‌های مهم:
+
+- **`components/providers.tsx`**: Theme provider برای dark/light mode
+- **`components.json`**: تنظیمات shadcn/ui برای workspace
+- **`src/app/layout.tsx`**: Layout اصلی با workspace UI و Providers
+- **`src/app/page.tsx`**: صفحه نمونه با workspace UI components

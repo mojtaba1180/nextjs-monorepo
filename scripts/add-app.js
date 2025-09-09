@@ -60,9 +60,7 @@ try {
       "next": "^15.4.5",
       "next-themes": "^0.4.6",
       "react": "^19.1.1",
-      "react-dom": "^19.1.1",
-      "tailwindcss": "^4.1.13",
-      "tw-animate-css": "^1.0.0"
+      "react-dom": "^19.1.1"
     },
     devDependencies: {
       "@types/node": "^20.19.9",
@@ -126,140 +124,131 @@ export default nextConfig
 `;
   fs.writeFileSync(nextConfigPath, nextConfig);
 
-  // Step 6: Update globals.css
-  console.log('🎨 تنظیم Tailwind CSS...');
+  // Step 6: Remove globals.css and update layout.tsx to use workspace UI
+  console.log('🎨 تنظیم workspace UI...');
   const globalsCssPath = path.join(appPath, 'src', 'app', 'globals.css');
-  const globalsCss = `@import "tailwindcss";
-@source "../../../apps/**/*.{ts,tsx}";
-@source "../../../components/**/*.{ts,tsx}";
-@source "../**/*.{ts,tsx}";
-
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+  const layoutTsxPath = path.join(appPath, 'src', 'app', 'layout.tsx');
+  
+  // Remove globals.css file
+  if (fs.existsSync(globalsCssPath)) {
+    fs.unlinkSync(globalsCssPath);
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+  
+  // Update layout.tsx to use workspace UI and Providers
+  const layoutContent = `import { Geist, Geist_Mono } from "next/font/google"
+
+import "@workspace/ui/globals.css"
+import { Providers } from "../../components/providers"
+
+const fontSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
+
+const fontMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+})
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={\`\${fontSans.variable} \${fontMono.variable} font-sans antialiased\`}
+      >
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
 }
 `;
-  fs.writeFileSync(globalsCssPath, globalsCss);
+  fs.writeFileSync(layoutTsxPath, layoutContent);
 
-  // Step 7: Install dependencies
+  // Step 7: Create components directory and providers.tsx
+  console.log('🔧 ایجاد فایل‌های اضافی...');
+  const componentsDir = path.join(appPath, 'components');
+  if (!fs.existsSync(componentsDir)) {
+    fs.mkdirSync(componentsDir, { recursive: true });
+  }
+
+  const providersPath = path.join(componentsDir, 'providers.tsx');
+  const providersContent = `"use client"
+
+import * as React from "react"
+import { ThemeProvider as NextThemesProvider } from "next-themes"
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <NextThemesProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+      enableColorScheme
+    >
+      {children}
+    </NextThemesProvider>
+  )
+}
+`;
+  fs.writeFileSync(providersPath, providersContent);
+
+  // Step 8: Create components.json
+  const componentsJsonPath = path.join(appPath, 'components.json');
+  const componentsJson = {
+    "$schema": "https://ui.shadcn.com/schema.json",
+    "style": "new-york",
+    "rsc": true,
+    "tsx": true,
+    "tailwind": {
+      "config": "",
+      "css": "../../packages/ui/src/styles/globals.css",
+      "baseColor": "neutral",
+      "cssVariables": true
+    },
+    "iconLibrary": "lucide",
+    "aliases": {
+      "components": "@/components",
+      "hooks": "@/hooks",
+      "lib": "@/lib",
+      "utils": "@workspace/ui/lib/utils",
+      "ui": "@workspace/ui/components"
+    }
+  };
+  fs.writeFileSync(componentsJsonPath, JSON.stringify(componentsJson, null, 2));
+
+  // Step 9: Create hooks and lib directories
+  const hooksDir = path.join(appPath, 'hooks');
+  const libDir = path.join(appPath, 'lib');
+  if (!fs.existsSync(hooksDir)) {
+    fs.mkdirSync(hooksDir, { recursive: true });
+  }
+  if (!fs.existsSync(libDir)) {
+    fs.mkdirSync(libDir, { recursive: true });
+  }
+
+  // Step 10: Update page.tsx to use workspace UI components
+  const pageTsxPath = path.join(appPath, 'src', 'app', 'page.tsx');
+  const pageContent = `import { Button } from "@workspace/ui/components/button"
+
+export default function Page() {
+  return (
+    <div className="flex items-center justify-center min-h-svh">
+      <div className="flex flex-col items-center justify-center gap-4">
+        <h1 className="text-2xl font-bold">Hello World</h1>
+        <Button size="sm">Button</Button>
+      </div>
+    </div>
+  )
+}
+`;
+  fs.writeFileSync(pageTsxPath, pageContent);
+
+  // Step 11: Install dependencies
   console.log('📥 نصب dependencies...');
   execSync('pnpm install', { stdio: 'inherit' });
 
