@@ -2,7 +2,13 @@
 
 import * as React from "react"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
-import { ModalProvider, ModalManager } from "@workspace/custom-ui"
+import { 
+  ModalProvider, 
+  ModalManager,
+  ErrorProvider,
+  ToastProvider,
+  ToastContainer
+} from "@workspace/custom-ui"
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -13,10 +19,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
       enableColorScheme
     >
-      <ModalProvider>
-        {children}
-        <ModalManager />
-      </ModalProvider>
+      <ErrorProvider>
+        <ToastProvider>
+          <ModalProvider>
+            {children}
+            <ModalManager />
+            <ToastContainer position="top-right" />
+          </ModalProvider>
+        </ToastProvider>
+      </ErrorProvider>
     </NextThemesProvider>
   )
 }

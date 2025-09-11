@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@workspace/ui/components/button"
-import { CustomButton, useToggle, useLocalStorage, useModal } from "@workspace/custom-ui"
+import { CustomButton, useToggle, useLocalStorage, useModal, ErrorManagementExample } from "@workspace/custom-ui"
 import { FormExample } from "@/components/form-example"
 import { useState } from "react"
 
@@ -119,6 +119,11 @@ export default function Page() {
         {/* Form Example */}
         <div className="w-full">
           <FormExample />
+        </div>
+
+        {/* Error Management Example */}
+        <div className="w-full">
+          <ErrorManagementExample />
         </div>
         
         {/* Original Button */}

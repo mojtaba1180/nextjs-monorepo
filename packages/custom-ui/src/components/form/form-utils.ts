@@ -57,6 +57,13 @@ export const validationRules = {
     }
   }),
   
+  iranianPhone: (message = "لطفاً شماره تلفن ایرانی معتبر وارد کنید") => ({
+    pattern: {
+      value: /^(\+98|0)?9\d{9}$/,
+      message
+    }
+  }),
+  
   url: (message = "Please enter a valid URL") => ({
     pattern: {
       value: /^https?:\/\/.+/,
@@ -140,7 +147,7 @@ export const commonValidations = {
   },
   
   phone: {
-    ...validationRules.phone()
+    ...validationRules.iranianPhone()
   },
   
   url: {

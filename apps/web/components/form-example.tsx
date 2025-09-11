@@ -85,8 +85,8 @@ export function FormExample() {
             <RHFInput
               name="phone"
               type="tel"
-              label="Phone Number"
-              placeholder="(123) 456-7890"
+              label="شماره تلفن"
+              placeholder="شماره تلفن خود را وارد کنید (مثال: 09123456789)"
               mode="phone"
               {...commonValidations.phone}
             />
