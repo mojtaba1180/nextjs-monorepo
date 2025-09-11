@@ -8,6 +8,20 @@ export { DialogModal, ResponsiveModal, ModalManager } from "./components/modal"
 // Export modal context and provider
 export { ModalProvider, useModalContext } from "./contexts/modal-context"
 
+// Export form components
+export { 
+  FormProvider, 
+  RHFInput, 
+  RHFTextarea, 
+  RHFSelect, 
+  RHFCheckbox, 
+  RHFButton,
+  validationRules,
+  formatters,
+  commonValidations,
+  combineValidations
+} from "./components/form"
+
 // Export all custom hooks
 export { useLocalStorage, useDebounce, useToggle, useModal } from "./hooks"
 

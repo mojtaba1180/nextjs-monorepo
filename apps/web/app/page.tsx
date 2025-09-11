@@ -2,6 +2,7 @@
 
 import { Button } from "@workspace/ui/components/button"
 import { CustomButton, useToggle, useLocalStorage, useModal } from "@workspace/custom-ui"
+import { FormExample } from "@/components/form-example"
 import { useState } from "react"
 
 export default function Page() {
@@ -11,8 +12,8 @@ export default function Page() {
   const { openModal, closeModal } = useModal()
 
   return (
-    <div className="flex items-center justify-center min-h-svh">
-      <div className="flex flex-col items-center justify-center gap-4 p-8">
+    <div className="min-h-svh">
+      <div className="flex flex-col items-center justify-center gap-8 p-8">
         <h1 className="text-2xl font-bold">Modal System Demo</h1>
         
         {/* Modal Examples */}
@@ -113,6 +114,11 @@ export default function Page() {
           >
             Open Large Modal
           </CustomButton>
+        </div>
+
+        {/* Form Example */}
+        <div className="w-full">
+          <FormExample />
         </div>
         
         {/* Original Button */}
