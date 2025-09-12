@@ -1,0 +1,514 @@
+---
+title: کامپوننت‌های مدال
+description: کامپوننت‌های مدال و Dialog پیشرفته
+---
+
+# کامپوننت‌های مدال
+
+کامپوننت‌های مدال این کتابخانه برای ایجاد dialog ها و modal های responsive و قابل تنظیم طراحی شده‌اند.
+
+## DialogModal
+
+کامپوننت مدال پایه با قابلیت‌های پیشرفته.
+
+### ویژگی‌ها
+
+- **Responsive**: سازگار با تمام اندازه‌های صفحه
+- **Animation**: انیمیشن‌های زیبا
+- **Keyboard Support**: پشتیبانی از کلیدهای میانبر
+- **Focus Management**: مدیریت فوکوس خودکار
+
+### استفاده پایه
+
+```tsx
+import { DialogModal } from '@workspace/custom-ui'
+import { useState } from 'react'
+
+function BasicModalExample() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>
+        باز کردن مدال
+      </button>
+      
+      <DialogModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="مدال نمونه"
+      >
+        <p>محتوای مدال اینجا قرار می‌گیرد</p>
+        <button onClick={() => setIsOpen(false)}>
+          بستن
+        </button>
+      </DialogModal>
+    </>
+  )
+}
+```
+
+### اندازه‌های مختلف
+
+```tsx
+function SizeVariants() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [size, setSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('md')
+
+  return (
+    <>
+      <div>
+        <button onClick={() => { setSize('sm'); setIsOpen(true) }}>
+          مدال کوچک
+        </button>
+        <button onClick={() => { setSize('md'); setIsOpen(true) }}>
+          مدال متوسط
+        </button>
+        <button onClick={() => { setSize('lg'); setIsOpen(true) }}>
+          مدال بزرگ
+        </button>
+        <button onClick={() => { setSize('xl'); setIsOpen(true) }}>
+          مدال خیلی بزرگ
+        </button>
+      </div>
+      
+      <DialogModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title={`مدال ${size}`}
+        size={size}
+      >
+        <p>این یک مدال {size} است</p>
+      </DialogModal>
+    </>
+  )
+}
+```
+
+### مدال با فرم
+
+```tsx
+import { DialogModal, RHFInput, RHFButton, FormProvider } from '@workspace/custom-ui'
+import { useForm } from 'react-hook-form'
+
+function FormModal() {
+  const [isOpen, setIsOpen] = useState(false)
+  const methods = useForm()
+
+  const onSubmit = (data) => {
+    console.log(data)
+    setIsOpen(false)
+  }
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>
+        باز کردن فرم
+      </button>
+      
+      <DialogModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="فرم کاربر"
+        size="md"
+      >
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          <div className="space-y-4">
+            <RHFInput
+              name="name"
+              label="نام"
+              placeholder="نام خود را وارد کنید"
+              required
+            />
+            
+            <RHFInput
+              name="email"
+              type="email"
+              label="ایمیل"
+              placeholder="ایمیل خود را وارد کنید"
+              required
+            />
+            
+            <div className="flex gap-2 justify-end">
+              <button 
+                type="button" 
+                onClick={() => setIsOpen(false)}
+                className="btn-secondary"
+              >
+                انصراف
+              </button>
+              <RHFButton type="submit">
+                ذخیره
+              </RHFButton>
+            </div>
+          </div>
+        </FormProvider>
+      </DialogModal>
+    </>
+  )
+}
+```
+
+## ResponsiveModal
+
+مدال responsive که در موبایل به صورت fullscreen نمایش داده می‌شود.
+
+### ویژگی‌ها
+
+- **Mobile First**: بهینه‌سازی برای موبایل
+- **Fullscreen on Mobile**: نمایش تمام صفحه در موبایل
+- **Desktop Modal**: نمایش مدال در دسکتاپ
+- **Swipe to Close**: قابلیت بستن با swipe در موبایل
+
+### استفاده
+
+```tsx
+import { ResponsiveModal } from '@workspace/custom-ui'
+
+function ResponsiveModalExample() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>
+        مدال Responsive
+      </button>
+      
+      <ResponsiveModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="مدال Responsive"
+      >
+        <div className="p-4">
+          <p>این مدال در موبایل تمام صفحه و در دسکتاپ به صورت مدال نمایش داده می‌شود</p>
+          
+          <div className="mt-4 space-y-2">
+            <button className="w-full btn-primary">
+              عملیات اول
+            </button>
+            <button className="w-full btn-secondary">
+              عملیات دوم
+            </button>
+          </div>
+        </div>
+      </ResponsiveModal>
+    </>
+  )
+}
+```
+
+### مدال با محتوای پیچیده
+
+```tsx
+function ComplexResponsiveModal() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('info')
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>
+        مدال پیچیده
+      </button>
+      
+      <ResponsiveModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="مدال پیچیده"
+        size="lg"
+      >
+        <div className="p-4">
+          {/* تب‌ها */}
+          <div className="flex border-b mb-4">
+            <button
+              className={`px-4 py-2 ${activeTab === 'info' ? 'border-b-2 border-blue-500' : ''}`}
+              onClick={() => setActiveTab('info')}
+            >
+              اطلاعات
+            </button>
+            <button
+              className={`px-4 py-2 ${activeTab === 'settings' ? 'border-b-2 border-blue-500' : ''}`}
+              onClick={() => setActiveTab('settings')}
+            >
+              تنظیمات
+            </button>
+          </div>
+          
+          {/* محتوای تب‌ها */}
+          {activeTab === 'info' && (
+            <div>
+              <h3 className="text-lg font-semibold mb-2">اطلاعات کاربر</h3>
+              <p>اطلاعات کاربر اینجا نمایش داده می‌شود</p>
+            </div>
+          )}
+          
+          {activeTab === 'settings' && (
+            <div>
+              <h3 className="text-lg font-semibold mb-2">تنظیمات</h3>
+              <p>تنظیمات کاربر اینجا نمایش داده می‌شود</p>
+            </div>
+          )}
+          
+          {/* دکمه‌های عملیات */}
+          <div className="flex gap-2 justify-end mt-6">
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="btn-secondary"
+            >
+              انصراف
+            </button>
+            <button className="btn-primary">
+              ذخیره تغییرات
+            </button>
+          </div>
+        </div>
+      </ResponsiveModal>
+    </>
+  )
+}
+```
+
+## ModalManager
+
+مدیر مدال‌ها برای مدیریت چندین مدال همزمان.
+
+### ویژگی‌ها
+
+- **Stack Management**: مدیریت stack مدال‌ها
+- **Z-Index Management**: مدیریت لایه‌ها
+- **Animation Coordination**: هماهنگی انیمیشن‌ها
+- **Memory Management**: مدیریت حافظه
+
+### استفاده
+
+```tsx
+import { ModalManager, useModal } from '@workspace/custom-ui'
+
+function App() {
+  return (
+    <ModalProvider>
+      <ModalManager />
+      <YourApp />
+    </ModalProvider>
+  )
+}
+
+function ModalExample() {
+  const { openModal, closeModal, isOpen } = useModal()
+
+  const handleOpenModal = (type: string) => {
+    openModal(type, {
+      title: `مدال ${type}`,
+      content: `محتوای مدال ${type}`
+    })
+  }
+
+  return (
+    <div>
+      <button onClick={() => handleOpenModal('first')}>
+        مدال اول
+      </button>
+      <button onClick={() => handleOpenModal('second')}>
+        مدال دوم
+      </button>
+      
+      {/* مدال‌ها به صورت خودکار توسط ModalManager مدیریت می‌شوند */}
+    </div>
+  )
+}
+```
+
+### مدال‌های تودرتو
+
+```tsx
+function NestedModalsExample() {
+  const { openModal, closeModal, isOpen } = useModal()
+
+  const handleOpenParent = () => {
+    openModal('parent', {
+      title: 'مدال والد',
+      onOpenChild: () => openModal('child', {
+        title: 'مدال فرزند'
+      })
+    })
+  }
+
+  return (
+    <>
+      <button onClick={handleOpenParent}>
+        مدال‌های تودرتو
+      </button>
+      
+      {isOpen('parent') && (
+        <DialogModal
+          isOpen={true}
+          onClose={() => closeModal('parent')}
+          title="مدال والد"
+        >
+          <p>این مدال والد است</p>
+          <button onClick={() => openModal('child', { title: 'مدال فرزند' })}>
+            باز کردن مدال فرزند
+          </button>
+        </DialogModal>
+      )}
+      
+      {isOpen('child') && (
+        <DialogModal
+          isOpen={true}
+          onClose={() => closeModal('child')}
+          title="مدال فرزند"
+        >
+          <p>این مدال فرزند است</p>
+          <button onClick={() => closeModal('child')}>
+            بستن مدال فرزند
+          </button>
+        </DialogModal>
+      )}
+    </>
+  )
+}
+```
+
+## مثال‌های کاربردی
+
+### مدال تایید
+
+```tsx
+function ConfirmationModal() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [itemToDelete, setItemToDelete] = useState(null)
+
+  const handleDelete = (item) => {
+    setItemToDelete(item)
+    setIsOpen(true)
+  }
+
+  const confirmDelete = () => {
+    // منطق حذف
+    console.log('حذف شد:', itemToDelete)
+    setIsOpen(false)
+    setItemToDelete(null)
+  }
+
+  return (
+    <>
+      <button onClick={() => handleDelete({ id: 1, name: 'آیتم 1' })}>
+        حذف آیتم
+      </button>
+      
+      <DialogModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="تایید حذف"
+        size="sm"
+      >
+        <div className="p-4">
+          <p>آیا مطمئن هستید که می‌خواهید "{itemToDelete?.name}" را حذف کنید؟</p>
+          <p className="text-sm text-gray-500 mt-2">
+            این عملیات قابل بازگشت نیست
+          </p>
+          
+          <div className="flex gap-2 justify-end mt-4">
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="btn-secondary"
+            >
+              انصراف
+            </button>
+            <button 
+              onClick={confirmDelete}
+              className="btn-danger"
+            >
+              حذف
+            </button>
+          </div>
+        </div>
+      </DialogModal>
+    </>
+  )
+}
+```
+
+### مدال انتخاب فایل
+
+```tsx
+function FileUploadModal() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [files, setFiles] = useState([])
+
+  const handleFileSelect = (event) => {
+    const selectedFiles = Array.from(event.target.files)
+    setFiles(selectedFiles)
+  }
+
+  const handleUpload = () => {
+    // منطق آپلود
+    console.log('آپلود فایل‌ها:', files)
+    setIsOpen(false)
+    setFiles([])
+  }
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>
+        آپلود فایل
+      </button>
+      
+      <DialogModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="آپلود فایل"
+        size="md"
+      >
+        <div className="p-4">
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <input
+              type="file"
+              multiple
+              onChange={handleFileSelect}
+              className="hidden"
+              id="file-input"
+            />
+            <label htmlFor="file-input" className="cursor-pointer">
+              <div className="text-gray-500">
+                <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <p className="mt-2">فایل‌ها را اینجا بکشید یا کلیک کنید</p>
+              </div>
+            </label>
+          </div>
+          
+          {files.length > 0 && (
+            <div className="mt-4">
+              <h4 className="font-semibold">فایل‌های انتخاب شده:</h4>
+              <ul className="mt-2 space-y-1">
+                {files.map((file, index) => (
+                  <li key={index} className="text-sm text-gray-600">
+                    {file.name} ({(file.size / 1024).toFixed(1)} KB)
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          
+          <div className="flex gap-2 justify-end mt-4">
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="btn-secondary"
+            >
+              انصراف
+            </button>
+            <button 
+              onClick={handleUpload}
+              disabled={files.length === 0}
+              className="btn-primary"
+            >
+              آپلود ({files.length})
+            </button>
+          </div>
+        </div>
+      </DialogModal>
+    </>
+  )
+}
+```

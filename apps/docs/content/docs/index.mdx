@@ -1,13 +1,46 @@
 ---
-title: Hello World
-description: Your first document
+title: مستندات پروژه
+description: مستندات کامل پروژه و کتابخانه‌های آن
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+# خوش آمدید به مستندات پروژه
 
-## What is Next?
+این مستندات شامل راهنمای کامل استفاده از کتابخانه‌ها و کامپوننت‌های پروژه است.
+
+## کتابخانه‌های موجود
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.vercel.app" />
+  <Card 
+    title="Custom UI Library" 
+    href="/docs/custom-ui" 
+    description="کتابخانه کامپوننت‌های سفارشی React با قابلیت‌های پیشرفته"
+  />
+</Cards>
+
+## شروع سریع
+
+برای شروع کار با کتابخانه‌ها، ابتدا آن‌ها را نصب کنید:
+
+```bash
+# نصب در پروژه‌های workspace
+pnpm add @workspace/custom-ui
+
+# یا در پروژه‌های خارجی
+npm install @workspace/custom-ui
+```
+
+## ویژگی‌های کلیدی
+
+- **کامپوننت‌های فرم**: کامپوننت‌های آماده برای React Hook Form
+- **مدیریت خطا**: سیستم جامع نمایش و مدیریت خطاها
+- **مدال‌ها**: کامپوننت‌های مدال responsive و قابل تنظیم
+- **هوک‌های مفید**: مجموعه‌ای از هوک‌های کاربردی
+- **Context ها**: مدیریت state سراسری برای خطا، مدال و toast
+
+## منابع مفید
+
+<Cards>
+  <Card title="Next.js Documentation" href="https://nextjs.org/docs" />
+  <Card title="Fumadocs Documentation" href="https://fumadocs.vercel.app" />
+  <Card title="React Hook Form" href="https://react-hook-form.com" />
 </Cards>

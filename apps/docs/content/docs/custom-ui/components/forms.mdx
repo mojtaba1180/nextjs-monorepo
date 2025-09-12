@@ -1,0 +1,259 @@
+---
+title: کامپوننت‌های فرم
+description: کامپوننت‌های فرم متصل به React Hook Form
+---
+
+# کامپوننت‌های فرم
+
+کامپوننت‌های فرم این کتابخانه به طور کامل با React Hook Form یکپارچه شده‌اند و قابلیت‌های پیشرفته‌ای برای مدیریت فرم‌ها ارائه می‌دهند.
+
+## RHFInput
+
+کامپوننت ورودی متصل به React Hook Form با قابلیت‌های فرمت کردن و اعتبارسنجی.
+
+### ویژگی‌ها
+
+- **فرمت خودکار**: پشتیبانی از فرمت کارت بانکی، شماره تلفن و ارز
+- **اعتبارسنجی**: قوانین اعتبارسنجی پیشرفته
+- **نمایش خطا**: نمایش خطاهای محلی و سراسری
+- **RTL Support**: پشتیبانی کامل از راست به چپ
+
+### استفاده پایه
+
+```tsx
+import { RHFInput, FormProvider } from '@workspace/custom-ui'
+import { useForm } from 'react-hook-form'
+
+function MyForm() {
+  const methods = useForm()
+  
+  return (
+    <FormProvider methods={methods}>
+      <RHFInput
+        name="email"
+        type="email"
+        label="ایمیل"
+        placeholder="ایمیل خود را وارد کنید"
+        required
+      />
+    </FormProvider>
+  )
+}
+```
+
+### فرمت‌های مختلف
+
+#### فرمت شماره تلفن ایرانی
+
+```tsx
+<RHFInput
+  name="phone"
+  mode="phone"
+  label="شماره تلفن"
+  placeholder="09123456789"
+  required
+/>
+```
+
+#### فرمت کارت بانکی
+
+```tsx
+<RHFInput
+  name="cardNumber"
+  mode="card"
+  label="شماره کارت"
+  placeholder="1234 5678 9012 3456"
+  required
+/>
+```
+
+#### فرمت ارز
+
+```tsx
+<RHFInput
+  name="amount"
+  mode="currency"
+  label="مبلغ"
+  placeholder="1,000,000 ریال"
+  required
+/>
+```
+
+### اعتبارسنجی پیشرفته
+
+```tsx
+<RHFInput
+  name="password"
+  type="password"
+  label="رمز عبور"
+  required
+  minLength={{
+    value: 8,
+    message: "رمز عبور باید حداقل 8 کاراکتر باشد"
+  }}
+  pattern={{
+    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+    message: "رمز عبور باید شامل حروف بزرگ، کوچک و عدد باشد"
+  }}
+  validate={(value) => {
+    if (value.includes('123')) {
+      return "رمز عبور نباید شامل اعداد متوالی باشد"
+    }
+    return true
+  }}
+/>
+```
+
+## RHFTextarea
+
+کامپوننت textarea متصل به React Hook Form.
+
+```tsx
+import { RHFTextarea } from '@workspace/custom-ui'
+
+<RHFTextarea
+  name="description"
+  label="توضیحات"
+  placeholder="توضیحات خود را بنویسید"
+  rows={4}
+  maxLength={{
+    value: 500,
+    message: "حداکثر 500 کاراکتر مجاز است"
+  }}
+/>
+```
+
+## RHFSelect
+
+کامپوننت select متصل به React Hook Form.
+
+```tsx
+import { RHFSelect } from '@workspace/custom-ui'
+
+<RHFSelect
+  name="country"
+  label="کشور"
+  placeholder="کشور خود را انتخاب کنید"
+  required
+>
+  <option value="">انتخاب کنید</option>
+  <option value="ir">ایران</option>
+  <option value="us">آمریکا</option>
+  <option value="uk">انگلستان</option>
+</RHFSelect>
+```
+
+## RHFCheckbox
+
+کامپوننت checkbox متصل به React Hook Form.
+
+```tsx
+import { RHFCheckbox } from '@workspace/custom-ui'
+
+<RHFCheckbox
+  name="terms"
+  label="قوانین و مقررات را می‌پذیرم"
+  required
+/>
+```
+
+## RHFButton
+
+دکمه submit متصل به React Hook Form با نمایش وضعیت loading.
+
+```tsx
+import { RHFButton } from '@workspace/custom-ui'
+
+<RHFButton
+  type="submit"
+  variant="primary"
+  size="lg"
+  loadingText="در حال ارسال..."
+>
+  ارسال فرم
+</RHFButton>
+```
+
+## FormProvider
+
+Provider برای مدیریت فرم‌ها با React Hook Form.
+
+```tsx
+import { FormProvider } from '@workspace/custom-ui'
+import { useForm } from 'react-hook-form'
+
+function MyForm() {
+  const methods = useForm({
+    defaultValues: {
+      email: '',
+      phone: '',
+      terms: false
+    }
+  })
+
+  const onSubmit = (data) => {
+    console.log(data)
+  }
+
+  return (
+    <FormProvider methods={methods} onSubmit={onSubmit}>
+      {/* فرم کامپوننت‌ها */}
+    </FormProvider>
+  )
+}
+```
+
+## ابزارهای فرم
+
+### validationRules
+
+قوانین اعتبارسنجی از پیش تعریف شده:
+
+```tsx
+import { validationRules } from '@workspace/custom-ui'
+
+// استفاده از قوانین پیش‌فرض
+<RHFInput
+  name="email"
+  validation={validationRules.email}
+/>
+
+<RHFInput
+  name="phone"
+  validation={validationRules.iranianPhone}
+/>
+```
+
+### formatters
+
+فرمت‌کننده‌های از پیش تعریف شده:
+
+```tsx
+import { formatters } from '@workspace/custom-ui'
+
+// فرمت شماره تلفن
+const formattedPhone = formatters.phone('09123456789')
+// نتیجه: "0912 345 6789"
+
+// فرمت کارت بانکی
+const formattedCard = formatters.card('1234567890123456')
+// نتیجه: "1234 5678 9012 3456"
+```
+
+### commonValidations
+
+اعتبارسنجی‌های رایج:
+
+```tsx
+import { commonValidations } from '@workspace/custom-ui'
+
+<RHFInput
+  name="email"
+  validate={commonValidations.email}
+/>
+
+<RHFInput
+  name="phone"
+  validate={commonValidations.iranianPhone}
+/>
+```
