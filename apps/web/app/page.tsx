@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@workspace/ui/components/button"
-import { CustomButton, useToggle, useLocalStorage, useModal, ErrorManagementExample } from "@workspace/custom-ui"
+import { CustomButton, useToggle, useLocalStorage, useModal, ErrorManagementExample, Map, ThemeToggle, ThemeToggleWithText } from "@workspace/custom-ui"
 import { FormExample } from "@/components/form-example"
 import { useState } from "react"
 
@@ -9,12 +9,20 @@ export default function Page() {
   const [isToggled, toggle] = useToggle(false)
   const [name, setName, removeName] = useLocalStorage("user-name", "")
   const [inputValue, setInputValue] = useState("")
+  const [selectedLocation, setSelectedLocation] = useState<{latitude: number, longitude: number} | null>(null)
+  const [selectedAddress, setSelectedAddress] = useState("")
   const { openModal, closeModal } = useModal()
 
   return (
     <div className="min-h-svh">
       <div className="flex flex-col items-center justify-center gap-8 p-8">
-        <h1 className="text-2xl font-bold">Modal System Demo</h1>
+        <div className="flex items-center justify-between w-full max-w-4xl">
+          <h1 className="text-2xl font-bold">Modal System Demo</h1>
+          <div className="flex gap-2">
+            <ThemeToggle />
+            <ThemeToggleWithText />
+          </div>
+        </div>
         
         {/* Modal Examples */}
         <div className="flex flex-col gap-4">
@@ -116,6 +124,71 @@ export default function Page() {
           </CustomButton>
         </div>
 
+        {/* Theme Toggle Examples */}
+        <div className="w-full space-y-6">
+          <h2 className="text-lg font-semibold">Theme Toggle Examples</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Icon Only Theme Toggle */}
+            <div className="space-y-4">
+              <h3 className="text-md font-medium">Icon Only Theme Toggle</h3>
+              <div className="flex gap-4 items-center">
+                <ThemeToggle />
+                <ThemeToggle variant="ghost" />
+                <ThemeToggle variant="secondary" />
+                <ThemeToggle size="sm" />
+                <ThemeToggle size="lg" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Different variants and sizes of icon-only theme toggle
+              </p>
+            </div>
+
+            {/* Text Theme Toggle */}
+            <div className="space-y-4">
+              <h3 className="text-md font-medium">Text Theme Toggle</h3>
+              <div className="flex gap-4 items-center">
+                <ThemeToggleWithText />
+                <ThemeToggleWithText variant="ghost" />
+                <ThemeToggleWithText variant="secondary" />
+                <ThemeToggleWithText size="sm" />
+                <ThemeToggleWithText size="lg" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Theme toggle with text labels showing current theme
+              </p>
+            </div>
+          </div>
+
+          {/* Theme Toggle in Different Contexts */}
+          <div className="space-y-4">
+            <h3 className="text-md font-medium">Theme Toggle in Different Contexts</h3>
+            
+            {/* In Card */}
+            <div className="border rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">Settings Card</h4>
+                  <p className="text-sm text-muted-foreground">Toggle theme from settings</p>
+                </div>
+                <ThemeToggle />
+              </div>
+            </div>
+
+            {/* In Navigation */}
+            <div className="border rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <span className="font-medium">Navigation</span>
+                  <span className="text-sm text-muted-foreground">Home</span>
+                  <span className="text-sm text-muted-foreground">About</span>
+                </div>
+                <ThemeToggleWithText size="sm" />
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Form Example */}
         <div className="w-full">
           <FormExample />
@@ -124,6 +197,93 @@ export default function Page() {
         {/* Error Management Example */}
         <div className="w-full">
           <ErrorManagementExample />
+        </div>
+
+        {/* Map Examples */}
+        <div className="w-full space-y-6">
+          <h2 className="text-lg font-semibold">Map Components</h2>
+          
+        
+          {/* Inline Map Example */}
+          <div className="space-y-2">
+            <h3 className="text-md font-medium">Inline Map</h3>
+            <div className="border rounded-lg overflow-hidden">
+              <Map
+                center={{ latitude: 35.6892, longitude: 51.3890 }} // تهران
+                zoom={12}
+                style={{ width: "100%", height: 400 }}
+                onLocationSelect={(lat: number, lng: number) => {
+                  setSelectedLocation({ latitude: lat, longitude: lng })
+                  console.log("Selected location:", lat, lng)
+                }}
+                onAddressSelect={(address: string, lat: number, lng: number) => {
+                  setSelectedAddress(address)
+                  console.log("Selected address:", address, lat, lng)
+                }}
+                showConfirmButton={true}
+              />
+            </div>
+            
+            {/* Display selected location info */}
+            {selectedLocation && (
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <h4 className="font-medium mb-2">Selected Location:</h4>
+                <p className="text-sm text-gray-600">
+                  Latitude: {selectedLocation.latitude.toFixed(6)}
+                </p>
+                <p className="text-sm text-gray-600">
+                  Longitude: {selectedLocation.longitude.toFixed(6)}
+                </p>
+                {selectedAddress && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    Address: {selectedAddress}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+          
+          {/* Map in Modal Example */}
+          <div className="space-y-2">
+            <h3 className="text-md font-medium">Map in Modal</h3>
+            <CustomButton 
+              onClick={() => openModal({
+                id: "map-modal-example",
+                type: "dialog",
+                title: "Map Selection",
+                description: "Select a location on the map",
+                view: (
+                  <div className="space-y-4">
+                    <Map
+                      center={{ latitude: 36.2605, longitude: 59.6168 }} // مشهد
+                      zoom={13}
+                      style={{ width: "100%", height: 400 }}
+                      onLocationSelect={(lat: number, lng: number) => {
+                        setSelectedLocation({ latitude: lat, longitude: lng })
+                        console.log("Modal map location:", lat, lng)
+                      }}
+                      onAddressSelect={(address: string, lat: number, lng: number) => {
+                        setSelectedAddress(address)
+                        console.log("Modal map address:", address, lat, lng)
+                      }}
+                      showConfirmButton={true}
+                    />
+                    <div className="flex gap-2">
+                      <Button size="sm" onClick={() => closeModal("map-modal-example")}>
+                        Close
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        Use Location
+                      </Button>
+                    </div>
+                  </div>
+                ),
+                size: "xl"
+              })}
+            >
+              Open Map in Modal
+            </CustomButton>
+          </div>
         </div>
         
         {/* Original Button */}

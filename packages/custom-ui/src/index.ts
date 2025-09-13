@@ -2,6 +2,10 @@
 export { CustomButton } from "./components/custom-button"
 export type { CustomButtonProps } from "./components/custom-button"
 
+// Export theme components
+export { ThemeToggle, ThemeToggleWithText } from "./components/theme-toggle"
+export type { ThemeToggleProps } from "./components/theme-toggle"
+
 // Export examples
 export { ErrorManagementExample } from "./components/examples/error-management-example"
 
@@ -28,6 +32,10 @@ export {
   useModalContext 
 } from "./contexts"
 
+// Export providers
+export { CustomUIProvider } from "./providers/custom-ui-provider"
+export type { CustomUIProviderProps } from "./providers/custom-ui-provider"
+
 // Export form components
 export { 
   FormProvider, 
@@ -52,6 +60,10 @@ export { useLocalStorage, useDebounce, useToggle, useModal } from "./hooks"
 export type { ModalConfig, ModalType, ModalState, ModalContextType } from "./types/modal"
 export type { FieldError, AppError, ErrorContextType } from "./types/error"
 export type { Toast, ToastType } from "./components/error/error-toast"
+
+// Export map components
+export { default as Map } from "./components/map/map"
+export { default as MapLibre } from "./components/map/map-libre"
 
 // Re-export commonly used UI components for convenience
 export { Button } from "@workspace/ui/components/button"

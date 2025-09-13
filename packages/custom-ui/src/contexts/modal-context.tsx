@@ -1,7 +1,10 @@
 "use client"
 
-import React, { createContext, useContext, useReducer, useCallback, ReactNode } from "react"
+import  { createContext, useContext, useReducer, useCallback, ReactNode } from "react"
 import { ModalConfig, ModalState, ModalContextType } from "../types/modal"
+
+// Re-export the type for convenience
+export type { ModalContextType }
 
 // Action types
 type ModalAction =
