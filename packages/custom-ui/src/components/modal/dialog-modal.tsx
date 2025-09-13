@@ -29,7 +29,7 @@ export function DialogModal({ config, isOpen, onClose }: DialogModalProps) {
   const { title, description, view, size = "md", closable = true, className } = config
 
   return (
-    <Dialog open={isOpen} onOpenChange={closable ? onClose : undefined}>
+    <Dialog  open={isOpen} onOpenChange={closable ? onClose : undefined}>
       <DialogContent 
         className={cn(
           sizeClasses[size],
