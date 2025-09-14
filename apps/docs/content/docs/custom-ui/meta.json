@@ -1,0 +1,11 @@
+{
+  "title": "Custom UI",
+  "description": "Custom UI components built for the DigiMoragheb project",
+  "items": [
+    {
+      "title": "CustomButton",
+      "href": "/docs/custom-ui/custom-button",
+      "description": "A customizable button component with various variants and sizes"
+    }
+  ]
+}

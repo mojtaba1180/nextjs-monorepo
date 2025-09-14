@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "name": "custom-button",
+      "description": "A customizable button component with various variants and sizes",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/custom-ui/custom-ui/custom-button.tsx",
+          "type": "registry:component",
+          "target": "components/custom-button.tsx"
+        }
+      ],
+      "categories": [
+        "components"
+      ],
+      "meta": {
+        "title": "CustomButton",
+        "description": "A customizable button component with various variants and sizes for different use cases."
+      }
+    }
+  ]
+}

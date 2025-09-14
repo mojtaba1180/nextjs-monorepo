@@ -1,0 +1,105 @@
+---
+title: CustomButton
+description: A customizable button component with various variants and sizes for different use cases.
+component: true
+links:
+  doc: https://ui.shadcn.com/docs/components/button
+  api: https://ui.shadcn.com/docs/components/button#api-reference
+---
+
+<ComponentPreview
+  name="custom-button"
+  description="A custom button with different variants and sizes"
+  align="center"
+/>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @digimoragheb/custom-ui@latest add custom-button
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install @workspace/custom-ui
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="custom-button" title="components/custom-button.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx showLineNumbers
+import { CustomButton } from "@workspace/custom-ui"
+```
+
+```tsx showLineNumbers
+<CustomButton variant="default" size="default">
+  Click me
+</CustomButton>
+```
+
+## Variants
+
+The CustomButton component supports different visual variants:
+
+```tsx showLineNumbers
+<div className="flex gap-4">
+  <CustomButton variant="default">Default</CustomButton>
+  <CustomButton variant="destructive">Destructive</CustomButton>
+  <CustomButton variant="outline">Outline</CustomButton>
+  <CustomButton variant="secondary">Secondary</CustomButton>
+  <CustomButton variant="ghost">Ghost</CustomButton>
+  <CustomButton variant="link">Link</CustomButton>
+</div>
+```
+
+## Sizes
+
+The CustomButton component supports different sizes:
+
+```tsx showLineNumbers
+<div className="flex items-center gap-4">
+  <CustomButton size="sm">Small</CustomButton>
+  <CustomButton size="default">Default</CustomButton>
+  <CustomButton size="lg">Large</CustomButton>
+  <CustomButton size="icon">Icon</CustomButton>
+</div>
+```
+
+## API Reference
+
+### CustomButton
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| variant | "default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "link" | "default" | The visual style variant |
+| size | "default" \| "sm" \| "lg" \| "icon" | "default" | The size of the button |
+| disabled | boolean | false | Whether the button is disabled |
+| className | string | - | Additional CSS classes |
+| children | ReactNode | - | The button content |
