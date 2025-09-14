@@ -123,26 +123,13 @@ links:
   align="center"
 />
 
-## Installation
-
-<CodeTabs>
-  <TabsList>
-    <TabsTrigger value="cli">CLI</TabsTrigger>
-    <TabsTrigger value="manual">Manual</TabsTrigger>
-  </TabsList>
-  <TabsContent value="cli">
-    <Steps>
-      <Step>Install the component:</Step>
-    </Steps>
-  </TabsContent>
-  <TabsContent value="manual">
-    <Steps>
-      <Step>Copy the component code:</Step>
-    </Steps>
-  </TabsContent>
-</CodeTabs>
-
 ## Usage
+
+The component is already available in your project. You can use it by importing:
+
+```tsx
+import { [ComponentName] } from "@workspace/custom-ui"
+```
 
 <ComponentSource
   name="[component-name]"
@@ -189,6 +176,7 @@ npx tsx scripts/build-registry.ts
 4. **Documentation**: داکیومنت کامل با مثال‌ها، API reference و usage بنویس
 5. **Registry**: کامپوننت رو به registry اضافه کن
 6. **Build**: حتماً اسکریپت build رو اجرا کن
+7. **Installation**: از بخش Installation استفاده نکن، فقط Usage با import statement بذار
 
 ## 🎯 مثال کامل
 
@@ -216,6 +204,7 @@ npx tsx scripts/build-registry.ts
 - داکیومنت رو کامل و مفصل بنویس
 - بعد از هر تغییر، build script رو اجرا کن
 - کامپوننت رو در مرورگر تست کن
+- **هرگز از بخش Installation استفاده نکن** - فقط Usage با import statement
 
 ---
 
