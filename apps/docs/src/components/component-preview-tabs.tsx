@@ -29,7 +29,7 @@ export function ComponentPreviewTabs({
         className="relative mr-auto w-full"
         defaultValue="preview"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between px-4 ">
           {!hideCode && (
             <TabsList className="justify-start gap-4 rounded-none bg-transparent px-2 md:px-0">
               <TabsTrigger
@@ -51,7 +51,7 @@ export function ComponentPreviewTabs({
         <TabsContent value="preview" className="mt-0">
           <div
             className={cn(
-              "preview flex h-[450px] w-full justify-center p-10 rounded-lg border",
+              "preview flex min-h-[450px] w-full justify-center p-10 rounded-lg border",
               {
                 "items-center": align === "center",
                 "items-end": align === "end",
