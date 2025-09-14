@@ -26,9 +26,11 @@ source: add-component
 ```
 src/registry/
 ├── custom-ui/
-│   └── [component-name].tsx          # فایل demo کامپوننت
-├── index.ts                          # تنظیمات registry
-└── __index__.ts                      # Auto-generated index
+│   ├── [component-name]/
+│   │   ├── [component-name].tsx      # فایل demo اصلی
+│   │   └── [component-name]-variants.tsx  # فایل demo variants
+│   ├── index.ts                      # تنظیمات registry
+│   └── __index__.ts                  # Auto-generated index
 
 content/docs/custom-ui/
 └── [component-name].mdx              # داکیومنت کامپوننت
@@ -36,24 +38,124 @@ content/docs/custom-ui/
 
 ## 🔧 مراحل پیاده‌سازی
 
-### مرحله 1: ایجاد فایل Demo
+### مرحله 1: ایجاد فولدر و فایل‌های Demo
+
+```bash
+# ایجاد فولدر کامپوننت
+mkdir -p src/registry/custom-ui/[component-name]
+```
 
 ```typescript
-// src/registry/custom-ui/[component-name].tsx
+// src/registry/custom-ui/[component-name]/[component-name].tsx
 "use client"
 
+import React from "react"
 import { [ComponentName] } from "@workspace/custom-ui"
+import { Button } from "@workspace/ui/components/button"
+// سایر import های مورد نیاز...
 
 export function [ComponentName]Demo() {
   return (
-    <div className="flex flex-col gap-4">
-      {/* مثال‌های مختلف کامپوننت */}
+    <div className="space-y-6">
+      {/* مثال 1: استفاده پایه */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Basic Usage</h3>
+        <div className="p-4 border rounded-lg">
+          <[ComponentName] 
+            // props پایه
+          >
+            Content here
+          </[ComponentName]>
+        </div>
+      </div>
+
+      {/* مثال 2: variant های مختلف */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Variants</h3>
+        <div className="flex gap-2 flex-wrap">
+          <[ComponentName] variant="default">Default</[ComponentName]>
+          <[ComponentName] variant="secondary">Secondary</[ComponentName]>
+          <[ComponentName] variant="destructive">Destructive</[ComponentName]>
+        </div>
+      </div>
+
+      {/* مثال 3: سایزهای مختلف */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Sizes</h3>
+        <div className="flex gap-2 items-center">
+          <[ComponentName] size="sm">Small</[ComponentName]>
+          <[ComponentName] size="md">Medium</[ComponentName]>
+          <[ComponentName] size="lg">Large</[ComponentName]>
+        </div>
+      </div>
+
+      {/* مثال 4: حالت‌های مختلف */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">States</h3>
+        <div className="flex gap-2">
+          <[ComponentName] disabled>Disabled</[ComponentName]>
+          <[ComponentName] loading>Loading</[ComponentName]>
+        </div>
+      </div>
+
+      {/* مثال 5: استفاده با state */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Interactive Example</h3>
+        <div className="p-4 border rounded-lg space-y-4">
+          <Button onClick={() => {/* منطق تعامل */}}>
+            Trigger Action
+          </Button>
+          <[ComponentName] 
+            // props تعاملی
+          >
+            Interactive content
+          </[ComponentName]>
+        </div>
+      </div>
     </div>
   )
 }
 ```
 
-### مرحله 2: آپدیت Registry Config
+### مرحله 2: ایجاد فایل Variants Demo
+
+```typescript
+// src/registry/custom-ui/[component-name]/[component-name]-variants.tsx
+"use client"
+
+import React from "react"
+import { [ComponentName] } from "@workspace/custom-ui"
+
+export function [ComponentName]VariantsDemo() {
+  return (
+    <div className="space-y-6">
+      {/* Variants */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">[ComponentName] Variants</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <h4 className="font-medium text-sm">Default</h4>
+            <[ComponentName] variant="default" className="w-full">
+              Default
+            </[ComponentName]>
+          </div>
+          
+          <div className="space-y-2">
+            <h4 className="font-medium text-sm">Secondary</h4>
+            <[ComponentName] variant="secondary" className="w-full">
+              Secondary
+            </[ComponentName]>
+          </div>
+          
+          {/* سایر variant ها... */}
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+### مرحله 3: آپدیت Registry Config
 
 ```typescript
 // src/registry/index.ts
@@ -67,7 +169,7 @@ export const registry = {
       registryDependencies: undefined,
       files: [
         {
-          path: "custom-ui/[component-name].tsx",
+          path: "[component-name]/[component-name].tsx",
           type: "registry:component",
           target: "components/[component-name].tsx"
         }
@@ -77,12 +179,30 @@ export const registry = {
         title: "[ComponentName]",
         description: "توضیح کامل کامپوننت"
       }
+    },
+    {
+      name: "[component-name]-variants",
+      description: "[ComponentName] variants demonstration",
+      type: "registry:component",
+      registryDependencies: undefined,
+      files: [
+        {
+          path: "[component-name]/[component-name]-variants.tsx",
+          type: "registry:component",
+          target: "components/[component-name]-variants.tsx"
+        }
+      ],
+      categories: ["components"],
+      meta: {
+        title: "[ComponentName] Variants",
+        description: "Demonstration of different [component-name] variants."
+      }
     }
   ]
 }
 ```
 
-### مرحله 3: ایجاد داکیومنت MDX
+### مرحله 4: ایجاد داکیومنت MDX
 
 ```markdown
 ---
@@ -127,13 +247,13 @@ import { [ComponentName] } from "@workspace/custom-ui"
 | ... | ... | ... | ... |
 ```
 
-### مرحله 4: اجرای Build Script
+### مرحله 5: اجرای Build Script
 
 ```bash
 npx tsx scripts/build-registry.ts
 ```
 
-### مرحله 5: آپدیت Navigation
+### مرحله 6: آپدیت Navigation
 
 ```json
 // content/docs/custom-ui/meta.json
@@ -149,10 +269,20 @@ npx tsx scripts/build-registry.ts
 
 1. **نام‌گذاری**: از kebab-case برای فایل‌ها و camelCase برای کامپوننت‌ها استفاده کن
 2. **Import Path**: همیشه از `@workspace/custom-ui` import کن
-3. **Demo Structure**: حداقل 3-4 مثال مختلف از کامپوننت نشون بده
-4. **Documentation**: داکیومنت کامل با مثال‌ها، API reference و usage بنویس
-5. **Registry**: کامپوننت رو به registry اضافه کن
-6. **Build**: حتماً اسکریپت build رو اجرا کن
+3. **فولدرسازی**: هر کامپوننت باید فولدر جداگانه داشته باشه:
+   - `src/registry/custom-ui/[component-name]/`
+   - فایل اصلی: `[component-name].tsx`
+   - فایل variants: `[component-name]-variants.tsx`
+4. **Demo Structure**: حتماً 5 مثال مختلف نشون بده:
+   - Basic Usage (استفاده پایه)
+   - Variants (variant های مختلف)
+   - Sizes (سایزهای مختلف)
+   - States (حالت‌های مختلف مثل disabled, loading)
+   - Interactive Example (مثال تعاملی با state)
+5. **Documentation**: داکیومنت کامل با مثال‌ها، API reference و usage بنویس
+6. **Registry**: کامپوننت و variants رو به registry اضافه کن
+7. **Build**: حتماً اسکریپت build رو اجرا کن
+8. **Demo Content**: هر مثال باید محتوای واقعی و قابل نمایش داشته باشه
 
 ## 🎯 مثال کامل
 

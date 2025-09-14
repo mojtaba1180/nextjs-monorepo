@@ -13,6 +13,29 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@work
 function ModalDemoContent() {
   const { openModal, closeModal } = useModalContext()
 
+  const openBasicModal = () => {
+    openModal({
+      id: "basic-modal",
+      type: "dialog",
+      title: "Basic Modal",
+      description: "This is a basic modal example",
+      size: "md",
+      closable: true,
+      view: (
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            This is a basic modal with simple content.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => closeModal("basic-modal")}>
+              Close
+            </Button>
+          </div>
+        </div>
+      )
+    })
+  }
+
   const openDialogModal = () => {
     openModal({
       id: "demo-dialog",
@@ -179,20 +202,75 @@ function ModalDemoContent() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Button onClick={openDialogModal} className="w-full">
-          Open Dialog Modal
-        </Button>
-        <Button onClick={openResponsiveModal} variant="outline" className="w-full">
-          Open Responsive Modal
-        </Button>
-        <Button onClick={openLargeModal} variant="secondary" className="w-full">
-          Open Large Modal
-        </Button>
-        <Button onClick={openNonClosableModal} variant="destructive" className="w-full">
-          Open Non-Closable Modal
-        </Button>
+    <div className="space-y-6">
+      {/* 1. Basic Usage */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Basic Usage</h3>
+        <div className="p-4 border rounded-lg">
+          <Button onClick={openBasicModal}>
+            Open Basic Modal
+          </Button>
+        </div>
+      </div>
+
+      {/* 2. Variants */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Modal Types</h3>
+        <div className="flex gap-2 flex-wrap">
+          <Button onClick={openDialogModal} variant="default">
+            Dialog Modal
+          </Button>
+          <Button onClick={openResponsiveModal} variant="outline">
+            Responsive Modal
+          </Button>
+        </div>
+      </div>
+
+      {/* 3. Sizes */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Modal Sizes</h3>
+        <div className="flex gap-2 items-center">
+          <Button onClick={openLargeModal} variant="secondary" size="sm">
+            Large Modal
+          </Button>
+          <Button onClick={openDialogModal} variant="secondary" size="md">
+            Medium Modal
+          </Button>
+        </div>
+      </div>
+
+      {/* 4. States */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Modal States</h3>
+        <div className="flex gap-2">
+          <Button onClick={openNonClosableModal} variant="destructive">
+            Non-Closable Modal
+          </Button>
+        </div>
+      </div>
+
+      {/* 5. Interactive Example */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Interactive Example</h3>
+        <div className="p-4 border rounded-lg space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Click the buttons below to see different modal types in action:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <Button onClick={openDialogModal} className="w-full">
+              Form Modal
+            </Button>
+            <Button onClick={openResponsiveModal} variant="outline" className="w-full">
+              Responsive Modal
+            </Button>
+            <Button onClick={openLargeModal} variant="secondary" className="w-full">
+              Large Modal
+            </Button>
+            <Button onClick={openNonClosableModal} variant="destructive" className="w-full">
+              Processing Modal
+            </Button>
+          </div>
+        </div>
       </div>
       
       <div className="mt-4 p-4 bg-muted rounded-lg">

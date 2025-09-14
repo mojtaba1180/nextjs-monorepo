@@ -49,9 +49,11 @@ description: مجموعه prompt های آماده برای کار با سیست
 ```
 src/registry/
 ├── custom-ui/
-│   └── [component-name].tsx          # فایل demo کامپوننت
-├── index.ts                          # تنظیمات registry
-└── __index__.ts                      # Auto-generated index
+│   ├── [component-name]/
+│   │   ├── [component-name].tsx      # فایل demo اصلی
+│   │   └── [component-name]-variants.tsx  # فایل demo variants
+│   ├── index.ts                      # تنظیمات registry
+│   └── __index__.ts                  # Auto-generated index
 
 content/docs/custom-ui/
 └── [component-name].mdx              # داکیومنت کامپوننت
@@ -59,10 +61,15 @@ content/docs/custom-ui/
 
 ## 🔧 مراحل پیاده‌سازی
 
-### مرحله 1: ایجاد فایل Demo
+### مرحله 1: ایجاد فولدر و فایل‌های Demo
+
+```bash
+# ایجاد فولدر کامپوننت
+mkdir -p src/registry/custom-ui/[component-name]
+```
 
 ```typescript
-// src/registry/custom-ui/[component-name].tsx
+// src/registry/custom-ui/[component-name]/[component-name].tsx
 "use client"
 
 import { [ComponentName] } from "@workspace/custom-ui"
@@ -172,11 +179,21 @@ npx tsx scripts/build-registry.ts
 
 1. **نام‌گذاری**: از kebab-case برای فایل‌ها و camelCase برای کامپوننت‌ها استفاده کن
 2. **Import Path**: همیشه از `@workspace/custom-ui` import کن
-3. **Demo Structure**: حداقل 3-4 مثال مختلف از کامپوننت نشون بده
-4. **Documentation**: داکیومنت کامل با مثال‌ها، API reference و usage بنویس
-5. **Registry**: کامپوننت رو به registry اضافه کن
-6. **Build**: حتماً اسکریپت build رو اجرا کن
-7. **Installation**: از بخش Installation استفاده نکن، فقط Usage با import statement بذار
+3. **فولدرسازی**: هر کامپوننت باید فولدر جداگانه داشته باشه:
+   - `src/registry/custom-ui/[component-name]/`
+   - فایل اصلی: `[component-name].tsx`
+   - فایل variants: `[component-name]-variants.tsx`
+4. **Demo Structure**: حتماً 5 مثال مختلف نشون بده:
+   - Basic Usage (استفاده پایه)
+   - Variants (variant های مختلف)
+   - Sizes (سایزهای مختلف)
+   - States (حالت‌های مختلف مثل disabled, loading)
+   - Interactive Example (مثال تعاملی با state)
+5. **Documentation**: داکیومنت کامل با مثال‌ها، API reference و usage بنویس
+6. **Registry**: کامپوننت و variants رو به registry اضافه کن
+7. **Build**: حتماً اسکریپت build رو اجرا کن
+8. **Installation**: از بخش Installation استفاده نکن، فقط Usage با import statement بذار
+9. **Demo Content**: هر مثال باید محتوای واقعی و قابل نمایش داشته باشه
 
 ## 🎯 مثال کامل
 
@@ -197,6 +214,68 @@ npx tsx scripts/build-registry.ts
 - [ ] Navigation آپدیت شده
 - [ ] کامپوننت در مرورگر تست شده
 
+## 🎨 راهنمای ساخت Demo
+
+### ساختار Demo کامل:
+
+```typescript
+export function [ComponentName]Demo() {
+  return (
+    <div className="space-y-6">
+      {/* 1. Basic Usage */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Basic Usage</h3>
+        <div className="p-4 border rounded-lg">
+          <[ComponentName]>
+            Real content here
+          </[ComponentName]>
+        </div>
+      </div>
+
+      {/* 2. Variants */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Variants</h3>
+        <div className="flex gap-2 flex-wrap">
+          <[ComponentName] variant="default">Default</[ComponentName]>
+          <[ComponentName] variant="secondary">Secondary</[ComponentName]>
+        </div>
+      </div>
+
+      {/* 3. Sizes */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Sizes</h3>
+        <div className="flex gap-2 items-center">
+          <[ComponentName] size="sm">Small</[ComponentName]>
+          <[ComponentName] size="md">Medium</[ComponentName]>
+        </div>
+      </div>
+
+      {/* 4. States */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">States</h3>
+        <div className="flex gap-2">
+          <[ComponentName] disabled>Disabled</[ComponentName]>
+          <[ComponentName] loading>Loading</[ComponentName]>
+        </div>
+      </div>
+
+      {/* 5. Interactive */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Interactive</h3>
+        <div className="p-4 border rounded-lg space-y-4">
+          <Button onClick={() => {/* real logic */}}>
+            Click me
+          </Button>
+          <[ComponentName]>
+            Interactive content
+          </[ComponentName]>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
 ## 🚨 نکات مهم
 
 - همیشه از `"use client"` در فایل‌های demo استفاده کن
@@ -205,6 +284,9 @@ npx tsx scripts/build-registry.ts
 - بعد از هر تغییر، build script رو اجرا کن
 - کامپوننت رو در مرورگر تست کن
 - **هرگز از بخش Installation استفاده نکن** - فقط Usage با import statement
+- **Demo ها باید محتوای واقعی داشته باشند** - نه فقط placeholder
+- **همیشه فولدرسازی کن** - هر کامپوننت فولدر جداگانه داشته باشه
+- **هر مثال باید عنوان و توضیح داشته باشه**
 
 ---
 

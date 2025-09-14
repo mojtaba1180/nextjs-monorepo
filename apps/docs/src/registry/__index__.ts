@@ -12,12 +12,12 @@ export const Index: Record<string, any> = {
     type: "registry:component",
     registryDependencies: undefined,
     files: [{
-      path: "registry/custom-ui/custom-button.tsx",
+      path: "registry/custom-ui/custom-button/custom-button.tsx",
       type: "registry:component",
       target: "components/custom-button.tsx"
     }],
     component: React.lazy(async () => {
-      const mod = await import("@/registry/custom-ui/custom-button.tsx")
+      const mod = await import("@/registry/custom-ui/custom-button/custom-button.tsx")
       const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "custom-button"
       return { default: mod.default || mod[exportName] }
     }),
@@ -30,16 +30,52 @@ export const Index: Record<string, any> = {
     type: "registry:component",
     registryDependencies: undefined,
     files: [{
-      path: "registry/custom-ui/modal.tsx",
+      path: "registry/custom-ui/modal/modal.tsx",
       type: "registry:component",
       target: "components/modal.tsx"
     }],
     component: React.lazy(async () => {
-      const mod = await import("@/registry/custom-ui/modal.tsx")
+      const mod = await import("@/registry/custom-ui/modal/modal.tsx")
       const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "modal"
       return { default: mod.default || mod[exportName] }
     }),
     categories: ["components"],
     meta: {"title":"Modal","description":"A comprehensive modal system with dialog and responsive variants for different screen sizes and use cases."},
+  },
+  "modal-variants": {
+    name: "modal-variants",
+    description: "Modal variants demonstration",
+    type: "registry:component",
+    registryDependencies: undefined,
+    files: [{
+      path: "registry/custom-ui/modal/modal-variants.tsx",
+      type: "registry:component",
+      target: "components/modal-variants.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/custom-ui/modal/modal-variants.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "modal-variants"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["components"],
+    meta: {"title":"Modal Variants","description":"Demonstration of different modal variants and types."},
+  },
+  "custom-button-variants": {
+    name: "custom-button-variants",
+    description: "Custom button variants demonstration",
+    type: "registry:component",
+    registryDependencies: undefined,
+    files: [{
+      path: "registry/custom-ui/custom-button/custom-button-variants.tsx",
+      type: "registry:component",
+      target: "components/custom-button-variants.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/custom-ui/custom-button/custom-button-variants.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "custom-button-variants"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["components"],
+    meta: {"title":"Custom Button Variants","description":"Demonstration of different custom button variants and sizes."},
   },
   }
