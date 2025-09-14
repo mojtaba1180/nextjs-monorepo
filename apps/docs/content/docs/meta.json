@@ -1,57 +1,16 @@
 {
   "title": "مستندات",
   "pages": [
-    {
-      "title": "خانه",
-      "url": "/docs"
-    },
-    {
-      "title": "Custom UI Library",
-      "url": "/docs/custom-ui",
-      "pages": [
-        {
-          "title": "شروع",
-          "url": "/docs/custom-ui"
-        },
-        {
-          "title": "کامپوننت‌ها",
-          "url": "/docs/custom-ui/components",
-          "pages": [
-            {
-              "title": "فرم‌ها",
-              "url": "/docs/custom-ui/components/forms"
-            },
-            {
-              "title": "مدال‌ها",
-              "url": "/docs/custom-ui/components/modals"
-            },
-            {
-              "title": "خطاها",
-              "url": "/docs/custom-ui/components/errors"
-            },
-            {
-              "title": "دکمه‌ها",
-              "url": "/docs/custom-ui/components/buttons"
-            }
-          ]
-        },
-        {
-          "title": "هوک‌ها",
-          "url": "/docs/custom-ui/hooks"
-        },
-        {
-          "title": "Context ها",
-          "url": "/docs/custom-ui/contexts"
-        },
-        {
-          "title": "مثال‌ها",
-          "url": "/docs/custom-ui/examples"
-        }
-      ]
-    },
-    {
-      "title": "تست",
-      "url": "/docs/test"
-    }
+    "index",
+    "custom-ui/index",
+    "custom-ui/components/index",
+    "custom-ui/components/forms",
+    "custom-ui/components/modals", 
+    "custom-ui/components/errors",
+    "custom-ui/components/buttons",
+    "custom-ui/hooks",
+    "custom-ui/contexts",
+    "custom-ui/examples",
+    "test"
   ]
 }
