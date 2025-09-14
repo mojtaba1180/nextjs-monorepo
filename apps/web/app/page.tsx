@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@workspace/ui/components/button"
-import { CustomButton, useToggle, useLocalStorage, useModal, ErrorManagementExample, Map, ThemeToggle, ThemeToggleWithText } from "@workspace/custom-ui"
+import { CustomButton, useToggle, useLocalStorage, useModal, ErrorManagementExample, Map, ThemeToggle, ThemeToggleWithText, CustomPagination, CustomTable } from "@workspace/custom-ui"
 import { FormExample } from "@/components/form-example"
 import { useState } from "react"
 
@@ -11,7 +11,40 @@ export default function Page() {
   const [inputValue, setInputValue] = useState("")
   const [selectedLocation, setSelectedLocation] = useState<{latitude: number, longitude: number} | null>(null)
   const [selectedAddress, setSelectedAddress] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [tableCurrentPage, setTableCurrentPage] = useState(1)
   const { openModal, closeModal } = useModal()
+
+  // Sample data for table
+  const sampleTableData = [
+    { id: 1, name: "احمد محمدی", email: "ahmad@example.com", role: "مدیر", status: "فعال" },
+    { id: 2, name: "فاطمه احمدی", email: "fateme@example.com", role: "کاربر", status: "غیرفعال" },
+    { id: 3, name: "علی رضایی", email: "ali@example.com", role: "ویرایشگر", status: "فعال" },
+    { id: 4, name: "زهرا کریمی", email: "zahra@example.com", role: "کاربر", status: "فعال" },
+    { id: 5, name: "محمد حسینی", email: "mohammad@example.com", role: "مدیر", status: "غیرفعال" },
+    { id: 6, name: "نرگس موسوی", email: "narges@example.com", role: "کاربر", status: "فعال" },
+    { id: 7, name: "حسن نوری", email: "hasan@example.com", role: "ویرایشگر", status: "فعال" },
+    { id: 8, name: "مریم صادقی", email: "maryam@example.com", role: "کاربر", status: "غیرفعال" },
+  ]
+
+  const tableColumns = [
+    { key: "name", label: "نام" },
+    { key: "email", label: "ایمیل" },
+    { key: "role", label: "نقش" },
+    { 
+      key: "status", 
+      label: "وضعیت",
+      render: (value: string) => (
+        <span className={`px-2 py-1 rounded-full text-xs ${
+          value === "فعال" 
+            ? "bg-green-100 text-green-800" 
+            : "bg-red-100 text-red-800"
+        }`}>
+          {value}
+        </span>
+      )
+    },
+  ]
 
   return (
     <div className="min-h-svh">
@@ -335,6 +368,77 @@ export default function Page() {
               Saved Name: {name}
             </p>
           )}
+        </div>
+
+        {/* Pagination Example */}
+        <div className="w-full space-y-6">
+          <h2 className="text-lg font-semibold">Pagination Component</h2>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-md font-medium">Custom Pagination</h3>
+              <p className="text-sm text-muted-foreground">
+                Current Page: {currentPage} of 10
+              </p>
+            </div>
+            
+            <div className="border rounded-lg p-4">
+              <CustomPagination
+                totalPages={10}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+            
+            <div className="text-sm text-muted-foreground">
+              <p>This pagination component includes:</p>
+              <ul className="list-disc list-inside space-y-1 mt-2">
+                <li>Previous/Next navigation buttons</li>
+                <li>Smart page number display with ellipsis</li>
+                <li>Responsive design</li>
+                <li>Custom styling for active page</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Table Example */}
+        <div className="w-full space-y-6">
+          <h2 className="text-lg font-semibold">Table Component</h2>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-md font-medium">Custom Table with Pagination</h3>
+              <p className="text-sm text-muted-foreground">
+                Showing {sampleTableData.length} users
+              </p>
+            </div>
+            
+            <div className="border rounded-lg overflow-hidden">
+              <CustomTable
+                data={sampleTableData}
+                columns={tableColumns}
+                pageSize={4}
+                totalPages={Math.ceil(sampleTableData.length / 4)}
+                currentPage={tableCurrentPage}
+                onSort={(key) => {
+                  console.log("Sort by:", key)
+                }}
+              />
+            </div>
+            
+            <div className="text-sm text-muted-foreground">
+              <p>This table component includes:</p>
+              <ul className="list-disc list-inside space-y-1 mt-2">
+                <li>Row selection with checkboxes</li>
+                <li>Custom column rendering</li>
+                <li>Built-in pagination</li>
+                <li>Sort functionality (click column headers)</li>
+                <li>Empty state handling</li>
+                <li>RTL support</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -65,6 +65,12 @@ export type { Toast, ToastType } from "./components/error/error-toast"
 export { default as Map } from "./components/map/map"
 export { default as MapLibre } from "./components/map/map-libre"
 
+// Export pagination component
+export { default as CustomPagination } from "./components/pagination"
+
+// Export table component
+export { default as CustomTable } from "./components/table"
+
 // Re-export commonly used UI components for convenience
 export { Button } from "@workspace/ui/components/button"
 export { Card } from "@workspace/ui/components/card"
