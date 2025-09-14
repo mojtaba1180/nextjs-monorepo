@@ -1,0 +1,211 @@
+---
+title: رفع خطاهای سیستم
+description: Prompt برای رفع خطاهای مختلف در سیستم داکیومنت‌اسیون
+source: fix-errors
+---
+
+# 🔧 رفع خطاهای سیستم
+
+این prompt برای رفع خطاهای مختلف در سیستم داکیومنت‌اسیون استفاده می‌شه.
+
+## 📋 دستورالعمل
+
+```
+من با خطاهای مختلفی در سیستم داکیومنت‌اسیون مواجه شدم. لطفا مراحل زیر رو به ترتیب انجام بده:
+
+1. **تشخیص خطا**: نوع و علت خطا رو مشخص کن
+2. **تحلیل مشکل**: مشکل رو تحلیل کن و راه حل پیدا کن
+3. **اعمال راه حل**: راه حل رو اعمال کن
+4. **تست**: مطمئن شو خطا برطرف شده
+5. **بررسی**: مطمئن شو تغییرات جدید خطای جدیدی ایجاد نکرده
+```
+
+## 🚨 انواع خطاهای رایج
+
+### خطاهای Import
+```
+Module not found: Can't resolve 'shiki'
+Cannot find module '@workspace/custom-ui'
+```
+
+### خطاهای TypeScript
+```
+Element implicitly has an 'any' type
+Property 'path' does not exist on type
+```
+
+### خطاهای React
+```
+useState only works in Client Components
+createContext is not a function
+```
+
+### خطاهای Build
+```
+Top-level await is currently not supported
+Transform failed with errors
+```
+
+## 🔧 راه‌حل‌های رایج
+
+### رفع خطاهای Import
+
+```bash
+# نصب dependency های مفقود
+pnpm add [package-name]
+
+# نصب workspace dependencies
+pnpm add @workspace/custom-ui@workspace:^
+```
+
+### رفع خطاهای TypeScript
+
+```typescript
+// اضافه کردن type annotations
+export const Index: Record<string, any> = {
+  // ...
+}
+
+// اضافه کردن optional properties
+export const registryItemFileSchema = z.object({
+  name: z.string(),
+  content: z.string(),
+  path: z.string().optional(), // اضافه کردن optional
+  // ...
+})
+```
+
+### رفع خطاهای React
+
+```typescript
+// اضافه کردن "use client" directive
+"use client"
+
+import { useState } from "react"
+
+// یا تبدیل به Server Component
+import { getRegistryItem } from "@/lib/registry"
+```
+
+### رفع خطاهای Build
+
+```typescript
+// تبدیل top-level await به async function
+async function main() {
+  try {
+    await buildRegistryIndex()
+    await buildRegistryJsonFile()
+  } catch (error) {
+    console.error(error)
+    process.exit(1)
+  }
+}
+
+main()
+```
+
+## 📁 فایل‌های قابل بررسی
+
+```
+src/
+├── registry/
+│   ├── __index__.ts
+│   ├── index.ts
+│   └── custom-ui/
+├── lib/
+│   ├── registry.ts
+│   └── highlight-code.ts
+├── components/
+│   ├── component-preview.tsx
+│   ├── component-source.tsx
+│   └── demos/
+└── app/
+    └── docs/
+```
+
+## 🔍 مراحل تشخیص خطا
+
+### 1. بررسی Terminal Output
+```bash
+# بررسی خطاهای build
+pnpm build
+
+# بررسی خطاهای dev
+pnpm dev
+```
+
+### 2. بررسی Lint Errors
+```bash
+# بررسی lint errors
+pnpm lint
+
+# بررسی type errors
+pnpm type-check
+```
+
+### 3. بررسی Browser Console
+```javascript
+// بررسی خطاهای runtime
+console.error("Error details")
+```
+
+## 🛠️ ابزارهای Debug
+
+### 1. TypeScript
+```typescript
+// اضافه کردن type assertions
+const item = Index[name] as any
+
+// اضافه کردن optional chaining
+const content = item?.files?.[0]?.content
+```
+
+### 2. React
+```typescript
+// اضافه کردن error boundaries
+<ErrorBoundary fallback={<div>Error occurred</div>}>
+  <Component />
+</ErrorBoundary>
+```
+
+### 3. Next.js
+```typescript
+// اضافه کردن error handling
+try {
+  const result = await getRegistryItem(name)
+  return result
+} catch (error) {
+  console.error("Registry error:", error)
+  return null
+}
+```
+
+## ✅ چک‌لیست رفع خطا
+
+- [ ] نوع خطا مشخص شده
+- [ ] علت خطا پیدا شده
+- [ ] راه حل اعمال شده
+- [ ] خطا برطرف شده
+- [ ] تغییرات جدید تست شده
+- [ ] خطای جدیدی ایجاد نشده
+
+## 🚨 نکات مهم
+
+- همیشه قبل از تغییر، backup بگیر
+- تغییرات رو مرحله به مرحله اعمال کن
+- بعد از هر تغییر، build script رو اجرا کن
+- کامپوننت رو در مرورگر تست کن
+- اگر خطا پیچیده هست، از console.log استفاده کن
+
+## 📞 درخواست کمک
+
+اگر خطا پیچیده هست یا نمی‌تونی حلش کنی:
+
+1. **خطای کامل رو کپی کن**
+2. **فایل‌های مربوطه رو نشون بده**
+3. **مراحل انجام شده رو توضیح بده**
+4. **انتظاراتت رو مشخص کن**
+
+---
+
+**حالا خطای مورد نظرت رو بهم بده تا برات حل کنم! 🔧**

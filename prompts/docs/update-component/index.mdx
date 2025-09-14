@@ -1,0 +1,185 @@
+---
+title: آپدیت کامپوننت موجود
+description: Prompt برای آپدیت کردن کامپوننت موجود در سیستم داکیومنت‌اسیون
+source: update-component
+---
+
+# 🔄 آپدیت کامپوننت موجود
+
+این prompt برای آپدیت کردن کامپوننت موجود در سیستم داکیومنت‌اسیون استفاده می‌شه.
+
+## 📋 دستورالعمل
+
+```
+من می‌خوام یک کامپوننت موجود رو در سیستم داکیومنت‌اسیون آپدیت کنم. لطفا مراحل زیر رو به ترتیب انجام بده:
+
+1. **تحلیل تغییرات**: تغییرات مورد نیاز رو بررسی کن
+2. **آپدیت فایل Demo**: فایل demo کامپوننت رو آپدیت کن
+3. **آپدیت Registry**: تنظیمات registry رو آپدیت کن
+4. **آپدیت داکیومنت**: فایل MDX داکیومنت‌اسیون رو آپدیت کن
+5. **Build registry**: اسکریپت build رو اجرا کن
+6. **تست**: مطمئن شو همه چیز درست کار می‌کنه
+```
+
+## 📁 فایل‌های قابل آپدیت
+
+```
+src/registry/
+├── custom-ui/
+│   └── [component-name].tsx          # فایل demo کامپوننت
+├── index.ts                          # تنظیمات registry
+└── __index__.ts                      # Auto-generated index
+
+content/docs/custom-ui/
+└── [component-name].mdx              # داکیومنت کامپوننت
+```
+
+## 🔧 مراحل آپدیت
+
+### مرحله 1: آپدیت فایل Demo
+
+```typescript
+// src/registry/custom-ui/[component-name].tsx
+"use client"
+
+import { [ComponentName] } from "@workspace/custom-ui"
+
+export function [ComponentName]Demo() {
+  return (
+    <div className="flex flex-col gap-4">
+      {/* مثال‌های جدید یا آپدیت شده */}
+    </div>
+  )
+}
+```
+
+### مرحله 2: آپدیت Registry Config
+
+```typescript
+// src/registry/index.ts
+export const registry = {
+  items: [
+    // کامپوننت‌های موجود...
+    {
+      name: "[component-name]",
+      description: "توضیح آپدیت شده کامپوننت",
+      type: "registry:component",
+      registryDependencies: undefined,
+      files: [
+        {
+          path: "custom-ui/[component-name].tsx",
+          type: "registry:component",
+          target: "components/[component-name].tsx"
+        }
+      ],
+      categories: ["components"],
+      meta: {
+        title: "[ComponentName]",
+        description: "توضیح آپدیت شده کامپوننت"
+      }
+    }
+  ]
+}
+```
+
+### مرحله 3: آپدیت داکیومنت MDX
+
+```markdown
+---
+title: [ComponentName]
+description: توضیح آپدیت شده کامپوننت
+component: true
+links:
+  doc: https://ui.shadcn.com/docs/components/[component-name]
+  api: https://ui.shadcn.com/docs/components/[component-name]#api-reference
+---
+
+<ComponentPreview
+  name="[component-name]"
+  description="توضیح آپدیت شده کامپوننت"
+  align="center"
+/>
+
+## Installation
+
+<CodeTabs>
+  <TabsList>
+    <TabsTrigger value="cli">CLI</TabsTrigger>
+    <TabsTrigger value="manual">Manual</TabsTrigger>
+  </TabsList>
+  <TabsContent value="cli">
+    <Steps>
+      <Step>Install the component:</Step>
+    </Steps>
+  </TabsContent>
+  <TabsContent value="manual">
+    <Steps>
+      <Step>Copy the component code:</Step>
+    </Steps>
+  </TabsContent>
+</CodeTabs>
+
+## Usage
+
+<ComponentSource
+  name="[component-name]"
+  title="components/[component-name].tsx"
+/>
+
+## New Features
+
+<!-- ویژگی‌های جدید اضافه شده -->
+
+## API Reference
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| ... | ... | ... | ... |
+```
+
+### مرحله 4: اجرای Build Script
+
+```bash
+npx tsx scripts/build-registry.ts
+```
+
+## 📝 قوانین آپدیت
+
+1. **Backward Compatibility**: سعی کن تغییرات backward compatible باشن
+2. **Documentation**: تمام تغییرات رو در داکیومنت منعکس کن
+3. **Examples**: مثال‌های جدید رو اضافه کن
+4. **API Changes**: تغییرات API رو واضح بنویس
+5. **Testing**: بعد از آپدیت، کامپوننت رو تست کن
+
+## 🎯 انواع آپدیت
+
+### آپدیت جزئی
+- اضافه کردن props جدید
+- بهبود styling
+- اضافه کردن مثال‌های جدید
+
+### آپدیت عمده
+- تغییر API کامپوننت
+- اضافه کردن variant های جدید
+- تغییر ساختار کامپوننت
+
+## ✅ چک‌لیست آپدیت
+
+- [ ] فایل demo آپدیت شده
+- [ ] Registry config آپدیت شده
+- [ ] داکیومنت MDX آپدیت شده
+- [ ] Build script اجرا شده
+- [ ] کامپوننت در مرورگر تست شده
+- [ ] تغییرات backward compatible هستن
+
+## 🚨 نکات مهم
+
+- قبل از آپدیت، backup بگیر
+- تغییرات رو مرحله به مرحله اعمال کن
+- بعد از هر تغییر، build script رو اجرا کن
+- کامپوننت رو در مرورگر تست کن
+- اگر تغییرات breaking هستن، version رو آپدیت کن
+
+---
+
+**حالا کامپوننت و تغییرات مورد نظرت رو بهم بده تا برات آپدیت کنم! 🔄**

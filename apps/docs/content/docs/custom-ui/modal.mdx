@@ -1,0 +1,350 @@
+---
+title: Modal
+description: A comprehensive modal system with dialog and responsive variants for different screen sizes and use cases.
+component: true
+links:
+  doc: https://ui.shadcn.com/docs/components/dialog
+  api: https://ui.shadcn.com/docs/components/dialog#api-reference
+---
+
+<ComponentPreview
+  name="modal"
+  description="A comprehensive modal system with dialog and responsive variants"
+  align="center"
+/>
+
+## Installation
+
+<CodeTabs>
+  <TabsList>
+    <TabsTrigger value="cli">CLI</TabsTrigger>
+    <TabsTrigger value="manual">Manual</TabsTrigger>
+  </TabsList>
+  <TabsContent value="cli">
+    <Steps>
+      <Step>Install the modal component:</Step>
+    </Steps>
+  </TabsContent>
+  <TabsContent value="manual">
+    <Steps>
+      <Step>Copy the modal component code:</Step>
+    </Steps>
+  </TabsContent>
+</CodeTabs>
+
+## Usage
+
+<ComponentSource
+  name="modal"
+  title="components/modal.tsx"
+/>
+
+## Modal Types
+
+The modal system provides three main components:
+
+### DialogModal
+
+A standard modal dialog that works well on desktop devices:
+
+```tsx
+import { DialogModal } from "@workspace/custom-ui"
+
+function MyComponent() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <DialogModal
+      config={{
+        id: "my-dialog",
+        type: "dialog",
+        title: "Dialog Title",
+        description: "Dialog description",
+        size: "md",
+        closable: true,
+        view: <div>Your content here</div>
+      }}
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+    />
+  )
+}
+```
+
+### ResponsiveModal
+
+A responsive modal that adapts to different screen sizes:
+- **Desktop**: Uses Dialog component
+- **Mobile**: Uses Drawer component
+
+```tsx
+import { ResponsiveModal } from "@workspace/custom-ui"
+
+function MyComponent() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <ResponsiveModal
+      config={{
+        id: "my-responsive",
+        type: "responsive",
+        title: "Responsive Modal",
+        description: "Adapts to screen size",
+        size: "lg",
+        closable: true,
+        view: <div>Your content here</div>
+      }}
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+    />
+  )
+}
+```
+
+### ModalManager
+
+A component that manages multiple modals using the modal context:
+
+```tsx
+import { ModalManager, ModalProvider } from "@workspace/custom-ui"
+
+function App() {
+  return (
+    <ModalProvider>
+      <YourAppContent />
+      <ModalManager />
+    </ModalProvider>
+  )
+}
+```
+
+## Modal Context
+
+Use the modal context to manage modals programmatically:
+
+```tsx
+import { useModalContext } from "@workspace/custom-ui"
+
+function MyComponent() {
+  const { openModal, closeModal, isModalOpen } = useModalContext()
+
+  const handleOpenModal = () => {
+    openModal({
+      id: "my-modal",
+      type: "dialog",
+      title: "My Modal",
+      description: "Modal description",
+      size: "md",
+      closable: true,
+      view: <div>Modal content</div>
+    })
+  }
+
+  return (
+    <div>
+      <button onClick={handleOpenModal}>
+        Open Modal
+      </button>
+      {isModalOpen("my-modal") && (
+        <p>Modal is open!</p>
+      )}
+    </div>
+  )
+}
+```
+
+## Modal Sizes
+
+The modal system supports different sizes:
+
+- **sm**: Small modal (max-width: 24rem)
+- **md**: Medium modal (max-width: 28rem) - Default
+- **lg**: Large modal (max-width: 32rem)
+- **xl**: Extra large modal (max-width: 36rem)
+- **full**: Full width modal with margins
+
+```tsx
+// Small modal
+openModal({
+  id: "small-modal",
+  type: "dialog",
+  size: "sm",
+  view: <div>Small content</div>
+})
+
+// Large modal
+openModal({
+  id: "large-modal",
+  type: "dialog",
+  size: "xl",
+  view: <div>Large content</div>
+})
+```
+
+## Non-Closable Modals
+
+Create modals that cannot be closed by user interaction:
+
+```tsx
+openModal({
+  id: "processing-modal",
+  type: "dialog",
+  title: "Processing...",
+  size: "sm",
+  closable: false,
+  view: (
+    <div className="flex items-center space-x-2">
+      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+      <span>Please wait...</span>
+    </div>
+  )
+})
+```
+
+## Custom Styling
+
+Apply custom styles to modals:
+
+```tsx
+openModal({
+  id: "custom-modal",
+  type: "dialog",
+  title: "Custom Modal",
+  className: "bg-gradient-to-br from-blue-50 to-indigo-100",
+  overlayClassName: "bg-black/50",
+  view: <div>Custom styled content</div>
+})
+```
+
+## API Reference
+
+### ModalConfig
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| id | string | - | Unique identifier for the modal |
+| type | "dialog" or "responsive" | - | Type of modal to render |
+| title | string | - | Modal title |
+| description | string | - | Modal description |
+| view | ReactNode | - | Content to display in the modal |
+| size | "sm" or "md" or "lg" or "xl" or "full" | "md" | Size of the modal |
+| closable | boolean | true | Whether the modal can be closed |
+| onClose | function | - | Callback when modal is closed |
+| className | string | - | Custom CSS classes for modal content |
+| overlayClassName | string | - | Custom CSS classes for modal overlay |
+
+### ModalContextType
+
+| Method | Type | Description |
+|--------|------|-------------|
+| openModal | function | Open a new modal |
+| closeModal | function | Close a modal by ID |
+| closeAllModals | function | Close all open modals |
+| isModalOpen | function | Check if a modal is open |
+| modals | object | Current state of all modals |
+
+## Examples
+
+### Form Modal
+
+```tsx
+const openFormModal = () => {
+  openModal({
+    id: "form-modal",
+    type: "responsive",
+    title: "User Registration",
+    description: "Fill out the form below to create your account",
+    size: "lg",
+    view: (
+      <form className="space-y-4">
+        <div>
+          <Label htmlFor="name">Name</Label>
+          <Input id="name" placeholder="Enter your name" />
+        </div>
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" type="email" placeholder="Enter your email" />
+        </div>
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" onClick={() => closeModal("form-modal")}>
+            Cancel
+          </Button>
+          <Button onClick={() => closeModal("form-modal")}>
+            Submit
+          </Button>
+        </div>
+      </form>
+    )
+  })
+}
+```
+
+### Confirmation Modal
+
+```tsx
+const openConfirmModal = () => {
+  openModal({
+    id: "confirm-modal",
+    type: "dialog",
+    title: "Confirm Action",
+    description: "Are you sure you want to delete this item?",
+    size: "sm",
+    view: (
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" onClick={() => closeModal("confirm-modal")}>
+          Cancel
+        </Button>
+        <Button variant="destructive" onClick={() => {
+          // Perform delete action
+          closeModal("confirm-modal")
+        }}>
+          Delete
+        </Button>
+      </div>
+    )
+  })
+}
+```
+
+### Loading Modal
+
+```tsx
+const openLoadingModal = () => {
+  openModal({
+    id: "loading-modal",
+    type: "dialog",
+    title: "Processing",
+    size: "sm",
+    closable: false,
+    view: (
+      <div className="flex flex-col items-center space-y-4 py-4">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <p className="text-sm text-muted-foreground">
+          Please wait while we process your request...
+        </p>
+      </div>
+    )
+  })
+  
+  // Auto close after 3 seconds
+  setTimeout(() => {
+    closeModal("loading-modal")
+  }, 3000)
+}
+```
+
+## Best Practices
+
+1. **Use appropriate modal types**: Use `responsive` for forms and complex content, `dialog` for simple confirmations
+2. **Provide clear titles and descriptions**: Help users understand the modal's purpose
+3. **Handle modal state properly**: Always provide a way to close modals
+4. **Use appropriate sizes**: Choose the right size based on content complexity
+5. **Consider accessibility**: Ensure modals are keyboard accessible and have proper focus management
+6. **Clean up on unmount**: Close modals when components unmount to prevent memory leaks
+
+## Dependencies
+
+The modal system depends on:
+- `@workspace/ui/components/dialog` - For dialog modals
+- `@workspace/ui/components/drawer` - For mobile responsive modals
+- `@workspace/ui/hooks/use-mobile` - For responsive behavior

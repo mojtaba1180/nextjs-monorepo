@@ -6,6 +6,11 @@
       "title": "CustomButton",
       "href": "/docs/custom-ui/custom-button",
       "description": "A customizable button component with various variants and sizes"
+    },
+    {
+      "title": "Modal",
+      "href": "/docs/custom-ui/modal",
+      "description": "A comprehensive modal system with dialog and responsive variants"
     }
   ]
 }

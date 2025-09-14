@@ -1,0 +1,199 @@
+---
+title: اضافه کردن کامپوننت جدید
+description: Prompt برای اضافه کردن کامپوننت جدید به سیستم داکیومنت‌اسیون
+source: add-component
+---
+
+# 🚀 اضافه کردن کامپوننت جدید
+
+این prompt برای اضافه کردن کامپوننت جدید به سیستم داکیومنت‌اسیون استفاده می‌شه.
+
+## 📋 دستورالعمل
+
+```
+من می‌خوام یک کامپوننت جدید به سیستم داکیومنت‌اسیون اضافه کنم. لطفا مراحل زیر رو به ترتیب انجام بده:
+
+1. **تحلیل کامپوننت**: کامپوننت رو بررسی کن و مشخصاتش رو تعیین کن
+2. **ایجاد فایل‌های مورد نیاز**: فایل‌های registry و demo رو بساز
+3. **آپدیت registry**: کامپوننت رو به registry اضافه کن
+4. **ایجاد داکیومنت**: فایل MDX داکیومنت‌اسیون رو بساز
+5. **Build registry**: اسکریپت build رو اجرا کن
+6. **تست**: مطمئن شو همه چیز درست کار می‌کنه
+```
+
+## 📁 ساختار فایل‌ها
+
+```
+src/registry/
+├── custom-ui/
+│   └── [component-name].tsx          # فایل demo کامپوننت
+├── index.ts                          # تنظیمات registry
+└── __index__.ts                      # Auto-generated index
+
+content/docs/custom-ui/
+└── [component-name].mdx              # داکیومنت کامپوننت
+```
+
+## 🔧 مراحل پیاده‌سازی
+
+### مرحله 1: ایجاد فایل Demo
+
+```typescript
+// src/registry/custom-ui/[component-name].tsx
+"use client"
+
+import { [ComponentName] } from "@workspace/custom-ui"
+
+export function [ComponentName]Demo() {
+  return (
+    <div className="flex flex-col gap-4">
+      {/* مثال‌های مختلف کامپوننت */}
+    </div>
+  )
+}
+```
+
+### مرحله 2: آپدیت Registry Config
+
+```typescript
+// src/registry/index.ts
+export const registry = {
+  items: [
+    // کامپوننت‌های موجود...
+    {
+      name: "[component-name]",
+      description: "توضیح کوتاه کامپوننت",
+      type: "registry:component",
+      registryDependencies: undefined,
+      files: [
+        {
+          path: "custom-ui/[component-name].tsx",
+          type: "registry:component",
+          target: "components/[component-name].tsx"
+        }
+      ],
+      categories: ["components"],
+      meta: {
+        title: "[ComponentName]",
+        description: "توضیح کامل کامپوننت"
+      }
+    }
+  ]
+}
+```
+
+### مرحله 3: ایجاد داکیومنت MDX
+
+```markdown
+---
+title: [ComponentName]
+description: توضیح کامپوننت
+component: true
+links:
+  doc: https://ui.shadcn.com/docs/components/[component-name]
+  api: https://ui.shadcn.com/docs/components/[component-name]#api-reference
+---
+
+<ComponentPreview
+  name="[component-name]"
+  description="توضیح کوتاه کامپوننت"
+  align="center"
+/>
+
+## Installation
+
+<CodeTabs>
+  <TabsList>
+    <TabsTrigger value="cli">CLI</TabsTrigger>
+    <TabsTrigger value="manual">Manual</TabsTrigger>
+  </TabsList>
+  <TabsContent value="cli">
+    <Steps>
+      <Step>Install the component:</Step>
+    </Steps>
+  </TabsContent>
+  <TabsContent value="manual">
+    <Steps>
+      <Step>Copy the component code:</Step>
+    </Steps>
+  </TabsContent>
+</CodeTabs>
+
+## Usage
+
+<ComponentSource
+  name="[component-name]"
+  title="components/[component-name].tsx"
+/>
+
+## Variants
+
+<ComponentPreview
+  name="[component-name]-variants"
+  description="نمایش variant های مختلف"
+/>
+
+## API Reference
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| ... | ... | ... | ... |
+```
+
+### مرحله 4: اجرای Build Script
+
+```bash
+npx tsx scripts/build-registry.ts
+```
+
+### مرحله 5: آپدیت Navigation
+
+```json
+// content/docs/custom-ui/meta.json
+{
+  "pages": {
+    "custom-button": "Custom Button",
+    "[component-name]": "[Component Name]"
+  }
+}
+```
+
+## 📝 قوانین مهم
+
+1. **نام‌گذاری**: از kebab-case برای فایل‌ها و camelCase برای کامپوننت‌ها استفاده کن
+2. **Import Path**: همیشه از `@workspace/custom-ui` import کن
+3. **Demo Structure**: حداقل 3-4 مثال مختلف از کامپوننت نشون بده
+4. **Documentation**: داکیومنت کامل با مثال‌ها، API reference و usage بنویس
+5. **Registry**: کامپوننت رو به registry اضافه کن
+6. **Build**: حتماً اسکریپت build رو اجرا کن
+
+## 🎯 مثال کامل
+
+```
+کامپوننت: CustomInput
+- فایل: custom-input.tsx
+- Demo: CustomInputDemo
+- Registry: custom-input
+- Documentation: custom-input.mdx
+```
+
+## ✅ چک‌لیست نهایی
+
+- [ ] فایل demo ساخته شده
+- [ ] Registry config آپدیت شده
+- [ ] داکیومنت MDX ایجاد شده
+- [ ] Build script اجرا شده
+- [ ] Navigation آپدیت شده
+- [ ] کامپوننت در مرورگر تست شده
+
+## 🚨 نکات مهم
+
+- همیشه از `"use client"` در فایل‌های demo استفاده کن
+- Import path ها رو درست بنویس
+- داکیومنت رو کامل و مفصل بنویس
+- بعد از هر تغییر، build script رو اجرا کن
+- کامپوننت رو در مرورگر تست کن
+
+---
+
+**حالا کامپوننت جدید رو بهم بده تا برات پیاده‌سازی کنم! 🚀**
