@@ -107,6 +107,96 @@ export const registry = {
         title: "Form Variants",
         description: "Demonstration of different form component variants and layouts."
       }
+    },
+    {
+      name: "map",
+      description: "Interactive map component with location selection and address fetching",
+      type: "registry:component",
+      registryDependencies: undefined,
+      files: [
+        {
+          path: "map/map.tsx",
+          type: "registry:component",
+          target: "components/map.tsx"
+        }
+      ],
+      categories: ["components"],
+      meta: {
+        title: "Map",
+        description: "Interactive map component with location selection, address fetching, and various customization options."
+      }
+    },
+    {
+      name: "map-variants",
+      description: "Map component variants demonstration",
+      type: "registry:component",
+      registryDependencies: undefined,
+      files: [
+        {
+          path: "map/map-variants.tsx",
+          type: "registry:component",
+          target: "components/map-variants.tsx"
+        }
+      ],
+      categories: ["components"],
+      meta: {
+        title: "Map Variants",
+        description: "Demonstration of different map component variants and configurations."
+      }
+    },
+    {
+      name: "pagination",
+      description: "A smart pagination component with intelligent page range display",
+      type: "registry:component",
+      registryDependencies: undefined,
+      files: [
+        {
+          path: "pagination/pagination.tsx",
+          type: "registry:component",
+          target: "components/pagination.tsx"
+        }
+      ],
+      categories: ["components"],
+      meta: {
+        title: "Pagination",
+        description: "A smart pagination component with intelligent page range display and navigation controls."
+      }
+    },
+    {
+      name: "pagination-variants",
+      description: "Pagination component variants demonstration",
+      type: "registry:component",
+      registryDependencies: undefined,
+      files: [
+        {
+          path: "pagination/pagination-variants.tsx",
+          type: "registry:component",
+          target: "components/pagination-variants.tsx"
+        }
+      ],
+      categories: ["components"],
+      meta: {
+        title: "Pagination Variants",
+        description: "Demonstration of different pagination component variants and page count scenarios."
+      }
+    },
+    {
+      name: "table",
+      description: "A comprehensive table component with pagination, sorting, and row selection",
+      type: "registry:component",
+      registryDependencies: undefined,
+      files: [
+        {
+          path: "table/table.tsx",
+          type: "registry:component",
+          target: "components/table.tsx"
+        }
+      ],
+      categories: ["components"],
+      meta: {
+        title: "Table",
+        description: "A comprehensive table component with pagination, sorting, row selection, and customizable columns."
+      }
     }
   ]
 }

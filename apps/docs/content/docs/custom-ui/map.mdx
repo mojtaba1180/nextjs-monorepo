@@ -1,0 +1,210 @@
+---
+title: Map
+description: Interactive map component with location selection and address fetching
+component: true
+links:
+  doc: https://ui.shadcn.com/docs/components/map
+  api: https://ui.shadcn.com/docs/components/map#api-reference
+---
+
+<ComponentPreview
+  name="map"
+  description="Interactive map component with location selection and address fetching capabilities"
+  align="center"
+/>
+
+## Usage
+
+The Map component is already available in your project. You can use it by importing:
+
+```tsx
+import { Map } from "@workspace/custom-ui"
+```
+
+<ComponentSource
+  name="map"
+  title="components/map.tsx"
+/>
+
+## Variants
+
+<ComponentPreview
+  name="map-variants"
+  description="Different map variants and configurations"
+/>
+
+## Features
+
+The Map component provides the following features:
+
+- **Interactive Location Selection**: Click and drag to select locations on the map
+- **Address Fetching**: Automatically fetches addresses using Neshan API
+- **Customizable Center**: Set custom center coordinates and zoom levels
+- **Confirm Button**: Optional confirm button for location selection
+- **Navigation Controls**: Built-in zoom and geolocation controls
+- **Responsive Design**: Adapts to different screen sizes
+- **Custom Styling**: Support for custom styles and CSS classes
+
+## Basic Example
+
+```tsx
+import { Map } from "@workspace/custom-ui"
+
+export function BasicMapExample() {
+  const handleLocationSelect = (latitude: number, longitude: number) => {
+    console.log('Selected location:', { latitude, longitude })
+  }
+
+  const handleAddressSelect = (address: string, latitude: number, longitude: number) => {
+    console.log('Selected address:', address)
+  }
+
+  return (
+    <Map
+      style={{ width: "100%", height: 400 }}
+      showConfirmButton={true}
+      onLocationSelect={handleLocationSelect}
+      onAddressSelect={handleAddressSelect}
+    />
+  )
+}
+```
+
+## Advanced Example
+
+```tsx
+import { Map } from "@workspace/custom-ui"
+import { useState } from "react"
+
+export function AdvancedMapExample() {
+  const [selectedLocation, setSelectedLocation] = useState(null)
+  const [selectedAddress, setSelectedAddress] = useState("")
+
+  const handleLocationSelect = (latitude: number, longitude: number) => {
+    setSelectedLocation({ latitude, longitude })
+  }
+
+  const handleAddressSelect = (address: string, latitude: number, longitude: number) => {
+    setSelectedAddress(address)
+  }
+
+  return (
+    <div className="space-y-4">
+      <Map
+        center={{ latitude: 35.6892, longitude: 51.3890 }} // Tehran
+        zoom={13}
+        style={{ width: "100%", height: 500 }}
+        showConfirmButton={true}
+        onLocationSelect={handleLocationSelect}
+        onAddressSelect={handleAddressSelect}
+      />
+      
+      {selectedLocation && (
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <h3 className="font-semibold mb-2">Selected Location:</h3>
+          <p>Latitude: {selectedLocation.latitude}</p>
+          <p>Longitude: {selectedLocation.longitude}</p>
+          {selectedAddress && <p>Address: {selectedAddress}</p>}
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+## Different Cities
+
+```tsx
+import { Map } from "@workspace/custom-ui"
+
+export function CityMapsExample() {
+  const cities = [
+    { name: "Tehran", center: { latitude: 35.6892, longitude: 51.3890 } },
+    { name: "Isfahan", center: { latitude: 32.6546, longitude: 51.6680 } },
+    { name: "Shiraz", center: { latitude: 29.5918, longitude: 52.5837 } },
+    { name: "Mashhad", center: { latitude: 36.2605, longitude: 59.6168 } }
+  ]
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {cities.map((city) => (
+        <div key={city.name} className="space-y-2">
+          <h3 className="font-semibold">{city.name}</h3>
+          <Map
+            center={city.center}
+            zoom={12}
+            style={{ width: "100%", height: 250 }}
+            showConfirmButton={false}
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+## Custom Styling
+
+```tsx
+import { Map } from "@workspace/custom-ui"
+
+export function StyledMapExample() {
+  return (
+    <div className="space-y-4">
+      {/* Map with custom border */}
+      <Map
+        style={{ 
+          width: "100%", 
+          height: 300,
+          border: "2px solid #3b82f6",
+          borderRadius: "12px"
+        }}
+        showConfirmButton={false}
+      />
+      
+      {/* Map with shadow */}
+      <Map
+        style={{ 
+          width: "100%", 
+          height: 300,
+          boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)"
+        }}
+        showConfirmButton={false}
+      />
+    </div>
+  )
+}
+```
+
+## API Reference
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `center` | `{ latitude: number; longitude: number }` | `{ latitude: 37.2809, longitude: 49.5924 }` | Center coordinates of the map (default: Rasht, Iran) |
+| `zoom` | `number` | `13` | Initial zoom level of the map |
+| `style` | `React.CSSProperties` | `{ width: "100%", height: 300 }` | Custom styles for the map container |
+| `className` | `string` | `undefined` | Additional CSS classes |
+| `showConfirmButton` | `boolean` | `true` | Whether to show the confirm location button |
+| `onLocationSelect` | `(latitude: number, longitude: number) => void` | `undefined` | Callback when location is selected |
+| `onAddressSelect` | `(address: string, latitude: number, longitude: number) => void` | `undefined` | Callback when address is fetched |
+| `address` | `string` | `undefined` | Pre-defined address to display |
+| `mapKey` | `string` | `undefined` | Map API key (kept for backward compatibility) |
+| `poi` | `boolean` | `undefined` | Points of interest (kept for backward compatibility) |
+
+## Notes
+
+- The component uses **MapLibre GL JS** for rendering maps
+- Maps are powered by **OpenStreetMap** tiles
+- Address fetching is done through **Neshan API**
+- The component includes built-in navigation and geolocation controls
+- Default center is set to Rasht, Iran (37.2809, 49.5924)
+- The component is fully responsive and works on mobile devices
+
+## Dependencies
+
+The Map component requires the following dependencies:
+
+- `react-map-gl/maplibre`: For map rendering
+- `@workspace/ui/components/button`: For the confirm button
+
+Make sure these dependencies are installed in your project.
