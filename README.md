@@ -1,31 +1,52 @@
-# shadcn/ui monorepo template
+# Nexus Framework
 
-This template is for creating a monorepo with shadcn/ui.
+A comprehensive monorepo framework built on top of shadcn/ui with custom components, API management, and development tools.
 
-## Usage
+## 🚀 Features
+
+- **🎨 Custom UI Components** - Enhanced components built on shadcn/ui
+- **🔧 Framework Package** - Complete API management with React Query
+- **📚 Documentation** - Built-in docs with Fumadocs
+- **⚡ TypeScript** - Full TypeScript support across all packages
+- **🔄 Monorepo** - Organized workspace with shared packages
+
+## 📦 Packages
+
+- `@workspace/ui` - Base UI components (shadcn/ui)
+- `@workspace/custom-ui` - Enhanced custom components
+- `@workspace/framework` - API management and data fetching
+- `@workspace/eslint-config` - Shared ESLint configuration
+- `@workspace/typescript-config` - Shared TypeScript configuration
+
+## 🛠️ Usage
+
+### Adding components
+
+To add components to your app, run the following command:
 
 ```bash
-pnpm dlx shadcn@latest init
+pnpm dlx shadcn@latest add button -c apps/your-app
 ```
 
-## Adding components
+### Using components
 
-To add components to your app, run the following command at the root of your `web` app:
-
-```bash
-pnpm dlx shadcn@latest add button -c apps/web
-```
-
-This will place the ui components in the `packages/ui/src/components` directory.
-
-## Tailwind
-
-Your `tailwind.config.ts` and `globals.css` are already set up to use the components from the `ui` package.
-
-## Using components
-
-To use the components in your app, import them from the `ui` package.
+Import components from the workspace packages:
 
 ```tsx
 import { Button } from "@workspace/ui/components/button"
+import { CustomButton } from "@workspace/custom-ui"
+import { useGenericQuery } from "@workspace/framework"
+```
+
+### Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development
+pnpm dev
+
+# Build all packages
+pnpm build
 ```

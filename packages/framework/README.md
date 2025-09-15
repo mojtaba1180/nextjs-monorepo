@@ -1,6 +1,6 @@
 # 🚀 Framework Package
 
-پکیج framework کامل برای مدیریت API calls، data fetching و state management در monorepo.
+پکیج framework کامل برای مدیریت API calls، data fetching و state management در Nexus Framework monorepo.
 
 ## ✨ ویژگی‌های کلیدی
 

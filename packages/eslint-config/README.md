@@ -1,3 +1,3 @@
 # `@workspace/eslint-config`
 
-Shared eslint configuration for the workspace.
+Shared ESLint configuration for the Nexus Framework workspace.

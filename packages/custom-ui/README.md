@@ -1,6 +1,6 @@
 # @workspace/custom-ui
 
-A custom UI component library built on top of `@workspace/ui` that provides enhanced and customized components.
+A custom UI component library built on top of `@workspace/ui` that provides enhanced and customized components for the Nexus Framework.
 
 ## Features
 
