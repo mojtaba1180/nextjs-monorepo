@@ -26,6 +26,11 @@
       "title": "Pagination",
       "href": "/docs/custom-ui/pagination",
       "description": "A smart pagination component with intelligent page range display"
+    },
+    {
+      "title": "Table",
+      "href": "/docs/custom-ui/table",
+      "description": "A comprehensive table component with pagination, sorting, and row selection"
     }
   ]
 }

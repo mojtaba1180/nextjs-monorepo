@@ -186,4 +186,22 @@ export const Index: Record<string, any> = {
     categories: ["components"],
     meta: {"title":"Pagination Variants","description":"Demonstration of different pagination component variants and page count scenarios."},
   },
+  "table": {
+    name: "table",
+    description: "A comprehensive table component with pagination, sorting, and row selection",
+    type: "registry:component",
+    registryDependencies: undefined,
+    files: [{
+      path: "registry/custom-ui/table/table.tsx",
+      type: "registry:component",
+      target: "components/table.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/custom-ui/table/table.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "table"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["components"],
+    meta: {"title":"Table","description":"A comprehensive table component with pagination, sorting, row selection, and customizable columns."},
+  },
   }

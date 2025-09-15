@@ -1,0 +1,91 @@
+---
+title: Table
+description: A comprehensive table component with pagination, sorting, and row selection
+component: true
+links:
+  doc: https://ui.shadcn.com/docs/components/table
+  api: https://ui.shadcn.com/docs/components/table#api-reference
+---
+
+<ComponentPreview
+  name="table"
+  description="A comprehensive table component with pagination, sorting, and row selection"
+  align="center"
+/>
+
+## Usage
+
+The component is already available in your project. You can use it by importing:
+
+```tsx
+import { CustomTable } from "@workspace/custom-ui"
+```
+
+<ComponentSource
+  name="table"
+  title="components/table.tsx"
+/>
+
+## API Reference
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| data | Array&lt;T&gt; | - | Array of data objects to display in the table |
+| columns | Array&lt;Column&lt;T&gt;&gt; | - | Array of column definitions with key, label, and optional render function |
+| pageSize | number | 5 | Number of items to display per page |
+| totalItems | number | - | Total number of items (optional) |
+| totalPages | number | - | Total number of pages (optional) |
+| currentPage | number | 1 | Current active page |
+| onSort | (key: string) =&gt; void | - | Callback function when column header is clicked for sorting |
+
+### Column Interface
+
+| Prop | Type | Description |
+|------|------|-------------|
+| key | string | Unique identifier for the column |
+| label | string | Display label for the column header |
+| render | (value: any, row: T) =&gt; React.ReactNode | Optional custom render function for cell content |
+
+## Features
+
+- **Row Selection**: Checkbox-based row selection with select all functionality
+- **Pagination**: Built-in pagination with customizable page size
+- **Sorting**: Clickable column headers for sorting (requires onSort callback)
+- **Custom Rendering**: Custom render functions for column content
+- **Empty State**: Displays a friendly message when no data is available
+- **RTL Support**: Right-to-left layout support for Persian/Arabic content
+- **Responsive**: Mobile-friendly table design
+
+## Example Data Structure
+
+```tsx
+const sampleData = [
+  { id: 1, name: "احمد محمدی", email: "ahmad@example.com", role: "مدیر" },
+  { id: 2, name: "فاطمه احمدی", email: "fateme@example.com", role: "کاربر" },
+  // ... more data
+]
+
+const columns = [
+  {
+    key: "name",
+    label: "نام",
+  },
+  {
+    key: "email", 
+    label: "ایمیل",
+  },
+  {
+    key: "role",
+    label: "نقش",
+    render: (value: string) => (
+      <span className={`px-2 py-1 rounded-full text-xs ${
+        value === "مدیر" ? "bg-blue-100 text-blue-800" :
+        value === "ادمین" ? "bg-green-100 text-green-800" :
+        "bg-gray-100 text-gray-800"
+      }`}>
+        {value}
+      </span>
+    ),
+  },
+]
+```
