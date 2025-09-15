@@ -114,4 +114,76 @@ export const Index: Record<string, any> = {
     categories: ["components"],
     meta: {"title":"Form Variants","description":"Demonstration of different form component variants and layouts."},
   },
+  "map": {
+    name: "map",
+    description: "Interactive map component with location selection and address fetching",
+    type: "registry:component",
+    registryDependencies: undefined,
+    files: [{
+      path: "registry/custom-ui/map/map.tsx",
+      type: "registry:component",
+      target: "components/map.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/custom-ui/map/map.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "map"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["components"],
+    meta: {"title":"Map","description":"Interactive map component with location selection, address fetching, and various customization options."},
+  },
+  "map-variants": {
+    name: "map-variants",
+    description: "Map component variants demonstration",
+    type: "registry:component",
+    registryDependencies: undefined,
+    files: [{
+      path: "registry/custom-ui/map/map-variants.tsx",
+      type: "registry:component",
+      target: "components/map-variants.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/custom-ui/map/map-variants.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "map-variants"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["components"],
+    meta: {"title":"Map Variants","description":"Demonstration of different map component variants and configurations."},
+  },
+  "pagination": {
+    name: "pagination",
+    description: "A smart pagination component with intelligent page range display",
+    type: "registry:component",
+    registryDependencies: undefined,
+    files: [{
+      path: "registry/custom-ui/pagination/pagination.tsx",
+      type: "registry:component",
+      target: "components/pagination.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/custom-ui/pagination/pagination.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "pagination"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["components"],
+    meta: {"title":"Pagination","description":"A smart pagination component with intelligent page range display and navigation controls."},
+  },
+  "pagination-variants": {
+    name: "pagination-variants",
+    description: "Pagination component variants demonstration",
+    type: "registry:component",
+    registryDependencies: undefined,
+    files: [{
+      path: "registry/custom-ui/pagination/pagination-variants.tsx",
+      type: "registry:component",
+      target: "components/pagination-variants.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/custom-ui/pagination/pagination-variants.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "pagination-variants"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["components"],
+    meta: {"title":"Pagination Variants","description":"Demonstration of different pagination component variants and page count scenarios."},
+  },
   }

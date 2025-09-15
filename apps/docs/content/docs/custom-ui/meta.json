@@ -16,6 +16,16 @@
       "title": "Form Components",
       "href": "/docs/custom-ui/form",
       "description": "Complete form system with React Hook Form integration, validation, and formatting"
+    },
+    {
+      "title": "Map",
+      "href": "/docs/custom-ui/map",
+      "description": "Interactive map component with location selection and address fetching"
+    },
+    {
+      "title": "Pagination",
+      "href": "/docs/custom-ui/pagination",
+      "description": "A smart pagination component with intelligent page range display"
     }
   ]
 }

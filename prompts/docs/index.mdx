@@ -82,8 +82,15 @@ import { [ComponentName] } from "@workspace/custom-ui"
 
 export function [ComponentName]Demo() {
   return (
-    <div className="flex flex-col gap-4">
-      {/* مثال‌های مختلف کامپوننت */}
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Basic Usage</h3>
+        <div className="p-4 border rounded-lg">
+          <[ComponentName]>
+            Real content here
+          </[ComponentName]>
+        </div>
+      </div>
     </div>
   )
 }
@@ -149,13 +156,6 @@ import { [ComponentName] } from "@workspace/custom-ui"
   title="components/[component-name].tsx"
 />
 
-## Variants
-
-<ComponentPreview
-  name="[component-name]-variants"
-  description="نمایش variant های مختلف"
-/>
-
 ## API Reference
 
 | Prop | Type | Default | Description |
@@ -188,15 +188,10 @@ npx tsx scripts/build-registry.ts
 3. **فولدرسازی**: هر کامپوننت باید فولدر جداگانه داشته باشه:
    - `src/registry/custom-ui/[component-name]/`
    - فایل اصلی: `[component-name].tsx`
-   - فایل variants: `[component-name]-variants.tsx`
-4. **Demo Structure**: حتماً 5 مثال مختلف نشون بده:
+4. **Demo Structure**: فقط یک مثال ساده و کاربردی نشون بده:
    - Basic Usage (استفاده پایه)
-   - Variants (variant های مختلف)
-   - Sizes (سایزهای مختلف)
-   - States (حالت‌های مختلف مثل disabled, loading)
-   - Interactive Example (مثال تعاملی با state)
 5. **Documentation**: داکیومنت کامل با مثال‌ها، API reference و usage بنویس
-6. **Registry**: کامپوننت و variants رو به registry اضافه کن
+6. **Registry**: کامپوننت رو به registry اضافه کن
 7. **Build**: حتماً اسکریپت build رو اجرا کن
 8. **Installation**: از بخش Installation استفاده نکن، فقط Usage با import statement بذار
 9. **Demo Content**: هر مثال باید محتوای واقعی و قابل نمایش داشته باشه
@@ -206,14 +201,14 @@ npx tsx scripts/build-registry.ts
 ```
 کامپوننت: CustomInput
 - فایل: custom-input.tsx
-- Demo: CustomInputDemo
+- Demo: CustomInputDemo (فقط یک مثال ساده)
 - Registry: custom-input
 - Documentation: custom-input.mdx
 ```
 
 ## ✅ چک‌لیست نهایی
 
-- [ ] فایل demo ساخته شده
+- [ ] فایل demo ساده ساخته شده
 - [ ] Registry config آپدیت شده
 - [ ] داکیومنت MDX ایجاد شده
 - [ ] Build script اجرا شده
@@ -222,58 +217,18 @@ npx tsx scripts/build-registry.ts
 
 ## 🎨 راهنمای ساخت Demo
 
-### ساختار Demo کامل:
+### ساختار Demo ساده:
 
 ```typescript
 export function [ComponentName]Demo() {
   return (
-    <div className="space-y-6">
-      {/* 1. Basic Usage */}
+    <div className="space-y-4">
+      {/* Basic Usage */}
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">Basic Usage</h3>
         <div className="p-4 border rounded-lg">
           <[ComponentName]>
             Real content here
-          </[ComponentName]>
-        </div>
-      </div>
-
-      {/* 2. Variants */}
-      <div className="space-y-2">
-        <h3 className="text-lg font-semibold">Variants</h3>
-        <div className="flex gap-2 flex-wrap">
-          <[ComponentName] variant="default">Default</[ComponentName]>
-          <[ComponentName] variant="secondary">Secondary</[ComponentName]>
-        </div>
-      </div>
-
-      {/* 3. Sizes */}
-      <div className="space-y-2">
-        <h3 className="text-lg font-semibold">Sizes</h3>
-        <div className="flex gap-2 items-center">
-          <[ComponentName] size="sm">Small</[ComponentName]>
-          <[ComponentName] size="md">Medium</[ComponentName]>
-        </div>
-      </div>
-
-      {/* 4. States */}
-      <div className="space-y-2">
-        <h3 className="text-lg font-semibold">States</h3>
-        <div className="flex gap-2">
-          <[ComponentName] disabled>Disabled</[ComponentName]>
-          <[ComponentName] loading>Loading</[ComponentName]>
-        </div>
-      </div>
-
-      {/* 5. Interactive */}
-      <div className="space-y-2">
-        <h3 className="text-lg font-semibold">Interactive</h3>
-        <div className="p-4 border rounded-lg space-y-4">
-          <Button onClick={() => {/* real logic */}}>
-            Click me
-          </Button>
-          <[ComponentName]>
-            Interactive content
           </[ComponentName]>
         </div>
       </div>
@@ -292,7 +247,7 @@ export function [ComponentName]Demo() {
 - **هرگز از بخش Installation استفاده نکن** - فقط Usage با import statement
 - **Demo ها باید محتوای واقعی داشته باشند** - نه فقط placeholder
 - **همیشه فولدرسازی کن** - هر کامپوننت فولدر جداگانه داشته باشه
-- **هر مثال باید عنوان و توضیح داشته باشه**
+- **فقط یک مثال ساده و کاربردی بساز** - نیازی به variants نیست
 
 ---
 

@@ -1,0 +1,177 @@
+---
+title: Pagination
+description: A smart pagination component with intelligent page range display and navigation controls
+component: true
+links:
+  doc: https://ui.shadcn.com/docs/components/pagination
+  api: https://ui.shadcn.com/docs/components/pagination#api-reference
+---
+
+<ComponentPreview
+  name="pagination"
+  description="A smart pagination component with intelligent page range display"
+  align="center"
+/>
+
+## Usage
+
+The component is already available in your project. You can use it by importing:
+
+```tsx
+import { CustomPagination } from "@workspace/custom-ui"
+```
+
+<ComponentSource
+  name="pagination"
+  title="components/pagination.tsx"
+/>
+
+## Variants
+
+<ComponentPreview
+  name="pagination-variants"
+  description="Different pagination scenarios and page count variations"
+/>
+
+## Features
+
+### Smart Page Range Display
+
+The pagination component intelligently displays page numbers based on the total number of pages:
+
+- **≤6 pages**: Shows all page numbers
+- **>6 pages**: Shows first page, current page range, and last page with ellipsis
+
+### Navigation Controls
+
+- **Previous/Next buttons**: Navigate between pages
+- **Page numbers**: Direct navigation to specific pages
+- **Ellipsis**: Indicates hidden pages when there are many pages
+
+### Responsive Design
+
+- Adapts to different screen sizes
+- Maintains usability on mobile devices
+- Clean and modern appearance
+
+## Examples
+
+### Basic Usage
+
+```tsx
+import { CustomPagination } from "@workspace/custom-ui"
+
+function MyComponent() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = 10
+
+  return (
+    <CustomPagination
+      totalPages={totalPages}
+      currentPage={currentPage}
+      onPageChange={setCurrentPage}
+    />
+  )
+}
+```
+
+### With Data Loading
+
+```tsx
+import { CustomPagination } from "@workspace/custom-ui"
+
+function ProductList() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [products, setProducts] = useState([])
+  const [totalPages, setTotalPages] = useState(1)
+
+  const handlePageChange = async (page: number) => {
+    setCurrentPage(page)
+    // Load data for the new page
+    const data = await fetchProducts(page)
+    setProducts(data.products)
+    setTotalPages(data.totalPages)
+  }
+
+  return (
+    <div>
+      {/* Product list */}
+      <div className="grid grid-cols-3 gap-4">
+        {products.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+      
+      {/* Pagination */}
+      <CustomPagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
+    </div>
+  )
+}
+```
+
+### With URL State
+
+```tsx
+import { CustomPagination } from "@workspace/custom-ui"
+import { useRouter, useSearchParams } from "next/navigation"
+
+function SearchResults() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const currentPage = parseInt(searchParams.get('page') || '1')
+  const totalPages = 25
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams)
+    params.set('page', page.toString())
+    router.push(`?${params.toString()}`)
+  }
+
+  return (
+    <CustomPagination
+      totalPages={totalPages}
+      currentPage={currentPage}
+      onPageChange={handlePageChange}
+    />
+  )
+}
+```
+
+## API Reference
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `totalPages` | `number` | - | Total number of pages |
+| `currentPage` | `number` | - | Current active page (1-based) |
+| `onPageChange` | `(page: number) => void` | - | Callback function called when page changes |
+
+## Styling
+
+The component uses Tailwind CSS classes and can be customized by modifying the component styles. The main classes used are:
+
+- `Pagination`: Main container with full width
+- `PaginationContent`: Content wrapper with full width
+- `PaginationItem`: Individual page item container
+- `PaginationLink`: Clickable page number
+- `PaginationPrevious/Next`: Navigation buttons
+- `PaginationEllipsis`: Ellipsis indicator
+
+## Best Practices
+
+1. **Always provide totalPages**: Make sure to calculate the total number of pages correctly
+2. **Handle loading states**: Show loading indicators while fetching new page data
+3. **URL synchronization**: Consider syncing pagination state with URL parameters
+4. **Accessibility**: The component includes proper ARIA attributes for screen readers
+5. **Mobile optimization**: Test on mobile devices to ensure good usability
+
+## Common Use Cases
+
+- **Product catalogs**: Paginate through product listings
+- **Search results**: Navigate through search result pages
+- **Data tables**: Paginate large datasets
+- **Blog posts**: Navigate through article listings
+- **User management**: Paginate user lists in admin panels
