@@ -11,6 +11,11 @@
       "title": "Modal",
       "href": "/docs/custom-ui/modal",
       "description": "A comprehensive modal system with dialog and responsive variants"
+    },
+    {
+      "title": "Form Components",
+      "href": "/docs/custom-ui/form",
+      "description": "Complete form system with React Hook Form integration, validation, and formatting"
     }
   ]
 }

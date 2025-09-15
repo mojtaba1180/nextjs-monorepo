@@ -1,0 +1,455 @@
+---
+title: Form Components
+description: Complete form system with React Hook Form integration, validation, formatting, and error handling
+component: true
+links:
+  doc: https://react-hook-form.com/
+  api: https://react-hook-form.com/docs/api/useform
+---
+
+<ComponentPreview
+  name="form"
+  description="Complete form system with React Hook Form integration"
+  align="center"
+/>
+
+## Usage
+
+The form components are already available in your project. You can use them by importing:
+
+```tsx
+import { 
+  FormProvider, 
+  RHFInput, 
+  RHFTextarea, 
+  RHFSelect, 
+  RHFCheckbox, 
+  RHFButton,
+  validationRules,
+  commonValidations 
+} from "@workspace/custom-ui"
+```
+
+## Basic Example
+
+```tsx
+import { useForm } from "react-hook-form"
+import { FormProvider, RHFInput, RHFButton } from "@workspace/custom-ui"
+
+export function BasicForm() {
+  const methods = useForm({
+    defaultValues: {
+      name: "",
+      email: ""
+    }
+  })
+
+  const onSubmit = (data: any) => {
+    console.log("Form submitted:", data)
+  }
+
+  return (
+    <FormProvider methods={methods} onSubmit={methods.handleSubmit(onSubmit)}>
+      <RHFInput
+        name="name"
+        label="Full Name"
+        placeholder="Enter your name"
+        required
+        {...commonValidations.name}
+      />
+      
+      <RHFInput
+        name="email"
+        label="Email"
+        type="email"
+        placeholder="Enter your email"
+        required
+        {...commonValidations.email}
+      />
+      
+      <RHFButton type="submit">
+        Submit
+      </RHFButton>
+    </FormProvider>
+  )
+}
+```
+
+<ComponentSource
+  name="form"
+  title="components/form.tsx"
+/>
+
+## Variants
+
+<ComponentPreview
+  name="form-variants"
+  description="Different form component variants and layouts"
+/>
+
+## Components
+
+### FormProvider
+
+The main wrapper component that provides React Hook Form context to all child components.
+
+```tsx
+<FormProvider 
+  methods={methods} 
+  onSubmit={methods.handleSubmit(onSubmit)}
+  className="space-y-4"
+>
+  {/* Form fields */}
+</FormProvider>
+```
+
+### RHFInput
+
+A versatile input component with built-in validation and formatting support.
+
+```tsx
+<RHFInput
+  name="email"
+  label="Email Address"
+  type="email"
+  placeholder="Enter your email"
+  required
+  mode="email" // Special formatting modes
+  helperText="We'll never share your email"
+  {...validationRules.email()}
+/>
+```
+
+#### Input Modes
+
+- `card`: Formats input as card number (1234 5678 9012 3456)
+- `phone`: Formats input as phone number (Iranian format)
+- `currency`: Formats input as currency
+
+### RHFTextarea
+
+A textarea component with character counting and validation.
+
+```tsx
+<RHFTextarea
+  name="message"
+  label="Message"
+  placeholder="Enter your message"
+  rows={4}
+  maxLength={500}
+  showCharCount
+  helperText="Maximum 500 characters"
+/>
+```
+
+### RHFSelect
+
+A select component with options support.
+
+```tsx
+<RHFSelect
+  name="country"
+  label="Country"
+  placeholder="Select your country"
+  options={[
+    { value: "iran", label: "Iran" },
+    { value: "usa", label: "United States" },
+    { value: "uk", label: "United Kingdom", disabled: true }
+  ]}
+  required
+/>
+```
+
+### RHFCheckbox
+
+A checkbox component with label and validation support.
+
+```tsx
+<RHFCheckbox
+  name="newsletter"
+  label="Subscribe to newsletter"
+  helperText="Receive updates about our products"
+/>
+```
+
+### RHFButton
+
+A button component that integrates with form state.
+
+```tsx
+<RHFButton 
+  type="submit"
+  loadingText="Submitting..."
+>
+  Submit Form
+</RHFButton>
+```
+
+## Validation
+
+### Built-in Validation Rules
+
+```tsx
+import { validationRules, commonValidations } from "@workspace/custom-ui"
+
+// Individual rules
+<RHFInput
+  name="email"
+  {...validationRules.email("Custom error message")}
+/>
+
+<RHFInput
+  name="password"
+  {...validationRules.password()}
+/>
+
+<RHFInput
+  name="phone"
+  {...validationRules.iranianPhone()}
+/>
+
+// Common validation combinations
+<RHFInput
+  name="email"
+  {...commonValidations.email}
+/>
+
+<RHFInput
+  name="name"
+  {...commonValidations.name}
+/>
+```
+
+### Available Validation Rules
+
+- `required`: Field is required
+- `email`: Email format validation
+- `minLength`: Minimum character length
+- `maxLength`: Maximum character length
+- `min`: Minimum numeric value
+- `max`: Maximum numeric value
+- `pattern`: Custom regex pattern
+- `phone`: Phone number validation
+- `iranianPhone`: Iranian phone number validation
+- `url`: URL format validation
+- `password`: Strong password validation
+
+### Common Validations
+
+Pre-configured validation combinations:
+
+- `commonValidations.email`: Email validation
+- `commonValidations.password`: Strong password validation
+- `commonValidations.name`: Name validation (2-50 characters)
+- `commonValidations.phone`: Iranian phone validation
+- `commonValidations.url`: URL validation
+
+## Formatting
+
+### Input Formatting
+
+```tsx
+// Card number formatting
+<RHFInput
+  name="cardNumber"
+  mode="card"
+  placeholder="1234 5678 9012 3456"
+/>
+
+// Phone number formatting (Iranian)
+<RHFInput
+  name="phone"
+  mode="phone"
+  placeholder="0912 345 6789"
+/>
+
+// Currency formatting
+<RHFInput
+  name="amount"
+  mode="currency"
+  placeholder="0"
+/>
+```
+
+### Custom Formatting
+
+```tsx
+import { formatters } from "@workspace/custom-ui"
+
+// Use formatters in your custom components
+const formattedValue = formatters.cardNumber("1234567890123456")
+// Result: "1234 5678 9012 3456"
+```
+
+## Error Handling
+
+The form components automatically handle validation errors and display them below each field. They also integrate with the global error context for server-side errors.
+
+```tsx
+// Validation errors are shown automatically
+<RHFInput
+  name="email"
+  required
+  {...validationRules.email()}
+/>
+// Shows: "This field is required" or "Please enter a valid email address"
+
+// Global errors from server are also displayed
+// when ErrorProvider is available in the component tree
+```
+
+## API Reference
+
+### FormProvider Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| methods | UseFormReturn | - | React Hook Form methods object |
+| onSubmit | function | - | Form submit handler |
+| className | string | - | Additional CSS classes |
+| children | ReactNode | - | Form content |
+
+### RHFInput Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| name | string | - | Field name (required) |
+| type | string | "text" | Input type |
+| mode | "card" \| "phone" \| "currency" | - | Special formatting mode |
+| label | string | - | Field label |
+| helperText | string | - | Helper text below field |
+| required | boolean | false | Whether field is required |
+| placeholder | string | - | Input placeholder |
+| disabled | boolean | false | Whether input is disabled |
+| className | string | - | Additional CSS classes |
+
+### RHFTextarea Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| name | string | - | Field name (required) |
+| label | string | - | Field label |
+| helperText | string | - | Helper text below field |
+| required | boolean | false | Whether field is required |
+| maxLength | number | - | Maximum character length |
+| showCharCount | boolean | false | Show character counter |
+| rows | number | 3 | Number of textarea rows |
+| disabled | boolean | false | Whether textarea is disabled |
+| className | string | - | Additional CSS classes |
+
+### RHFSelect Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| name | string | - | Field name (required) |
+| label | string | - | Field label |
+| placeholder | string | "Select an option..." | Select placeholder |
+| options | Option[] | - | Array of select options |
+| helperText | string | - | Helper text below field |
+| required | boolean | false | Whether field is required |
+| disabled | boolean | false | Whether select is disabled |
+| className | string | - | Additional CSS classes |
+
+### RHFCheckbox Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| name | string | - | Field name (required) |
+| label | string | - | Checkbox label |
+| helperText | string | - | Helper text below field |
+| required | boolean | false | Whether field is required |
+| disabled | boolean | false | Whether checkbox is disabled |
+| className | string | - | Additional CSS classes |
+| labelClassName | string | - | Additional CSS classes for label |
+
+### RHFButton Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| type | "button" \| "submit" \| "reset" | "button" | Button type |
+| loading | boolean | false | Whether button is in loading state |
+| loadingText | string | "Loading..." | Text shown when loading |
+| disabled | boolean | false | Whether button is disabled |
+| children | ReactNode | - | Button content |
+| className | string | - | Additional CSS classes |
+| onClick | function | - | Click handler |
+
+## Advanced Usage
+
+### Custom Validation
+
+```tsx
+<RHFInput
+  name="customField"
+  validate={(value) => {
+    if (value.length < 5) {
+      return "Must be at least 5 characters"
+    }
+    return true
+  }}
+/>
+```
+
+### Combining Validations
+
+```tsx
+import { combineValidations } from "@workspace/custom-ui"
+
+<RHFInput
+  name="email"
+  {...combineValidations(
+    validationRules.required(),
+    validationRules.email(),
+    validationRules.minLength(5)
+  )}
+/>
+```
+
+### Form with Reset
+
+```tsx
+const methods = useForm({
+  defaultValues: {
+    name: "",
+    email: ""
+  }
+})
+
+const handleReset = () => {
+  methods.reset()
+}
+
+<FormProvider methods={methods} onSubmit={methods.handleSubmit(onSubmit)}>
+  <RHFInput name="name" label="Name" />
+  <RHFInput name="email" label="Email" />
+  
+  <div className="flex gap-2">
+    <RHFButton type="submit">Submit</RHFButton>
+    <RHFButton type="button" onClick={handleReset}>Reset</RHFButton>
+  </div>
+</FormProvider>
+```
+
+### Dynamic Form Fields
+
+```tsx
+const [fields, setFields] = useState([{ id: 1, name: "" }])
+
+const addField = () => {
+  setFields([...fields, { id: Date.now(), name: "" }])
+}
+
+<FormProvider methods={methods} onSubmit={methods.handleSubmit(onSubmit)}>
+  {fields.map((field) => (
+    <RHFInput
+      key={field.id}
+      name={`field_${field.id}`}
+      label={`Field ${field.id}`}
+    />
+  ))}
+  
+  <RHFButton type="button" onClick={addField}>
+    Add Field
+  </RHFButton>
+</FormProvider>
+```

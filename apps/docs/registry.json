@@ -75,6 +75,44 @@
         "title": "Custom Button Variants",
         "description": "Demonstration of different custom button variants and sizes."
       }
+    },
+    {
+      "name": "form",
+      "description": "React Hook Form components with validation and formatting",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/custom-ui/form/form.tsx",
+          "type": "registry:component",
+          "target": "components/form.tsx"
+        }
+      ],
+      "categories": [
+        "components"
+      ],
+      "meta": {
+        "title": "Form Components",
+        "description": "Complete form system with RHF integration, validation, formatting, and error handling."
+      }
+    },
+    {
+      "name": "form-variants",
+      "description": "Form components variants demonstration",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/custom-ui/form/form-variants.tsx",
+          "type": "registry:component",
+          "target": "components/form-variants.tsx"
+        }
+      ],
+      "categories": [
+        "components"
+      ],
+      "meta": {
+        "title": "Form Variants",
+        "description": "Demonstration of different form component variants and layouts."
+      }
     }
   ]
 }

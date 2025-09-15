@@ -78,4 +78,40 @@ export const Index: Record<string, any> = {
     categories: ["components"],
     meta: {"title":"Custom Button Variants","description":"Demonstration of different custom button variants and sizes."},
   },
+  "form": {
+    name: "form",
+    description: "React Hook Form components with validation and formatting",
+    type: "registry:component",
+    registryDependencies: undefined,
+    files: [{
+      path: "registry/custom-ui/form/form.tsx",
+      type: "registry:component",
+      target: "components/form.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/custom-ui/form/form.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "form"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["components"],
+    meta: {"title":"Form Components","description":"Complete form system with RHF integration, validation, formatting, and error handling."},
+  },
+  "form-variants": {
+    name: "form-variants",
+    description: "Form components variants demonstration",
+    type: "registry:component",
+    registryDependencies: undefined,
+    files: [{
+      path: "registry/custom-ui/form/form-variants.tsx",
+      type: "registry:component",
+      target: "components/form-variants.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/custom-ui/form/form-variants.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "form-variants"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["components"],
+    meta: {"title":"Form Variants","description":"Demonstration of different form component variants and layouts."},
+  },
   }
