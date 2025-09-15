@@ -6,7 +6,6 @@ export default defineConfig({
     types: "src/types/index.ts",
     utils: "src/utils/index.ts",
     providers: "src/providers/index.ts",
-    "routes/products": "src/routes/products/index.ts",
   },
   format: ["cjs", "esm"],
   dts: true,

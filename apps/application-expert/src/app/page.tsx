@@ -1,20 +1,26 @@
 "use client"
 
 import { Button } from "@workspace/ui/components/button"
-import { useProductsQuery, useCreateProductMutation } from "@workspace/framework"
+import { useGenericQuery, useGenericMutation } from "@workspace/framework"
 import { useState } from "react"
 
 export default function Page() {
   const [showProducts, setShowProducts] = useState(false)
   
   // استفاده از framework hooks
-  const { data: products, isLoading, error } = useProductsQuery({
-    pageNo: 1,
-    rowCount: 5,
-    isActive: true,
-  })
+  const { data: products, isLoading, error } = useGenericQuery(
+    () => fetch('/api/products').then(res => res.json()),
+    ['products']
+  )
 
-  const createProduct = useCreateProductMutation()
+  const createProduct = useGenericMutation(
+    (productData) => fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(productData)
+    }).then(res => res.json()),
+    ['products']
+  )
 
   const handleCreateProduct = async () => {
     try {
@@ -70,12 +76,12 @@ export default function Page() {
             
             {products && (
               <div className="grid gap-4">
-                {products.data?.entries.length === 0 ? (
+                {products.length === 0 ? (
                   <p className="text-center py-8 text-gray-500">
                     No products found. Create one using the button above!
                   </p>
                 ) : (
-                  products.data?.entries.map((product) => (
+                  products.map((product: any) => (
                     <div key={product.id} className="border rounded-lg p-4">
                       <h3 className="font-semibold">{product.name}</h3>
                       <p className="text-gray-600">{product.description}</p>

@@ -1,36 +1,41 @@
-# Framework Package
+# 🚀 Framework Package
 
-یک پکیج framework کامل برای مدیریت API calls، data fetching و state management در monorepo.
+پکیج framework کامل برای مدیریت API calls، data fetching و state management در monorepo.
 
-## ویژگی‌ها
+## ✨ ویژگی‌های کلیدی
 
-- ✅ **TypeScript کامل** - تمام تایپ‌ها و interfaceها
-- ✅ **React Query integration** - کش هوشمند و background updates
-- ✅ **HTTP Client مرکزی** - مدیریت token و error handling
-- ✅ **Generic Hooks** - قابلیت استفاده مجدد
-- ✅ **Provider Pattern** - آسان برای setup
-- ✅ **Route Structure** - سازماندهی منظم API calls
+- **🔧 TypeScript کامل** - تمام تایپ‌ها و interfaceها
+- **⚡ React Query integration** - کش هوشمند و background updates
+- **🌐 HTTP Client مرکزی** - مدیریت token و error handling
+- **🔄 Generic Hooks** - قابلیت استفاده مجدد
+- **📦 Provider Pattern** - آسان برای setup
+- **🗂️ Route Structure** - سازماندهی منظم API calls
 
-## نصب
+## 🏗️ ساختار کلی
 
+```
+packages/framework/
+├── src/
+│   ├── types/           # Core types و base response types
+│   ├── utils/           # HTTP client، endpoints، generic hooks
+│   ├── providers/       # Framework provider اصلی
+│   └── index.ts         # Main exports
+├── dist/                # Built files
+└── README.md
+```
+
+## 🚀 شروع سریع
+
+### 1. نصب
 ```bash
-# در هر app که می‌خواهید استفاده کنید
 pnpm add @workspace/framework
 ```
 
-## استفاده
-
-### 1. Setup Provider
-
+### 2. Setup Provider
 ```tsx
-// app/layout.tsx یا _app.tsx
-import { FrameworkProvider } from "@workspace/framework/providers";
+import { FrameworkProvider } from "@workspace/framework";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }) {
   return (
     <FrameworkProvider>
       {children}
@@ -39,116 +44,74 @@ export default function RootLayout({
 }
 ```
 
-### 2. استفاده از Hooks
-
+### 3. استفاده از Hooks
 ```tsx
-// components/ProductList.tsx
-import { useProductsQuery, useCreateProductMutation } from "@workspace/framework/routes/products";
+import { useGenericQuery, useGenericMutation } from "@workspace/framework";
 
-export function ProductList() {
-  const { data, isLoading, error } = useProductsQuery({
-    pageNo: 1,
-    rowCount: 10,
-    isActive: true,
-  });
-
-  const createProduct = useCreateProductMutation();
-
-  const handleCreate = async () => {
-    await createProduct.mutateAsync({
-      name: "New Product",
-      description: "Product description",
-      price: 100,
-      categoryId: "cat-1",
-    });
-  };
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
-  return (
-    <div>
-      {data?.entries.map((product) => (
-        <div key={product.id}>{product.name}</div>
-      ))}
-      <button onClick={handleCreate}>Create Product</button>
-    </div>
+function MyComponent() {
+  const { data, isLoading, error } = useGenericQuery(
+    () => fetch('/api/users'),
+    ['users']
   );
+
+  const createUser = useGenericMutation(
+    (userData) => fetch('/api/users', {
+      method: 'POST',
+      body: JSON.stringify(userData)
+    }),
+    ['users']
+  );
+
+  // استفاده از data و mutations...
 }
 ```
 
-## ساختار
+## 📚 داکیومنت‌اسیون کامل
 
-```
-packages/framework/
-├── src/
-│   ├── types/           # Core types
-│   ├── utils/           # HTTP client, endpoints, generic hooks
-│   ├── providers/       # Framework provider
-│   ├── routes/          # API route implementations
-│   │   └── products/    # Example route
-│   │       ├── type.ts  # Route-specific types
-│   │       ├── get.ts   # GET functions
-│   │       ├── post.ts  # POST/PUT functions
-│   │       ├── delete.ts # DELETE functions
-│   │       ├── query.ts # React Query hooks
-│   │       └── index.ts # Exports
-│   └── index.ts         # Main exports
-├── package.json
-├── tsconfig.json
-└── tsup.config.ts
-```
+برای راهنمای کامل و مثال‌های عملی، به داکیومنت‌اسیون مراجعه کنید:
 
-## افزودن Route جدید
+**[📖 داکیومنت‌اسیون Framework Package](../../apps/docs/content/docs/framework/)**
 
-### 1. ایجاد پوشه Route
+## 🔧 Core Components
 
-```bash
-mkdir packages/framework/src/routes/users
-```
-
-### 2. ایجاد فایل‌های مورد نیاز
-
+### Types
 ```typescript
-// type.ts
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-}
-
-// get.ts
-export function GetUsersList(): Promise<APIHttpType<IUser[]>> {
-  return APIHttp.get(API_ENDPOINTS.USERS.LIST);
-}
-
-// post.ts
-export function CreateUser(userData: ICreateUserRequest): Promise<APIHttpType<IUser>> {
-  return APIHttp.post(API_ENDPOINTS.USERS.CREATE, userData);
-}
-
-// query.ts
-export const useUsersQuery = () =>
-  useGenericQuery(GetUsersList, ["get-users-list"]);
-
-export const useCreateUserMutation = () =>
-  useGenericMutation(CreateUser, ["get-users-list"]);
+import { 
+  BaseResponseType, 
+  PaginatedResponse, 
+  APIHttpType, 
+  APIHttpPaginatedType,
+  HookOptions,
+  MutationOptions 
+} from "@workspace/framework";
 ```
 
-### 3. Export در index.ts
-
+### Utils
 ```typescript
-// routes/users/index.ts
-export * from "./type";
-export * from "./get";
-export * from "./post";
-export * from "./query";
+import { 
+  API_ENDPOINTS, 
+  APIHttp,
+  useGenericQuery,
+  useGenericQueryWithParams,
+  useGenericMutation,
+  useGenericMutationWithOptimisticUpdate 
+} from "@workspace/framework";
 ```
 
-## قوانین استفاده
+### Providers
+```typescript
+import { FrameworkProvider, useQueryClient } from "@workspace/framework";
+```
+
+## 🎯 افزودن Endpoint جدید
+
+برای افزودن endpoint جدید، از prompt آماده استفاده کنید:
+
+**[➕ افزودن Endpoint جدید](../../prompts/docs/add-endpoint/)**
+
+## 🔄 قوانین استفاده
 
 ### ✅ باید انجام دهید:
-
 1. **همیشه از `API_ENDPOINTS` استفاده کنید**
 2. **توابع خام در `get.ts`/`post.ts`**
 3. **هوک‌ها در `query.ts`**
@@ -156,33 +119,15 @@ export * from "./query";
 5. **استفاده از generic hooks**
 
 ### ❌ نباید انجام دهید:
-
 1. **هاردکد endpoint** - `APIHttp.get("/users")` ❌
 2. **مستقیم APIHttp در UI** - فقط از hooks استفاده کنید
 3. **تایپ any** - همیشه interface تعریف کنید
 4. **Query key تکراری**
 
-## Environment Variables
+## 🎯 نتیجه
 
-```env
-NEXT_PUBLIC_REST_API_ENDPOINT=https://api.example.com
-```
+Framework package یک راه‌حل کامل و استاندارد برای مدیریت API calls در monorepo است که باعث می‌شود کد تمیز، قابل نگهداری و قابل توسعه باشد.
 
-## Dependencies
+---
 
-- `axios` - HTTP client
-- `@tanstack/react-query` - Data fetching
-- `react` - React hooks
-- `react-dom` - React DOM
-
-## Build
-
-```bash
-pnpm build
-```
-
-## Development
-
-```bash
-pnpm dev
-```
+**آماده‌اید شروع کنید؟ [داکیومنت‌اسیون](../../apps/docs/content/docs/framework/) را مطالعه کنید! 🚀**

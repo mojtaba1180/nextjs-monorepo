@@ -18,10 +18,6 @@
     "./providers": {
       "types": "./dist/providers/index.d.ts",
       "default": "./dist/providers/index.js"
-    },
-    "./routes/products": {
-      "types": "./dist/routes/products.d.ts",
-      "default": "./dist/routes/products.js"
     }
   },
   "scripts": {
