@@ -1,13 +1,5 @@
 "use client"
 
-import React from "react"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@workspace/ui/components/dialog"
 import {
   Drawer,
   DrawerContent,
@@ -18,6 +10,7 @@ import {
 import { ModalConfig } from "../../types/modal"
 import { cn } from "@workspace/ui/lib/utils"
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile"
+import { DialogModal } from "./dialog-modal"
 
 interface ResponsiveModalProps {
   config: ModalConfig
@@ -25,13 +18,6 @@ interface ResponsiveModalProps {
   onClose: () => void
 }
 
-const sizeClasses = {
-  sm: "max-w-sm",
-  md: "max-w-md", 
-  lg: "max-w-lg",
-  xl: "max-w-xl",
-  full: "max-w-full mx-4"
-}
 
 export function ResponsiveModal({ config, isOpen, onClose }: ResponsiveModalProps) {
   const { title, description, view, size = "md", closable = true, className } = config
@@ -43,7 +29,7 @@ export function ResponsiveModal({ config, isOpen, onClose }: ResponsiveModalProp
       <Drawer open={isOpen} onOpenChange={closable ? onClose : undefined}>
         <DrawerContent className={cn("max-h-[85vh]", className)}>
           {(title || description) && (
-            <DrawerHeader className="text-left">
+            <DrawerHeader className=" rtl:text-right ltr:text-left">
               {title && <DrawerTitle>{title}</DrawerTitle>}
               {description && <DrawerDescription>{description}</DrawerDescription>}
             </DrawerHeader>
@@ -56,25 +42,12 @@ export function ResponsiveModal({ config, isOpen, onClose }: ResponsiveModalProp
     )
   }
 
-  // Desktop: Use Dialog
+  // Desktop: Use DialogModal
   return (
-    <Dialog open={isOpen} onOpenChange={closable ? onClose : undefined}>
-      <DialogContent 
-        className={cn(
-          sizeClasses[size],
-          className
-        )}
-      >
-        {(title || description) && (
-          <DialogHeader>
-            {title && <DialogTitle>{title}</DialogTitle>}
-            {description && <DialogDescription>{description}</DialogDescription>}
-          </DialogHeader>
-        )}
-        <div className="mt-4">
-          {view}
-        </div>
-      </DialogContent>
-    </Dialog>
+    <DialogModal 
+      config={config}
+      isOpen={isOpen}
+      onClose={onClose}
+    />
   )
 }

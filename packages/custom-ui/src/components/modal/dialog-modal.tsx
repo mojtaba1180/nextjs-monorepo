@@ -18,11 +18,11 @@ interface DialogModalProps {
 }
 
 const sizeClasses = {
-  sm: "max-w-sm",
-  md: "max-w-md", 
-  lg: "max-w-lg",
-  xl: "max-w-xl",
-  full: "max-w-full mx-4"
+  sm: "!max-w-sm",
+  md: "!max-w-md", 
+  lg: "!max-w-lg",
+  xl: "!max-w-xl",
+  full: "!max-w-full mx-4"
 }
 
 export function DialogModal({ config, isOpen, onClose }: DialogModalProps) {
