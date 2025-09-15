@@ -2,6 +2,8 @@
 
 A comprehensive monorepo framework built on top of shadcn/ui with custom components, API management, and development tools.
 
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 ## 🚀 Features
 
 - **🎨 Custom UI Components** - Enhanced components built on shadcn/ui
@@ -50,3 +52,15 @@ pnpm dev
 # Build all packages
 pnpm build
 ```
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+## 📞 Support
+
+If you have any questions or need help, please open an issue on GitHub.
