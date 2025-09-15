@@ -1,0 +1,210 @@
+---
+title: Framework Package
+description: پکیج framework کامل برای مدیریت API calls، data fetching و state management در monorepo
+---
+
+# 🚀 Framework Package
+
+پکیج framework یک راه‌حل کامل و استاندارد برای مدیریت API calls، data fetching و state management در تمام پروژه‌های monorepo است.
+
+## ✨ ویژگی‌های کلیدی
+
+- **🔧 TypeScript کامل** - تمام تایپ‌ها و interfaceها
+- **⚡ React Query integration** - کش هوشمند و background updates
+- **🌐 HTTP Client مرکزی** - مدیریت token و error handling
+- **🔄 Generic Hooks** - قابلیت استفاده مجدد
+- **📦 Provider Pattern** - آسان برای setup
+- **🗂️ Route Structure** - سازماندهی منظم API calls
+
+## 🏗️ ساختار کلی
+
+```
+packages/framework/
+├── src/
+│   ├── types/           # Core types و base response types
+│   ├── utils/           # HTTP client، endpoints، generic hooks
+│   ├── providers/       # Framework provider اصلی
+│   ├── routes/          # API route implementations
+│   │   └── products/    # مثال کامل route structure
+│   └── index.ts         # Main exports
+├── dist/                # Built files
+└── README.md
+```
+
+## 🎯 مزایای استفاده
+
+### 1. **مرکزی‌سازی**
+تمام endpointها در یک فایل مرکزی (`api-endpoints.ts`) تعریف می‌شوند و هیچ endpoint هاردکد نمی‌شود.
+
+### 2. **تایپ‌سفتی**
+تمام API calls با TypeScript کامل پوشش داده شده‌اند و هیچ `any` type استفاده نمی‌شود.
+
+### 3. **قابلیت استفاده مجدد**
+Generic hooks برای تمام انواع API calls (GET, POST, PUT, DELETE) قابل استفاده مجدد هستند.
+
+### 4. **مدیریت خطا**
+Interceptors مرکزی برای مدیریت خطاها، token handling و notifications.
+
+### 5. **کش هوشمند**
+React Query برای کش هوشمند، background updates و optimistic updates.
+
+### 6. **سازماندهی**
+ساختار منظم و قابل پیش‌بینی برای تمام API routes.
+
+## 🚀 شروع سریع
+
+### 1. نصب
+```bash
+pnpm add @workspace/framework
+```
+
+### 2. Setup Provider
+```tsx
+import { FrameworkProvider } from "@workspace/framework";
+
+export default function RootLayout({ children }) {
+  return (
+    <FrameworkProvider>
+      {children}
+    </FrameworkProvider>
+  );
+}
+```
+
+### 3. استفاده از Hooks
+```tsx
+import { useProductsQuery, useCreateProductMutation } from "@workspace/framework";
+
+function ProductList() {
+  const { data, isLoading, error } = useProductsQuery({
+    pageNo: 1,
+    rowCount: 10,
+  });
+
+  const createProduct = useCreateProductMutation();
+
+  // استفاده از data و mutations...
+}
+```
+
+## 📚 بخش‌های مختلف
+
+### [🔧 Setup & Installation](./setup)
+راهنمای کامل نصب و راه‌اندازی framework package
+
+### [📖 Usage Guide](./usage)
+راهنمای استفاده از hooks و API calls
+
+### [🏗️ Route Structure](./route-structure)
+ساختار و سازماندهی API routes
+
+### [➕ Adding New Endpoints](./adding-endpoints)
+راهنمای افزودن endpoint جدید
+
+### [🎯 Examples](./examples)
+مثال‌های عملی و کاربردی
+
+### [📋 API Reference](./api-reference)
+مرجع کامل API و types
+
+## 🎨 مثال کامل
+
+```tsx
+"use client"
+
+import { Button } from "@workspace/ui/components/button"
+import { useProductsQuery, useCreateProductMutation } from "@workspace/framework"
+import { useState } from "react"
+
+export default function ProductManagement() {
+  const [showProducts, setShowProducts] = useState(false)
+  
+  // استفاده از framework hooks
+  const { data: products, isLoading, error } = useProductsQuery({
+    pageNo: 1,
+    rowCount: 5,
+    isActive: true,
+  })
+
+  const createProduct = useCreateProductMutation()
+
+  const handleCreateProduct = async () => {
+    try {
+      await createProduct.mutateAsync({
+        name: "Test Product",
+        description: "A test product created via framework",
+        price: 99.99,
+        categoryId: "cat-1",
+        isActive: true,
+      })
+      alert("Product created successfully!")
+    } catch (error) {
+      console.error("Failed to create product:", error)
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex gap-4">
+        <Button 
+          onClick={() => setShowProducts(!showProducts)}
+          variant="outline"
+        >
+          {showProducts ? "Hide" : "Show"} Products
+        </Button>
+        
+        <Button 
+          onClick={handleCreateProduct}
+          disabled={createProduct.isPending}
+        >
+          {createProduct.isPending ? "Creating..." : "Create Test Product"}
+        </Button>
+      </div>
+
+      {showProducts && (
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Products List</h2>
+          
+          {isLoading && <p>Loading products...</p>}
+          {error && <p className="text-red-500">Error: {error.message}</p>}
+          
+          {products && (
+            <div className="grid gap-4">
+              {products.data?.entries.map((product) => (
+                <div key={product.id} className="border rounded-lg p-4">
+                  <h3 className="font-semibold">{product.name}</h3>
+                  <p className="text-gray-600">{product.description}</p>
+                  <p className="text-green-600 font-medium">${product.price}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+## 🔄 قوانین استفاده
+
+### ✅ باید انجام دهید:
+1. **همیشه از `API_ENDPOINTS` استفاده کنید**
+2. **توابع خام در `get.ts`/`post.ts`**
+3. **هوک‌ها در `query.ts`**
+4. **تایپ‌ها در `type.ts`**
+5. **استفاده از generic hooks**
+
+### ❌ نباید انجام دهید:
+1. **هاردکد endpoint** - `APIHttp.get("/users")` ❌
+2. **مستقیم APIHttp در UI** - فقط از hooks استفاده کنید
+3. **تایپ any** - همیشه interface تعریف کنید
+4. **Query key تکراری**
+
+## 🎯 نتیجه
+
+Framework package یک راه‌حل کامل و استاندارد برای مدیریت API calls در monorepo است که باعث می‌شود کد تمیز، قابل نگهداری و قابل توسعه باشد.
+
+---
+
+**آماده‌اید شروع کنید؟ [راهنمای Setup](./setup) را مطالعه کنید! 🚀**

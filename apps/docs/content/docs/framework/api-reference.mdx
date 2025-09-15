@@ -1,0 +1,649 @@
+---
+title: API Reference
+description: مرجع کامل API و types در framework package
+---
+
+# 📋 API Reference
+
+مرجع کامل API، types و interfaces در framework package.
+
+## 🏗️ Core Types
+
+### BaseResponseType
+
+```typescript
+export type BaseResponseType<T> = {
+  result: { 
+    status: string; 
+    message: string; 
+  };
+  entries: Array<T>;
+};
+```
+
+### PaginatedResponse
+
+```typescript
+export type PaginatedResponse<T> = {
+  result: { 
+    status: string; 
+    message: string; 
+  };
+  entries: Array<T>;
+  metadata: { 
+    totalRows: number; 
+    pageCount: number; 
+  };
+};
+```
+
+### HTTP Response Types
+
+```typescript
+export type APIHttpType<T> = AxiosResponse<BaseResponseType<T>>;
+export type APIHttpPaginatedType<T> = AxiosResponse<PaginatedResponse<T> | null>;
+```
+
+### Common Parameters
+
+```typescript
+export interface PaginationParams {
+  pageNo?: number;
+  rowCount?: number;
+}
+
+export interface QueryParams extends PaginationParams {
+  search?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface HookOptions {
+  enabled?: boolean;
+  staleTime?: number;
+  gcTime?: number; // formerly cacheTime
+}
+
+export interface MutationOptions<TData, TVariables> {
+  onSuccess?: (data: TData, variables: TVariables) => void;
+  onError?: (error: Error, variables: TVariables) => void;
+}
+```
+
+## 🔧 Utils
+
+### API Endpoints
+
+```typescript
+// تمام endpointها در یک فایل مرکزی
+const API_ENDPOINTS = {
+  AUTH: {
+    LOGIN: "/auth/login",
+    LOGOUT: "/auth/logout",
+    REFRESH_TOKEN: "/auth/refresh",
+    // ...
+  },
+  USER: {
+    PROFILE: "/user/profile",
+    UPDATE_PROFILE: "/user/update-profile",
+    // ...
+  },
+  PRODUCTS: {
+    LIST: "/products",
+    CREATE: "/products",
+    UPDATE: "/products",
+    DELETE: "/products",
+    // ...
+  },
+  // ...
+} as const;
+```
+
+### HTTP Client
+
+```typescript
+// HTTP Client با interceptors
+const APIHttp = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_REST_API_ENDPOINT || "/api",
+  timeout: 70000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Request interceptor: اضافه کردن token
+// Response interceptor: مدیریت خطاها
+```
+
+### Generic Query Hooks
+
+```typescript
+// Generic query hook
+export const useGenericQuery = <TData, TError = Error>(
+  queryFn: () => Promise<TData>,
+  queryKey: readonly [string] | readonly [string, ...string[]],
+  options?: HookOptions & Omit<UseQueryOptions<TData, TError>, 'queryKey' | 'queryFn'>
+): UseQueryResult<TData, TError>
+
+// Generic query hook with parameters
+export const useGenericQueryWithParams = <TData, TParams = any, TError = Error>(
+  queryFn: (params: TParams) => Promise<TData>,
+  queryKey: readonly [string] | readonly [string, ...string[]],
+  params: TParams,
+  options?: HookOptions & Omit<UseQueryOptions<TData, TError>, 'queryKey' | 'queryFn'>
+): UseQueryResult<TData, TError>
+```
+
+### Generic Mutation Hooks
+
+```typescript
+// Generic mutation hook
+export const useGenericMutation = <TData, TVariables, TError = Error>(
+  mutationFn: (data: TVariables) => Promise<TData>,
+  queryKey: readonly string[],
+  options?: MutationOptions<TData, TVariables> & Omit<UseMutationOptions<TData, TError, TVariables>, 'mutationFn'>
+): UseMutationResult<TData, TError, TVariables>
+
+// Generic mutation hook with optimistic updates
+export const useGenericMutationWithOptimisticUpdate = <TData, TVariables, TError = Error>(
+  mutationFn: (data: TVariables) => Promise<TData>,
+  queryKey: readonly string[],
+  optimisticUpdateFn: (oldData: any, variables: TVariables) => any,
+  options?: MutationOptions<TData, TVariables> & Omit<UseMutationOptions<TData, TError, TVariables>, 'mutationFn'>
+): UseMutationResult<TData, TError, TVariables>
+```
+
+## 🏪 Products API
+
+### Types
+
+```typescript
+export interface IProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  categoryId: string;
+  categoryName: string;
+  imageUrl?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ICreateProductRequest {
+  name: string;
+  description: string;
+  price: number;
+  categoryId: string;
+  imageUrl?: string;
+  isActive?: boolean;
+}
+
+export interface IUpdateProductRequest {
+  id: string;
+  name?: string;
+  description?: string;
+  price?: number;
+  categoryId?: string;
+  imageUrl?: string;
+  isActive?: boolean;
+}
+
+export interface IProductListParams extends QueryParams {
+  categoryId?: string;
+  isActive?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+export interface IProductDetailParams {
+  id: string;
+}
+
+export interface IProductSearchParams extends QueryParams {
+  query: string;
+  categoryId?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+```
+
+### GET Functions
+
+```typescript
+// Get products list
+export function GetProductsList(
+  params?: IProductListParams
+): Promise<APIHttpPaginatedType<IProduct>>
+
+// Get single product
+export function GetProductDetail(
+  params: IProductDetailParams
+): Promise<APIHttpType<IProduct>>
+
+// Search products
+export function SearchProducts(
+  params: IProductSearchParams
+): Promise<APIHttpPaginatedType<IProduct>>
+
+// Get product categories
+export function GetProductCategories(
+  params?: ICategoryListParams
+): Promise<APIHttpPaginatedType<IProductCategory>>
+
+// Get product categories tree
+export function GetProductCategoriesTree(): Promise<APIHttpType<IProductCategory[]>>
+```
+
+### POST/PUT Functions
+
+```typescript
+// Create product
+export function CreateProduct(
+  productData: ICreateProductRequest
+): Promise<APIHttpType<IProduct>>
+
+// Update product
+export function UpdateProduct(
+  productData: IUpdateProductRequest
+): Promise<APIHttpType<IProduct>>
+
+// Upload product image
+export function UploadProductImage(
+  productId: string,
+  imageFile: File
+): Promise<APIHttpType<{ imageUrl: string }>>
+
+// Bulk create products
+export function BulkCreateProducts(
+  products: ICreateProductRequest[]
+): Promise<APIHttpType<{ created: number; failed: number }>>
+
+// Bulk update products
+export function BulkUpdateProducts(
+  updates: Array<{ id: string; data: Partial<ICreateProductRequest> }>
+): Promise<APIHttpType<{ updated: number; failed: number }>>
+```
+
+### DELETE Functions
+
+```typescript
+// Delete product
+export function DeleteProduct(productId: string): Promise<APIHttpType<{ message: string }>>
+
+// Bulk delete products
+export function BulkDeleteProducts(productIds: string[]): Promise<APIHttpType<{ deleted: number; failed: number }>>
+
+// Soft delete product
+export function SoftDeleteProduct(productId: string): Promise<APIHttpType<{ message: string }>>
+
+// Restore product
+export function RestoreProduct(productId: string): Promise<APIHttpType<{ message: string }>>
+```
+
+### React Query Hooks
+
+```typescript
+// Query hooks
+export const useProductsQuery = (params?: IProductListParams) => UseQueryResult<APIHttpPaginatedType<IProduct>, Error>
+export const useProductDetailQuery = (params: IProductDetailParams) => UseQueryResult<APIHttpType<IProduct>, Error>
+export const useProductSearchQuery = (params: IProductSearchParams) => UseQueryResult<APIHttpPaginatedType<IProduct>, Error>
+export const useProductCategoriesQuery = (params?: ICategoryListParams) => UseQueryResult<APIHttpPaginatedType<IProductCategory>, Error>
+export const useProductCategoriesTreeQuery = () => UseQueryResult<APIHttpType<IProductCategory[]>, Error>
+
+// Mutation hooks
+export const useCreateProductMutation = () => UseMutationResult<IProduct, ICreateProductRequest, Error>
+export const useUpdateProductMutation = () => UseMutationResult<IProduct, IUpdateProductRequest, Error>
+export const useDeleteProductMutation = () => UseMutationResult<{ message: string }, string, Error>
+export const useUploadProductImageMutation = () => UseMutationResult<{ imageUrl: string }, { productId: string; imageFile: File }, Error>
+export const useBulkCreateProductsMutation = () => UseMutationResult<{ created: number; failed: number }, ICreateProductRequest[], Error>
+export const useBulkUpdateProductsMutation = () => UseMutationResult<{ updated: number; failed: number }, Array<{ id: string; data: Partial<ICreateProductRequest> }>, Error>
+export const useBulkDeleteProductsMutation = () => UseMutationResult<{ deleted: number; failed: number }, string[], Error>
+```
+
+## 👥 Users API
+
+### Types
+
+```typescript
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ICreateUserRequest {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  isActive?: boolean;
+}
+
+export interface IUpdateUserRequest {
+  id: string;
+  name?: string;
+  email?: string;
+  role?: string;
+  isActive?: boolean;
+}
+
+export interface IUserListParams extends QueryParams {
+  role?: string;
+  isActive?: boolean;
+}
+```
+
+### Functions
+
+```typescript
+// GET
+export function GetUsersList(params?: IUserListParams): Promise<APIHttpPaginatedType<IUser>>
+export function GetUserDetail(params: { id: string }): Promise<APIHttpType<IUser>>
+
+// POST/PUT
+export function CreateUser(userData: ICreateUserRequest): Promise<APIHttpType<IUser>>
+export function UpdateUser(userData: IUpdateUserRequest): Promise<APIHttpType<IUser>>
+
+// DELETE
+export function DeleteUser(userId: string): Promise<APIHttpType<{ message: string }>>
+export function BulkDeleteUsers(userIds: string[]): Promise<APIHttpType<{ deleted: number; failed: number }>>
+```
+
+### Hooks
+
+```typescript
+export const useUsersQuery = (params?: IUserListParams) => UseQueryResult<APIHttpPaginatedType<IUser>, Error>
+export const useUserDetailQuery = (params: { id: string }) => UseQueryResult<APIHttpType<IUser>, Error>
+export const useCreateUserMutation = () => UseMutationResult<IUser, ICreateUserRequest, Error>
+export const useUpdateUserMutation = () => UseMutationResult<IUser, IUpdateUserRequest, Error>
+export const useDeleteUserMutation = () => UseMutationResult<{ message: string }, string, Error>
+```
+
+## 🛒 Orders API
+
+### Types
+
+```typescript
+export interface IOrder {
+  id: string;
+  orderNumber: string;
+  customerId: string;
+  customerName: string;
+  customerEmail: string;
+  items: IOrderItem[];
+  totalAmount: number;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  shippingAddress: IAddress;
+  billingAddress: IAddress;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IOrderItem {
+  id: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+export interface IAddress {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
+export enum OrderStatus {
+  PENDING = "pending",
+  CONFIRMED = "confirmed",
+  PROCESSING = "processing",
+  SHIPPED = "shipped",
+  DELIVERED = "delivered",
+  CANCELLED = "cancelled",
+}
+
+export enum PaymentStatus {
+  PENDING = "pending",
+  PAID = "paid",
+  FAILED = "failed",
+  REFUNDED = "refunded",
+}
+
+export interface ICreateOrderRequest {
+  customerId: string;
+  items: Omit<IOrderItem, 'id' | 'totalPrice'>[];
+  shippingAddress: IAddress;
+  billingAddress: IAddress;
+  notes?: string;
+}
+
+export interface IUpdateOrderRequest {
+  id: string;
+  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+  notes?: string;
+  shippingAddress?: IAddress;
+  billingAddress?: IAddress;
+}
+
+export interface IOrderListParams extends QueryParams {
+  customerId?: string;
+  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+  dateFrom?: string;
+  dateTo?: string;
+  minAmount?: number;
+  maxAmount?: number;
+}
+```
+
+### Functions
+
+```typescript
+// GET
+export function GetOrdersList(params?: IOrderListParams): Promise<APIHttpPaginatedType<IOrder>>
+export function GetOrderDetail(params: { id: string }): Promise<APIHttpType<IOrder>>
+export function GetCustomerOrders(customerId: string, params?: Omit<IOrderListParams, 'customerId'>): Promise<APIHttpPaginatedType<IOrder>>
+
+// POST/PUT
+export function CreateOrder(orderData: ICreateOrderRequest): Promise<APIHttpType<IOrder>>
+export function UpdateOrder(orderData: IUpdateOrderRequest): Promise<APIHttpType<IOrder>>
+export function UpdateOrderStatus(statusData: { orderId: string; status: OrderStatus; notes?: string }): Promise<APIHttpType<IOrder>>
+export function BulkUpdateOrders(bulkData: { orderIds: string[]; status?: OrderStatus; paymentStatus?: PaymentStatus }): Promise<APIHttpType<{ updated: number; failed: number }>>
+export function DuplicateOrder(orderId: string): Promise<APIHttpType<IOrder>>
+
+// DELETE
+export function DeleteOrder(orderId: string): Promise<APIHttpType<{ message: string }>>
+export function BulkDeleteOrders(orderIds: string[]): Promise<APIHttpType<{ deleted: number; failed: number }>>
+export function CancelOrder(orderId: string, reason?: string): Promise<APIHttpType<{ message: string }>>
+```
+
+### Hooks
+
+```typescript
+export const useOrdersQuery = (params?: IOrderListParams) => UseQueryResult<APIHttpPaginatedType<IOrder>, Error>
+export const useOrderDetailQuery = (params: { id: string }) => UseQueryResult<APIHttpType<IOrder>, Error>
+export const useCustomerOrdersQuery = (customerId: string, params?: Omit<IOrderListParams, 'customerId'>) => UseQueryResult<APIHttpPaginatedType<IOrder>, Error>
+export const useCreateOrderMutation = () => UseMutationResult<IOrder, ICreateOrderRequest, Error>
+export const useUpdateOrderMutation = () => UseMutationResult<IOrder, IUpdateOrderRequest, Error>
+export const useUpdateOrderStatusMutation = () => UseMutationResult<IOrder, { orderId: string; status: OrderStatus; notes?: string }, Error>
+export const useDeleteOrderMutation = () => UseMutationResult<{ message: string }, string, Error>
+export const useBulkUpdateOrdersMutation = () => UseMutationResult<{ updated: number; failed: number }, { orderIds: string[]; status?: OrderStatus; paymentStatus?: PaymentStatus }, Error>
+export const useDuplicateOrderMutation = () => UseMutationResult<IOrder, string, Error>
+```
+
+## 🔧 Providers
+
+### FrameworkProvider
+
+```typescript
+interface FrameworkProviderProps {
+  children: ReactNode;
+  queryClient?: QueryClient;
+  enableDevtools?: boolean;
+}
+
+export const FrameworkProvider: React.FC<FrameworkProviderProps>
+```
+
+### Usage
+
+```tsx
+import { FrameworkProvider } from "@workspace/framework";
+
+export default function RootLayout({ children }) {
+  return (
+    <FrameworkProvider>
+      {children}
+    </FrameworkProvider>
+  );
+}
+```
+
+## 🎯 Error Handling
+
+### API Error Type
+
+```typescript
+export interface APIError {
+  message: string;
+  status: number;
+  code?: string;
+}
+```
+
+### Error Handling in Hooks
+
+```typescript
+// Query hooks return error in result
+const { data, isLoading, error } = useProductsQuery();
+
+if (error) {
+  console.error("Query error:", error.message);
+}
+
+// Mutation hooks have error in result
+const createProduct = useCreateProductMutation();
+
+if (createProduct.error) {
+  console.error("Mutation error:", createProduct.error.message);
+}
+```
+
+### HTTP Interceptors
+
+```typescript
+// Request interceptor - Add token
+APIHttp.interceptors.request.use((config) => {
+  const token = localStorage.getItem("auth_token");
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Response interceptor - Handle errors
+APIHttp.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const apiError: APIError = {
+      message: error.response?.data?.message || error.message,
+      status: error.response?.status || 500,
+      code: error.response?.data?.code,
+    };
+    
+    // Handle specific status codes
+    if (error.response?.status === 401) {
+      // Redirect to login
+      window.location.href = "/login";
+    }
+    
+    return Promise.reject(apiError);
+  }
+);
+```
+
+## 🎯 Best Practices
+
+### 1. Query Keys
+
+```typescript
+// Good: Meaningful query keys
+["get-products-list", "active", "electronics"]
+["get-user-detail", userId]
+["search-products", searchTerm, categoryId]
+
+// Bad: Generic or duplicate keys
+["products"]
+["user"]
+["search"]
+```
+
+### 2. Error Handling
+
+```typescript
+// Good: Proper error handling
+const { data, isLoading, error } = useProductsQuery();
+
+if (error) {
+  return <ErrorComponent error={error} />;
+}
+
+// Bad: Ignoring errors
+const { data } = useProductsQuery();
+// No error handling
+```
+
+### 3. Loading States
+
+```typescript
+// Good: Proper loading states
+if (isLoading) {
+  return <LoadingSpinner />;
+}
+
+// Bad: No loading states
+return <div>{data?.entries.map(...)}</div>;
+```
+
+### 4. Type Safety
+
+```typescript
+// Good: Proper typing
+const createProduct = useCreateProductMutation();
+await createProduct.mutateAsync({
+  name: "Product",
+  price: 100,
+  categoryId: "cat-1",
+});
+
+// Bad: Using any
+const createProduct = useCreateProductMutation();
+await createProduct.mutateAsync({
+  name: "Product",
+  // Missing required fields
+});
+```
+
+## 🎯 مرحله بعدی
+
+بعد از مطالعه API Reference، می‌توانید:
+
+1. **[Usage Guide](./usage)** - راهنمای استفاده
+2. **[Examples](./examples)** - مثال‌های عملی
+3. **[Adding Endpoints](./adding-endpoints)** - افزودن endpoint جدید
+
+---
+
+**API Reference کامل شد! حالا می‌توانید از framework package استفاده کنید! 🚀**

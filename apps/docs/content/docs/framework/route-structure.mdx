@@ -1,0 +1,605 @@
+---
+title: Route Structure
+description: ساختار و سازماندهی API routes در framework package
+---
+
+# 🗂️ Route Structure
+
+راهنمای کامل ساختار و سازماندهی API routes در framework package.
+
+## 📁 ساختار کلی
+
+```
+packages/framework/src/routes/
+├── products/              # مثال کامل route
+│   ├── type.ts           # تمام interfaceها و types
+│   ├── get.ts            # توابع GET خام
+│   ├── post.ts           # توابع POST/PUT خام
+│   ├── delete.ts         # توابع DELETE خام
+│   ├── query.ts          # React Query hooks
+│   └── index.ts          # exports
+├── users/                # route جدید
+│   ├── type.ts
+│   ├── get.ts
+│   ├── post.ts
+│   ├── delete.ts
+│   ├── query.ts
+│   └── index.ts
+└── categories/           # route جدید
+    ├── type.ts
+    ├── get.ts
+    ├── post.ts
+    ├── delete.ts
+    ├── query.ts
+    └── index.ts
+```
+
+## 📝 فایل‌های مورد نیاز
+
+### 1. type.ts - تعریف Types
+
+```typescript
+// src/routes/products/type.ts
+import { PaginationParams, QueryParams } from "../../types";
+
+/**
+ * Product interface
+ */
+export interface IProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  categoryId: string;
+  categoryName: string;
+  imageUrl?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Create product request interface
+ */
+export interface ICreateProductRequest {
+  name: string;
+  description: string;
+  price: number;
+  categoryId: string;
+  imageUrl?: string;
+  isActive?: boolean;
+}
+
+/**
+ * Update product request interface
+ */
+export interface IUpdateProductRequest {
+  id: string;
+  name?: string;
+  description?: string;
+  price?: number;
+  categoryId?: string;
+  imageUrl?: string;
+  isActive?: boolean;
+}
+
+/**
+ * Product list query parameters
+ */
+export interface IProductListParams extends QueryParams {
+  categoryId?: string;
+  isActive?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+/**
+ * Product detail query parameters
+ */
+export interface IProductDetailParams {
+  id: string;
+}
+
+/**
+ * Product search parameters
+ */
+export interface IProductSearchParams extends QueryParams {
+  query: string;
+  categoryId?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+```
+
+### 2. get.ts - توابع GET
+
+```typescript
+// src/routes/products/get.ts
+import { APIHttp, API_ENDPOINTS } from "../../utils";
+import { 
+  APIHttpType, 
+  APIHttpPaginatedType 
+} from "../../types";
+import {
+  IProduct,
+  IProductListParams,
+  IProductDetailParams,
+  IProductSearchParams,
+} from "./type";
+
+/**
+ * Get products list with pagination and filters
+ */
+export function GetProductsList(
+  params?: IProductListParams
+): Promise<APIHttpPaginatedType<IProduct>> {
+  return APIHttp.get(API_ENDPOINTS.PRODUCTS.LIST, {
+    params: {
+      pageNo: params?.pageNo || 1,
+      rowCount: params?.rowCount || 10,
+      search: params?.search,
+      sortBy: params?.sortBy,
+      sortOrder: params?.sortOrder,
+      categoryId: params?.categoryId,
+      isActive: params?.isActive,
+      minPrice: params?.minPrice,
+      maxPrice: params?.maxPrice,
+    },
+  });
+}
+
+/**
+ * Get single product by ID
+ */
+export function GetProductDetail(
+  params: IProductDetailParams
+): Promise<APIHttpType<IProduct>> {
+  return APIHttp.get(`${API_ENDPOINTS.PRODUCTS.LIST}/${params.id}`);
+}
+
+/**
+ * Search products
+ */
+export function SearchProducts(
+  params: IProductSearchParams
+): Promise<APIHttpPaginatedType<IProduct>> {
+  return APIHttp.get(API_ENDPOINTS.PRODUCTS.SEARCH, {
+    params: {
+      query: params.query,
+      pageNo: params.pageNo || 1,
+      rowCount: params.rowCount || 10,
+      categoryId: params.categoryId,
+      minPrice: params.minPrice,
+      maxPrice: params.maxPrice,
+      sortBy: params.sortBy,
+      sortOrder: params.sortOrder,
+    },
+  });
+}
+```
+
+### 3. post.ts - توابع POST/PUT
+
+```typescript
+// src/routes/products/post.ts
+import { APIHttp, API_ENDPOINTS } from "../../utils";
+import { APIHttpType } from "../../types";
+import {
+  IProduct,
+  ICreateProductRequest,
+  IUpdateProductRequest,
+} from "./type";
+
+/**
+ * Create a new product
+ */
+export function CreateProduct(
+  productData: ICreateProductRequest
+): Promise<APIHttpType<IProduct>> {
+  return APIHttp.post(API_ENDPOINTS.PRODUCTS.CREATE, productData);
+}
+
+/**
+ * Update an existing product
+ */
+export function UpdateProduct(
+  productData: IUpdateProductRequest
+): Promise<APIHttpType<IProduct>> {
+  const { id, ...updateData } = productData;
+  return APIHttp.put(`${API_ENDPOINTS.PRODUCTS.UPDATE}/${id}`, updateData);
+}
+
+/**
+ * Upload product image
+ */
+export function UploadProductImage(
+  productId: string,
+  imageFile: File
+): Promise<APIHttpType<{ imageUrl: string }>> {
+  const formData = new FormData();
+  formData.append("image", imageFile);
+  formData.append("productId", productId);
+
+  return APIHttp.post(
+    `${API_ENDPOINTS.PRODUCTS.UPDATE}/${productId}/image`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+}
+
+/**
+ * Bulk create products
+ */
+export function BulkCreateProducts(
+  products: ICreateProductRequest[]
+): Promise<APIHttpType<{ created: number; failed: number }>> {
+  return APIHttp.post(`${API_ENDPOINTS.PRODUCTS.CREATE}/bulk`, { products });
+}
+```
+
+### 4. delete.ts - توابع DELETE
+
+```typescript
+// src/routes/products/delete.ts
+import { APIHttp, API_ENDPOINTS } from "../../utils";
+import { APIHttpType } from "../../types";
+
+/**
+ * Delete a product by ID
+ */
+export function DeleteProduct(productId: string): Promise<APIHttpType<{ message: string }>> {
+  return APIHttp.delete(`${API_ENDPOINTS.PRODUCTS.DELETE}/${productId}`);
+}
+
+/**
+ * Bulk delete products
+ */
+export function BulkDeleteProducts(productIds: string[]): Promise<APIHttpType<{ deleted: number; failed: number }>> {
+  return APIHttp.delete(`${API_ENDPOINTS.PRODUCTS.DELETE}/bulk`, {
+    data: { productIds },
+  });
+}
+
+/**
+ * Soft delete a product (mark as inactive)
+ */
+export function SoftDeleteProduct(productId: string): Promise<APIHttpType<{ message: string }>> {
+  return APIHttp.patch(`${API_ENDPOINTS.PRODUCTS.DELETE}/${productId}/soft`);
+}
+```
+
+### 5. query.ts - React Query Hooks
+
+```typescript
+// src/routes/products/query.ts
+import {
+  useGenericQuery,
+  useGenericQueryWithParams,
+  useGenericMutation,
+  useGenericMutationWithOptimisticUpdate,
+} from "../../utils";
+import {
+  GetProductsList,
+  GetProductDetail,
+  SearchProducts,
+} from "./get";
+import {
+  CreateProduct,
+  UpdateProduct,
+  UploadProductImage,
+  BulkCreateProducts,
+} from "./post";
+import {
+  DeleteProduct,
+  BulkDeleteProducts,
+} from "./delete";
+import {
+  IProduct,
+  IProductListParams,
+  IProductDetailParams,
+  IProductSearchParams,
+  ICreateProductRequest,
+  IUpdateProductRequest,
+} from "./type";
+
+// ===== PRODUCT QUERIES =====
+
+/**
+ * Hook to get products list
+ */
+export const useProductsQuery = (params?: IProductListParams) =>
+  useGenericQueryWithParams(
+    GetProductsList,
+    ["get-products-list"],
+    params || {},
+    {
+      enabled: true,
+      staleTime: 2 * 60 * 1000, // 2 minutes
+    }
+  );
+
+/**
+ * Hook to get single product detail
+ */
+export const useProductDetailQuery = (params: IProductDetailParams) =>
+  useGenericQueryWithParams(
+    GetProductDetail,
+    ["get-product-detail"],
+    params,
+    {
+      enabled: !!params.id,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    }
+  );
+
+/**
+ * Hook to search products
+ */
+export const useProductSearchQuery = (params: IProductSearchParams) =>
+  useGenericQueryWithParams(
+    SearchProducts,
+    ["search-products"],
+    params,
+    {
+      enabled: !!params.query && params.query.length >= 2,
+      staleTime: 1 * 60 * 1000, // 1 minute
+    }
+  );
+
+// ===== PRODUCT MUTATIONS =====
+
+/**
+ * Hook to create a new product
+ */
+export const useCreateProductMutation = () =>
+  useGenericMutation(
+    CreateProduct,
+    ["get-products-list", "get-product-categories"],
+    {
+      onSuccess: (data) => {
+        console.log("Product created successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Failed to create product:", error);
+      },
+    }
+  );
+
+/**
+ * Hook to update a product with optimistic updates
+ */
+export const useUpdateProductMutation = () =>
+  useGenericMutationWithOptimisticUpdate(
+    UpdateProduct,
+    ["get-products-list", "get-product-detail"],
+    (oldData: any, variables: IUpdateProductRequest) => {
+      // Optimistic update logic
+      if (oldData?.entries) {
+        return {
+          ...oldData,
+          entries: oldData.entries.map((product: IProduct) =>
+            product.id === variables.id ? { ...product, ...variables } : product
+          ),
+        };
+      }
+      return oldData;
+    },
+    {
+      onSuccess: (data) => {
+        console.log("Product updated successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Failed to update product:", error);
+      },
+    }
+  );
+
+/**
+ * Hook to delete a product
+ */
+export const useDeleteProductMutation = () =>
+  useGenericMutation(
+    DeleteProduct,
+    ["get-products-list", "get-product-detail"],
+    {
+      onSuccess: (data) => {
+        console.log("Product deleted successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Failed to delete product:", error);
+      },
+    }
+  );
+```
+
+### 6. index.ts - Exports
+
+```typescript
+// src/routes/products/index.ts
+// Export all types
+export * from "./type";
+
+// Export all GET functions
+export * from "./get";
+
+// Export all POST/PUT functions
+export * from "./post";
+
+// Export all DELETE functions
+export * from "./delete";
+
+// Export all query hooks
+export * from "./query";
+```
+
+## 🔧 قوانین Route Structure
+
+### ✅ باید انجام دهید:
+
+1. **فولدرسازی** - هر route باید فولدر جداگانه داشته باشد
+2. **نام‌گذاری** - از kebab-case برای فولدرها استفاده کنید
+3. **ساختار ثابت** - همیشه 5 فایل اصلی داشته باشید
+4. **Export کامل** - تمام exports در index.ts
+5. **تایپ‌سفتی** - هیچ any type استفاده نکنید
+
+### ❌ نباید انجام دهید:
+
+1. **فایل‌های پراکنده** - همه چیز در فولدر route
+2. **نام‌گذاری نادرست** - camelCase برای فولدرها
+3. **ساختار متفاوت** - فایل‌های اضافی یا کم
+4. **Export ناقص** - فراموش کردن exports
+5. **تایپ any** - استفاده از any type
+
+## 📋 چک‌لیست Route
+
+- [ ] فولدر route ایجاد شده
+- [ ] فایل type.ts با تمام interfaceها
+- [ ] فایل get.ts با توابع GET
+- [ ] فایل post.ts با توابع POST/PUT
+- [ ] فایل delete.ts با توابع DELETE
+- [ ] فایل query.ts با React Query hooks
+- [ ] فایل index.ts با تمام exports
+- [ ] API endpoints در api-endpoints.ts اضافه شده
+- [ ] Route در main index.ts export شده
+
+## 🎯 مثال کامل - Users Route
+
+### 1. ایجاد فولدر
+
+```bash
+mkdir -p packages/framework/src/routes/users
+```
+
+### 2. type.ts
+
+```typescript
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ICreateUserRequest {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  isActive?: boolean;
+}
+
+export interface IUserListParams {
+  pageNo?: number;
+  rowCount?: number;
+  search?: string;
+  role?: string;
+  isActive?: boolean;
+}
+```
+
+### 3. get.ts
+
+```typescript
+import { APIHttp, API_ENDPOINTS } from "../../utils";
+import { APIHttpPaginatedType } from "../../types";
+import { IUser, IUserListParams } from "./type";
+
+export function GetUsersList(
+  params?: IUserListParams
+): Promise<APIHttpPaginatedType<IUser>> {
+  return APIHttp.get(API_ENDPOINTS.USERS.LIST, {
+    params: {
+      pageNo: params?.pageNo || 1,
+      rowCount: params?.rowCount || 10,
+      search: params?.search,
+      role: params?.role,
+      isActive: params?.isActive,
+    },
+  });
+}
+```
+
+### 4. post.ts
+
+```typescript
+import { APIHttp, API_ENDPOINTS } from "../../utils";
+import { APIHttpType } from "../../types";
+import { IUser, ICreateUserRequest } from "./type";
+
+export function CreateUser(
+  userData: ICreateUserRequest
+): Promise<APIHttpType<IUser>> {
+  return APIHttp.post(API_ENDPOINTS.USERS.CREATE, userData);
+}
+```
+
+### 5. delete.ts
+
+```typescript
+import { APIHttp, API_ENDPOINTS } from "../../utils";
+import { APIHttpType } from "../../types";
+
+export function DeleteUser(userId: string): Promise<APIHttpType<{ message: string }>> {
+  return APIHttp.delete(`${API_ENDPOINTS.USERS.DELETE}/${userId}`);
+}
+```
+
+### 6. query.ts
+
+```typescript
+import { useGenericQueryWithParams, useGenericMutation } from "../../utils";
+import { GetUsersList } from "./get";
+import { CreateUser } from "./post";
+import { IUserListParams, ICreateUserRequest } from "./type";
+
+export const useUsersQuery = (params?: IUserListParams) =>
+  useGenericQueryWithParams(
+    GetUsersList,
+    ["get-users-list"],
+    params || {},
+    {
+      enabled: true,
+      staleTime: 2 * 60 * 1000,
+    }
+  );
+
+export const useCreateUserMutation = () =>
+  useGenericMutation(
+    CreateUser,
+    ["get-users-list"],
+    {
+      onSuccess: (data) => {
+        console.log("User created successfully:", data);
+      },
+    }
+  );
+```
+
+### 7. index.ts
+
+```typescript
+export * from "./type";
+export * from "./get";
+export * from "./post";
+export * from "./delete";
+export * from "./query";
+```
+
+## 🎯 مرحله بعدی
+
+بعد از یادگیری Route Structure، می‌توانید:
+
+1. **[Adding Endpoints](./adding-endpoints)** - افزودن endpoint جدید
+2. **[Examples](./examples)** - مثال‌های عملی
+3. **[API Reference](./api-reference)** - مرجع کامل API
+
+---
+
+**Route Structure یاد گرفتید؟ [Adding Endpoints](./adding-endpoints) را مطالعه کنید! 🚀**

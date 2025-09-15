@@ -3,6 +3,48 @@
   "description": "Documentation for the DigiMoragheb monorepo",
   "items": [
     {
+      "title": "Framework Package",
+      "href": "/docs/framework",
+      "description": "Complete framework package for API management, data fetching, and state management",
+      "items": [
+        {
+          "title": "Overview",
+          "href": "/docs/framework",
+          "description": "Introduction to framework package and its features"
+        },
+        {
+          "title": "Setup & Installation",
+          "href": "/docs/framework/setup",
+          "description": "Complete guide for installing and setting up framework package"
+        },
+        {
+          "title": "Usage Guide",
+          "href": "/docs/framework/usage",
+          "description": "Comprehensive guide for using framework hooks and API calls"
+        },
+        {
+          "title": "Route Structure",
+          "href": "/docs/framework/route-structure",
+          "description": "Structure and organization of API routes in framework package"
+        },
+        {
+          "title": "Adding New Endpoints",
+          "href": "/docs/framework/adding-endpoints",
+          "description": "Step-by-step guide for adding new endpoints to framework package"
+        },
+        {
+          "title": "Examples",
+          "href": "/docs/framework/examples",
+          "description": "Practical examples and real-world use cases"
+        },
+        {
+          "title": "API Reference",
+          "href": "/docs/framework/api-reference",
+          "description": "Complete API reference and type definitions"
+        }
+      ]
+    },
+    {
       "title": "Custom UI",
       "href": "/docs/custom-ui",
       "description": "Custom UI components built for the DigiMoragheb project",

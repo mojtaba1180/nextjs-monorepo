@@ -1,0 +1,571 @@
+---
+title: Usage Guide
+description: راهنمای کامل استفاده از framework hooks و API calls
+---
+
+# 📖 Usage Guide
+
+راهنمای کامل استفاده از framework package برای API calls و data management.
+
+## 🔄 Query Hooks (GET Requests)
+
+### 1. استفاده پایه
+
+```tsx
+import { useProductsQuery } from "@workspace/framework";
+
+function ProductList() {
+  const { data, isLoading, error } = useProductsQuery({
+    pageNo: 1,
+    rowCount: 10,
+    isActive: true,
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div>
+      {data?.data?.entries.map((product) => (
+        <div key={product.id}>
+          <h3>{product.name}</h3>
+          <p>{product.description}</p>
+          <p>${product.price}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### 2. با Parameters
+
+```tsx
+import { useProductDetailQuery } from "@workspace/framework";
+
+function ProductDetail({ productId }: { productId: string }) {
+  const { data, isLoading, error } = useProductDetailQuery({
+    id: productId,
+  });
+
+  if (isLoading) return <div>Loading product...</div>;
+  if (error) return <div>Error loading product</div>;
+
+  return (
+    <div>
+      <h1>{data?.data?.entries[0]?.name}</h1>
+      <p>{data?.data?.entries[0]?.description}</p>
+    </div>
+  );
+}
+```
+
+### 3. با Search و Filters
+
+```tsx
+import { useProductSearchQuery } from "@workspace/framework";
+
+function ProductSearch() {
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  const { data, isLoading } = useProductSearchQuery({
+    query: searchTerm,
+    pageNo: 1,
+    rowCount: 20,
+    categoryId: "electronics",
+    minPrice: 100,
+    maxPrice: 1000,
+  });
+
+  return (
+    <div>
+      <input
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search products..."
+      />
+      
+      {isLoading && <div>Searching...</div>}
+      
+      {data?.data?.entries.map((product) => (
+        <div key={product.id}>
+          <h3>{product.name}</h3>
+          <p>${product.price}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+## ✏️ Mutation Hooks (POST/PUT/DELETE)
+
+### 1. Create (POST)
+
+```tsx
+import { useCreateProductMutation } from "@workspace/framework";
+
+function CreateProductForm() {
+  const createProduct = useCreateProductMutation();
+
+  const handleSubmit = async (formData) => {
+    try {
+      await createProduct.mutateAsync({
+        name: formData.name,
+        description: formData.description,
+        price: formData.price,
+        categoryId: formData.categoryId,
+        isActive: true,
+      });
+      
+      alert("Product created successfully!");
+    } catch (error) {
+      console.error("Failed to create product:", error);
+      alert("Failed to create product");
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="name" placeholder="Product name" required />
+      <textarea name="description" placeholder="Description" />
+      <input name="price" type="number" placeholder="Price" required />
+      <select name="categoryId" required>
+        <option value="">Select category</option>
+        <option value="cat-1">Electronics</option>
+        <option value="cat-2">Clothing</option>
+      </select>
+      
+      <button 
+        type="submit" 
+        disabled={createProduct.isPending}
+      >
+        {createProduct.isPending ? "Creating..." : "Create Product"}
+      </button>
+    </form>
+  );
+}
+```
+
+### 2. Update (PUT)
+
+```tsx
+import { useUpdateProductMutation } from "@workspace/framework";
+
+function EditProductForm({ product }: { product: IProduct }) {
+  const updateProduct = useUpdateProductMutation();
+
+  const handleSubmit = async (formData) => {
+    try {
+      await updateProduct.mutateAsync({
+        id: product.id,
+        name: formData.name,
+        description: formData.description,
+        price: formData.price,
+      });
+      
+      alert("Product updated successfully!");
+    } catch (error) {
+      console.error("Failed to update product:", error);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input 
+        name="name" 
+        defaultValue={product.name} 
+        required 
+      />
+      <textarea 
+        name="description" 
+        defaultValue={product.description} 
+      />
+      <input 
+        name="price" 
+        type="number" 
+        defaultValue={product.price} 
+        required 
+      />
+      
+      <button 
+        type="submit" 
+        disabled={updateProduct.isPending}
+      >
+        {updateProduct.isPending ? "Updating..." : "Update Product"}
+      </button>
+    </form>
+  );
+}
+```
+
+### 3. Delete
+
+```tsx
+import { useDeleteProductMutation } from "@workspace/framework";
+
+function ProductItem({ product }: { product: IProduct }) {
+  const deleteProduct = useDeleteProductMutation();
+
+  const handleDelete = async () => {
+    if (confirm("Are you sure you want to delete this product?")) {
+      try {
+        await deleteProduct.mutateAsync(product.id);
+        alert("Product deleted successfully!");
+      } catch (error) {
+        console.error("Failed to delete product:", error);
+      }
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-between p-4 border rounded">
+      <div>
+        <h3>{product.name}</h3>
+        <p>${product.price}</p>
+      </div>
+      
+      <button
+        onClick={handleDelete}
+        disabled={deleteProduct.isPending}
+        className="bg-red-500 text-white px-3 py-1 rounded"
+      >
+        {deleteProduct.isPending ? "Deleting..." : "Delete"}
+      </button>
+    </div>
+  );
+}
+```
+
+## 📁 File Upload
+
+### 1. Upload Single File
+
+```tsx
+import { useUploadProductImageMutation } from "@workspace/framework";
+
+function ImageUpload({ productId }: { productId: string }) {
+  const uploadImage = useUploadProductImageMutation();
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const result = await uploadImage.mutateAsync({
+        productId,
+        imageFile: file,
+      });
+      
+      alert(`Image uploaded: ${result.data?.entries[0]?.imageUrl}`);
+    } catch (error) {
+      console.error("Failed to upload image:", error);
+    }
+  };
+
+  return (
+    <div>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileUpload}
+        disabled={uploadImage.isPending}
+      />
+      {uploadImage.isPending && <p>Uploading...</p>}
+    </div>
+  );
+}
+```
+
+## 🔄 Bulk Operations
+
+### 1. Bulk Create
+
+```tsx
+import { useBulkCreateProductsMutation } from "@workspace/framework";
+
+function BulkCreateProducts() {
+  const bulkCreate = useBulkCreateProductsMutation();
+
+  const handleBulkCreate = async () => {
+    const products = [
+      { name: "Product 1", price: 100, categoryId: "cat-1" },
+      { name: "Product 2", price: 200, categoryId: "cat-1" },
+      { name: "Product 3", price: 300, categoryId: "cat-2" },
+    ];
+
+    try {
+      const result = await bulkCreate.mutateAsync(products);
+      alert(`Created ${result.data?.entries[0]?.created} products`);
+    } catch (error) {
+      console.error("Failed to create products:", error);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleBulkCreate}
+      disabled={bulkCreate.isPending}
+    >
+      {bulkCreate.isPending ? "Creating..." : "Bulk Create Products"}
+    </button>
+  );
+}
+```
+
+### 2. Bulk Delete
+
+```tsx
+import { useBulkDeleteProductsMutation } from "@workspace/framework";
+
+function BulkDeleteProducts({ selectedIds }: { selectedIds: string[] }) {
+  const bulkDelete = useBulkDeleteProductsMutation();
+
+  const handleBulkDelete = async () => {
+    if (confirm(`Delete ${selectedIds.length} products?`)) {
+      try {
+        const result = await bulkDelete.mutateAsync(selectedIds);
+        alert(`Deleted ${result.data?.entries[0]?.deleted} products`);
+      } catch (error) {
+        console.error("Failed to delete products:", error);
+      }
+    }
+  };
+
+  return (
+    <button
+      onClick={handleBulkDelete}
+      disabled={bulkDelete.isPending || selectedIds.length === 0}
+    >
+      {bulkDelete.isPending ? "Deleting..." : `Delete ${selectedIds.length} Products`}
+    </button>
+  );
+}
+```
+
+## 🎯 Advanced Usage
+
+### 1. Optimistic Updates
+
+```tsx
+import { useUpdateProductMutation } from "@workspace/framework";
+
+function ProductCard({ product }: { product: IProduct }) {
+  const updateProduct = useUpdateProductMutation();
+
+  const handleToggleActive = async () => {
+    // Optimistic update - UI updates immediately
+    await updateProduct.mutateAsync({
+      id: product.id,
+      isActive: !product.isActive,
+    });
+  };
+
+  return (
+    <div className={`p-4 border rounded ${product.isActive ? 'bg-green-50' : 'bg-gray-50'}`}>
+      <h3>{product.name}</h3>
+      <p>Status: {product.isActive ? 'Active' : 'Inactive'}</p>
+      
+      <button
+        onClick={handleToggleActive}
+        disabled={updateProduct.isPending}
+      >
+        {updateProduct.isPending ? "Updating..." : "Toggle Status"}
+      </button>
+    </div>
+  );
+}
+```
+
+### 2. Error Handling
+
+```tsx
+import { useCreateProductMutation } from "@workspace/framework";
+
+function CreateProductWithErrorHandling() {
+  const createProduct = useCreateProductMutation();
+
+  const handleSubmit = async (formData) => {
+    try {
+      await createProduct.mutateAsync(formData);
+      alert("Product created successfully!");
+    } catch (error) {
+      // Handle different error types
+      if (error.status === 400) {
+        alert("Invalid data provided");
+      } else if (error.status === 401) {
+        alert("Please login first");
+      } else if (error.status === 403) {
+        alert("You don't have permission");
+      } else {
+        alert("Something went wrong");
+      }
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* form fields */}
+      <button 
+        type="submit" 
+        disabled={createProduct.isPending}
+      >
+        {createProduct.isPending ? "Creating..." : "Create Product"}
+      </button>
+      
+      {createProduct.error && (
+        <div className="text-red-500 mt-2">
+          Error: {createProduct.error.message}
+        </div>
+      )}
+    </form>
+  );
+}
+```
+
+### 3. Conditional Queries
+
+```tsx
+import { useProductDetailQuery } from "@workspace/framework";
+
+function ConditionalProductDetail({ productId, shouldLoad }: { 
+  productId: string; 
+  shouldLoad: boolean; 
+}) {
+  const { data, isLoading, error } = useProductDetailQuery(
+    { id: productId },
+    { enabled: shouldLoad } // Only run query when shouldLoad is true
+  );
+
+  if (!shouldLoad) {
+    return <div>Product loading is disabled</div>;
+  }
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div>
+      <h1>{data?.data?.entries[0]?.name}</h1>
+    </div>
+  );
+}
+```
+
+## 🔧 Custom Hooks
+
+### 1. ترکیب چندین Hooks
+
+```tsx
+import { 
+  useProductsQuery, 
+  useProductCategoriesQuery,
+  useCreateProductMutation 
+} from "@workspace/framework";
+
+function useProductManagement() {
+  const { data: products, isLoading: productsLoading } = useProductsQuery({
+    pageNo: 1,
+    rowCount: 10,
+  });
+
+  const { data: categories, isLoading: categoriesLoading } = useProductCategoriesQuery();
+
+  const createProduct = useCreateProductMutation();
+
+  const isLoading = productsLoading || categoriesLoading;
+
+  return {
+    products: products?.data?.entries || [],
+    categories: categories?.data?.entries || [],
+    createProduct,
+    isLoading,
+  };
+}
+
+// استفاده در کامپوننت
+function ProductManagement() {
+  const { products, categories, createProduct, isLoading } = useProductManagement();
+
+  if (isLoading) return <div>Loading...</div>;
+
+  return (
+    <div>
+      {/* استفاده از products و categories */}
+    </div>
+  );
+}
+```
+
+## 📋 Best Practices
+
+### 1. Error Boundaries
+
+```tsx
+import { ErrorBoundary } from "react-error-boundary";
+
+function ErrorFallback({ error }: { error: Error }) {
+  return (
+    <div className="text-red-500 p-4 border border-red-300 rounded">
+      <h2>Something went wrong:</h2>
+      <p>{error.message}</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <ProductList />
+    </ErrorBoundary>
+  );
+}
+```
+
+### 2. Loading States
+
+```tsx
+function ProductList() {
+  const { data, isLoading, error } = useProductsQuery();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <span className="ml-2">Loading products...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-red-500 p-4 border border-red-300 rounded">
+        <p>Error: {error.message}</p>
+        <button onClick={() => window.location.reload()}>
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {data?.data?.entries.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  );
+}
+```
+
+## 🎯 مرحله بعدی
+
+بعد از یادگیری usage، می‌توانید:
+
+1. **[Route Structure](./route-structure)** - ساختار API routes
+2. **[Adding Endpoints](./adding-endpoints)** - افزودن endpoint جدید
+3. **[Examples](./examples)** - مثال‌های عملی
+
+---
+
+**Usage یاد گرفتید؟ [Route Structure](./route-structure) را مطالعه کنید! 🚀**

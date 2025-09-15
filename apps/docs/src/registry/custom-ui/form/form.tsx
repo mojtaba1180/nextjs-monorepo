@@ -116,7 +116,7 @@ export function FormDemo() {
                 <RHFButton type="submit" loadingText="Submitting...">
                   Submit Form
                 </RHFButton>
-                <RHFButton type="button" variant="outline">
+                <RHFButton type="button">
                   Cancel
                 </RHFButton>
               </div>
@@ -142,7 +142,6 @@ export function FormDemo() {
                 label="Number Input"
                 type="number"
                 placeholder="Enter number"
-                {...validationRules.min(0, "Must be positive")}
               />
               
               <RHFInput
@@ -150,7 +149,6 @@ export function FormDemo() {
                 label="Card Number"
                 mode="card"
                 placeholder="1234 5678 9012 3456"
-                {...validationRules.pattern(/^\d{16}$/, "Enter 16-digit card number")}
               />
               
               <RHFInput
@@ -158,7 +156,6 @@ export function FormDemo() {
                 label="Amount"
                 mode="currency"
                 placeholder="0"
-                {...validationRules.min(0, "Amount must be positive")}
               />
             </div>
           </FormProvider>
@@ -201,7 +198,6 @@ export function FormDemo() {
                 placeholder="Enter text with length validation"
                 maxLength={100}
                 showCharCount
-                {...validationRules.minLength(10, "Minimum 10 characters required")}
               />
             </div>
           </FormProvider>
@@ -235,13 +231,12 @@ export function FormDemo() {
               <div className="flex gap-2">
                 <RHFButton 
                   type="button" 
-                  onClick={() => methods.setValue("dynamic_field", "Prefilled value")}
+                  onClick={() => methods.setValue("email", "prefilled@example.com")}
                 >
                   Fill Field
                 </RHFButton>
                 <RHFButton 
                   type="button" 
-                  variant="outline"
                   onClick={() => methods.reset()}
                 >
                   Reset Form

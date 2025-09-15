@@ -1,0 +1,733 @@
+---
+title: Adding New Endpoints
+description: راهنمای کامل افزودن endpoint جدید به framework package
+---
+
+# ➕ Adding New Endpoints
+
+راهنمای گام به گام برای افزودن endpoint جدید به framework package.
+
+## 🎯 مراحل کلی
+
+1. **افزودن Endpoint به API_ENDPOINTS**
+2. **ایجاد Route Structure**
+3. **تعریف Types**
+4. **ایجاد توابع API**
+5. **ایجاد React Query Hooks**
+6. **Export و Build**
+
+## 📝 مثال کامل - Orders Route
+
+### مرحله 1: افزودن Endpoint
+
+```typescript
+// src/utils/api-endpoints.ts
+const ORDERS = {
+  LIST: "/orders",
+  CREATE: "/orders",
+  UPDATE: "/orders",
+  DELETE: "/orders",
+  DETAIL: "/orders",
+  STATUS_UPDATE: "/orders/status",
+  BULK_UPDATE: "/orders/bulk",
+} as const;
+
+// اضافه کردن به API_ENDPOINTS
+const API_ENDPOINTS = {
+  AUTH,
+  USER,
+  USERS,
+  ARTICLES,
+  FILE,
+  CONTACT_US,
+  DOCTORS,
+  PRODUCTS,
+  CATEGORIES,
+  ORDERS, // ← اضافه کردن
+} as const;
+```
+
+### مرحله 2: ایجاد Route Structure
+
+```bash
+# ایجاد فولدر
+mkdir -p packages/framework/src/routes/orders
+```
+
+### مرحله 3: تعریف Types
+
+```typescript
+// src/routes/orders/type.ts
+import { PaginationParams, QueryParams } from "../../types";
+
+/**
+ * Order interface
+ */
+export interface IOrder {
+  id: string;
+  orderNumber: string;
+  customerId: string;
+  customerName: string;
+  customerEmail: string;
+  items: IOrderItem[];
+  totalAmount: number;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  shippingAddress: IAddress;
+  billingAddress: IAddress;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Order item interface
+ */
+export interface IOrderItem {
+  id: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+/**
+ * Address interface
+ */
+export interface IAddress {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
+/**
+ * Order status enum
+ */
+export enum OrderStatus {
+  PENDING = "pending",
+  CONFIRMED = "confirmed",
+  PROCESSING = "processing",
+  SHIPPED = "shipped",
+  DELIVERED = "delivered",
+  CANCELLED = "cancelled",
+}
+
+/**
+ * Payment status enum
+ */
+export enum PaymentStatus {
+  PENDING = "pending",
+  PAID = "paid",
+  FAILED = "failed",
+  REFUNDED = "refunded",
+}
+
+/**
+ * Create order request interface
+ */
+export interface ICreateOrderRequest {
+  customerId: string;
+  items: Omit<IOrderItem, 'id' | 'totalPrice'>[];
+  shippingAddress: IAddress;
+  billingAddress: IAddress;
+  notes?: string;
+}
+
+/**
+ * Update order request interface
+ */
+export interface IUpdateOrderRequest {
+  id: string;
+  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+  notes?: string;
+  shippingAddress?: IAddress;
+  billingAddress?: IAddress;
+}
+
+/**
+ * Order list query parameters
+ */
+export interface IOrderListParams extends QueryParams {
+  customerId?: string;
+  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+  dateFrom?: string;
+  dateTo?: string;
+  minAmount?: number;
+  maxAmount?: number;
+}
+
+/**
+ * Order detail query parameters
+ */
+export interface IOrderDetailParams {
+  id: string;
+}
+
+/**
+ * Order status update request
+ */
+export interface IOrderStatusUpdateRequest {
+  orderId: string;
+  status: OrderStatus;
+  notes?: string;
+}
+
+/**
+ * Bulk order update request
+ */
+export interface IBulkOrderUpdateRequest {
+  orderIds: string[];
+  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+}
+```
+
+### مرحله 4: ایجاد توابع GET
+
+```typescript
+// src/routes/orders/get.ts
+import { APIHttp, API_ENDPOINTS } from "../../utils";
+import { 
+  APIHttpType, 
+  APIHttpPaginatedType 
+} from "../../types";
+import {
+  IOrder,
+  IOrderListParams,
+  IOrderDetailParams,
+} from "./type";
+
+/**
+ * Get orders list with pagination and filters
+ */
+export function GetOrdersList(
+  params?: IOrderListParams
+): Promise<APIHttpPaginatedType<IOrder>> {
+  return APIHttp.get(API_ENDPOINTS.ORDERS.LIST, {
+    params: {
+      pageNo: params?.pageNo || 1,
+      rowCount: params?.rowCount || 10,
+      search: params?.search,
+      sortBy: params?.sortBy,
+      sortOrder: params?.sortOrder,
+      customerId: params?.customerId,
+      status: params?.status,
+      paymentStatus: params?.paymentStatus,
+      dateFrom: params?.dateFrom,
+      dateTo: params?.dateTo,
+      minAmount: params?.minAmount,
+      maxAmount: params?.maxAmount,
+    },
+  });
+}
+
+/**
+ * Get single order by ID
+ */
+export function GetOrderDetail(
+  params: IOrderDetailParams
+): Promise<APIHttpType<IOrder>> {
+  return APIHttp.get(`${API_ENDPOINTS.ORDERS.DETAIL}/${params.id}`);
+}
+
+/**
+ * Get orders by customer ID
+ */
+export function GetCustomerOrders(
+  customerId: string,
+  params?: Omit<IOrderListParams, 'customerId'>
+): Promise<APIHttpPaginatedType<IOrder>> {
+  return APIHttp.get(`${API_ENDPOINTS.ORDERS.LIST}/customer/${customerId}`, {
+    params: {
+      pageNo: params?.pageNo || 1,
+      rowCount: params?.rowCount || 10,
+      status: params?.status,
+      paymentStatus: params?.paymentStatus,
+    },
+  });
+}
+```
+
+### مرحله 5: ایجاد توابع POST/PUT
+
+```typescript
+// src/routes/orders/post.ts
+import { APIHttp, API_ENDPOINTS } from "../../utils";
+import { APIHttpType } from "../../types";
+import {
+  IOrder,
+  ICreateOrderRequest,
+  IUpdateOrderRequest,
+  IOrderStatusUpdateRequest,
+  IBulkOrderUpdateRequest,
+} from "./type";
+
+/**
+ * Create a new order
+ */
+export function CreateOrder(
+  orderData: ICreateOrderRequest
+): Promise<APIHttpType<IOrder>> {
+  return APIHttp.post(API_ENDPOINTS.ORDERS.CREATE, orderData);
+}
+
+/**
+ * Update an existing order
+ */
+export function UpdateOrder(
+  orderData: IUpdateOrderRequest
+): Promise<APIHttpType<IOrder>> {
+  const { id, ...updateData } = orderData;
+  return APIHttp.put(`${API_ENDPOINTS.ORDERS.UPDATE}/${id}`, updateData);
+}
+
+/**
+ * Update order status
+ */
+export function UpdateOrderStatus(
+  statusData: IOrderStatusUpdateRequest
+): Promise<APIHttpType<IOrder>> {
+  return APIHttp.patch(
+    `${API_ENDPOINTS.ORDERS.STATUS_UPDATE}/${statusData.orderId}`,
+    {
+      status: statusData.status,
+      notes: statusData.notes,
+    }
+  );
+}
+
+/**
+ * Bulk update orders
+ */
+export function BulkUpdateOrders(
+  bulkData: IBulkOrderUpdateRequest
+): Promise<APIHttpType<{ updated: number; failed: number }>> {
+  return APIHttp.put(API_ENDPOINTS.ORDERS.BULK_UPDATE, bulkData);
+}
+
+/**
+ * Duplicate an existing order
+ */
+export function DuplicateOrder(
+  orderId: string
+): Promise<APIHttpType<IOrder>> {
+  return APIHttp.post(`${API_ENDPOINTS.ORDERS.CREATE}/duplicate/${orderId}`);
+}
+```
+
+### مرحله 6: ایجاد توابع DELETE
+
+```typescript
+// src/routes/orders/delete.ts
+import { APIHttp, API_ENDPOINTS } from "../../utils";
+import { APIHttpType } from "../../types";
+
+/**
+ * Delete an order by ID
+ */
+export function DeleteOrder(orderId: string): Promise<APIHttpType<{ message: string }>> {
+  return APIHttp.delete(`${API_ENDPOINTS.ORDERS.DELETE}/${orderId}`);
+}
+
+/**
+ * Bulk delete orders
+ */
+export function BulkDeleteOrders(orderIds: string[]): Promise<APIHttpType<{ deleted: number; failed: number }>> {
+  return APIHttp.delete(`${API_ENDPOINTS.ORDERS.DELETE}/bulk`, {
+    data: { orderIds },
+  });
+}
+
+/**
+ * Cancel an order (soft delete)
+ */
+export function CancelOrder(
+  orderId: string,
+  reason?: string
+): Promise<APIHttpType<{ message: string }>> {
+  return APIHttp.patch(`${API_ENDPOINTS.ORDERS.DELETE}/${orderId}/cancel`, {
+    reason,
+  });
+}
+```
+
+### مرحله 7: ایجاد React Query Hooks
+
+```typescript
+// src/routes/orders/query.ts
+import {
+  useGenericQuery,
+  useGenericQueryWithParams,
+  useGenericMutation,
+  useGenericMutationWithOptimisticUpdate,
+} from "../../utils";
+import {
+  GetOrdersList,
+  GetOrderDetail,
+  GetCustomerOrders,
+} from "./get";
+import {
+  CreateOrder,
+  UpdateOrder,
+  UpdateOrderStatus,
+  BulkUpdateOrders,
+  DuplicateOrder,
+} from "./post";
+import {
+  DeleteOrder,
+  BulkDeleteOrders,
+  CancelOrder,
+} from "./delete";
+import {
+  IOrder,
+  IOrderListParams,
+  IOrderDetailParams,
+  ICreateOrderRequest,
+  IUpdateOrderRequest,
+  IOrderStatusUpdateRequest,
+  IBulkOrderUpdateRequest,
+} from "./type";
+
+// ===== ORDER QUERIES =====
+
+/**
+ * Hook to get orders list
+ */
+export const useOrdersQuery = (params?: IOrderListParams) =>
+  useGenericQueryWithParams(
+    GetOrdersList,
+    ["get-orders-list"],
+    params || {},
+    {
+      enabled: true,
+      staleTime: 1 * 60 * 1000, // 1 minute
+    }
+  );
+
+/**
+ * Hook to get single order detail
+ */
+export const useOrderDetailQuery = (params: IOrderDetailParams) =>
+  useGenericQueryWithParams(
+    GetOrderDetail,
+    ["get-order-detail"],
+    params,
+    {
+      enabled: !!params.id,
+      staleTime: 2 * 60 * 1000, // 2 minutes
+    }
+  );
+
+/**
+ * Hook to get customer orders
+ */
+export const useCustomerOrdersQuery = (
+  customerId: string,
+  params?: Omit<IOrderListParams, 'customerId'>
+) =>
+  useGenericQueryWithParams(
+    (p) => GetCustomerOrders(customerId, p),
+    ["get-customer-orders", customerId],
+    params || {},
+    {
+      enabled: !!customerId,
+      staleTime: 2 * 60 * 1000,
+    }
+  );
+
+// ===== ORDER MUTATIONS =====
+
+/**
+ * Hook to create a new order
+ */
+export const useCreateOrderMutation = () =>
+  useGenericMutation(
+    CreateOrder,
+    ["get-orders-list", "get-customer-orders"],
+    {
+      onSuccess: (data) => {
+        console.log("Order created successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Failed to create order:", error);
+      },
+    }
+  );
+
+/**
+ * Hook to update an order with optimistic updates
+ */
+export const useUpdateOrderMutation = () =>
+  useGenericMutationWithOptimisticUpdate(
+    UpdateOrder,
+    ["get-orders-list", "get-order-detail"],
+    (oldData: any, variables: IUpdateOrderRequest) => {
+      // Optimistic update logic
+      if (oldData?.entries) {
+        return {
+          ...oldData,
+          entries: oldData.entries.map((order: IOrder) =>
+            order.id === variables.id ? { ...order, ...variables } : order
+          ),
+        };
+      }
+      return oldData;
+    },
+    {
+      onSuccess: (data) => {
+        console.log("Order updated successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Failed to update order:", error);
+      },
+    }
+  );
+
+/**
+ * Hook to update order status
+ */
+export const useUpdateOrderStatusMutation = () =>
+  useGenericMutation(
+    UpdateOrderStatus,
+    ["get-orders-list", "get-order-detail"],
+    {
+      onSuccess: (data) => {
+        console.log("Order status updated successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Failed to update order status:", error);
+      },
+    }
+  );
+
+/**
+ * Hook to delete an order
+ */
+export const useDeleteOrderMutation = () =>
+  useGenericMutation(
+    DeleteOrder,
+    ["get-orders-list", "get-order-detail"],
+    {
+      onSuccess: (data) => {
+        console.log("Order deleted successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Failed to delete order:", error);
+      },
+    }
+  );
+
+/**
+ * Hook to bulk update orders
+ */
+export const useBulkUpdateOrdersMutation = () =>
+  useGenericMutation(
+    BulkUpdateOrders,
+    ["get-orders-list"],
+    {
+      onSuccess: (data) => {
+        console.log("Orders updated successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Failed to update orders:", error);
+      },
+    }
+  );
+
+/**
+ * Hook to duplicate an order
+ */
+export const useDuplicateOrderMutation = () =>
+  useGenericMutation(
+    DuplicateOrder,
+    ["get-orders-list"],
+    {
+      onSuccess: (data) => {
+        console.log("Order duplicated successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Failed to duplicate order:", error);
+      },
+    }
+  );
+```
+
+### مرحله 8: Export در index.ts
+
+```typescript
+// src/routes/orders/index.ts
+// Export all types
+export * from "./type";
+
+// Export all GET functions
+export * from "./get";
+
+// Export all POST/PUT functions
+export * from "./post";
+
+// Export all DELETE functions
+export * from "./delete";
+
+// Export all query hooks
+export * from "./query";
+```
+
+### مرحله 9: Export در main index.ts
+
+```typescript
+// src/index.ts
+// Export all types
+export * from "./types";
+
+// Export all utils
+export * from "./utils";
+
+// Export all providers
+export * from "./providers";
+
+// Export example routes
+export * from "./routes/products";
+export * from "./routes/orders"; // ← اضافه کردن
+```
+
+### مرحله 10: Build و Test
+
+```bash
+# Build framework package
+cd packages/framework
+pnpm build
+
+# Build کل پروژه
+cd ../..
+pnpm build
+```
+
+## 🎯 مثال استفاده
+
+```tsx
+// components/OrderManagement.tsx
+"use client";
+
+import { 
+  useOrdersQuery, 
+  useCreateOrderMutation,
+  useUpdateOrderStatusMutation,
+  useDeleteOrderMutation,
+  OrderStatus 
+} from "@workspace/framework";
+
+export function OrderManagement() {
+  const { data: orders, isLoading } = useOrdersQuery({
+    pageNo: 1,
+    rowCount: 20,
+    status: OrderStatus.PENDING,
+  });
+
+  const createOrder = useCreateOrderMutation();
+  const updateStatus = useUpdateOrderStatusMutation();
+  const deleteOrder = useDeleteOrderMutation();
+
+  const handleCreateOrder = async (orderData) => {
+    await createOrder.mutateAsync(orderData);
+  };
+
+  const handleUpdateStatus = async (orderId: string, status: OrderStatus) => {
+    await updateStatus.mutateAsync({ orderId, status });
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    await deleteOrder.mutateAsync(orderId);
+  };
+
+  if (isLoading) return <div>Loading orders...</div>;
+
+  return (
+    <div>
+      <h1>Order Management</h1>
+      
+      {orders?.data?.entries.map((order) => (
+        <div key={order.id} className="border p-4 rounded">
+          <h3>Order #{order.orderNumber}</h3>
+          <p>Customer: {order.customerName}</p>
+          <p>Total: ${order.totalAmount}</p>
+          <p>Status: {order.status}</p>
+          
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => handleUpdateStatus(order.id, OrderStatus.CONFIRMED)}
+              disabled={updateStatus.isPending}
+            >
+              Confirm
+            </button>
+            <button
+              onClick={() => handleDeleteOrder(order.id)}
+              disabled={deleteOrder.isPending}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+## 📋 چک‌لیست کامل
+
+### ✅ مراحل تکمیل شده:
+
+- [ ] Endpoint به API_ENDPOINTS اضافه شده
+- [ ] فولدر route ایجاد شده
+- [ ] فایل type.ts با تمام interfaceها
+- [ ] فایل get.ts با توابع GET
+- [ ] فایل post.ts با توابع POST/PUT
+- [ ] فایل delete.ts با توابع DELETE
+- [ ] فایل query.ts با React Query hooks
+- [ ] فایل index.ts با تمام exports
+- [ ] Route در main index.ts export شده
+- [ ] Build موفق
+- [ ] تست اولیه موفق
+
+## 🚨 نکات مهم
+
+### 1. **نام‌گذاری**
+- فولدر: `kebab-case` (orders, user-profiles)
+- فایل‌ها: `kebab-case` (order-detail.tsx)
+- Interfaceها: `PascalCase` با prefix `I` (IOrder, ICreateOrderRequest)
+- Enumها: `PascalCase` (OrderStatus, PaymentStatus)
+
+### 2. **ساختار Types**
+- همیشه interface اصلی را تعریف کنید
+- Request/Response types جداگانه
+- Query parameters interface
+- Enum برای status ها
+
+### 3. **API Functions**
+- همیشه از API_ENDPOINTS استفاده کنید
+- Parameters validation
+- Error handling مناسب
+- Type safety کامل
+
+### 4. **React Query Hooks**
+- Query keys معنادار
+- Stale time مناسب
+- Error handling
+- Success callbacks
+
+## 🎯 مرحله بعدی
+
+بعد از افزودن endpoint جدید، می‌توانید:
+
+1. **[Examples](./examples)** - مثال‌های عملی
+2. **[API Reference](./api-reference)** - مرجع کامل API
+3. **[Usage Guide](./usage)** - راهنمای استفاده
+
+---
+
+**Endpoint جدید اضافه شد؟ [Examples](./examples) را مطالعه کنید! 🚀**

@@ -1,0 +1,300 @@
+---
+title: Setup & Installation
+description: راهنمای کامل نصب و راه‌اندازی framework package
+---
+
+# 🔧 Setup & Installation
+
+راهنمای کامل برای نصب و راه‌اندازی framework package در پروژه‌های monorepo.
+
+## 📦 نصب Package
+
+### 1. اضافه کردن به Dependencies
+
+```bash
+# در package.json پروژه خود
+pnpm add @workspace/framework
+```
+
+### 2. نصب Dependencies
+
+```bash
+pnpm install
+```
+
+## ⚙️ Environment Variables
+
+### 1. ایجاد فایل Environment
+
+```bash
+# در root پروژه خود فایل .env.local ایجاد کنید
+touch .env.local
+```
+
+### 2. تنظیم متغیرهای محیطی
+
+```bash
+# .env.local
+NEXT_PUBLIC_REST_API_ENDPOINT=https://your-api-url.com
+
+# اختیاری: API Timeout (به میلی‌ثانیه)
+NEXT_PUBLIC_API_TIMEOUT=70000
+
+# اختیاری: فعال/غیرفعال کردن React Query Devtools
+NEXT_PUBLIC_ENABLE_QUERY_DEVTOOLS=true
+```
+
+### 3. مثال‌های مختلف Environment
+
+```bash
+# Development
+NEXT_PUBLIC_REST_API_ENDPOINT=http://localhost:3001/api
+
+# Staging
+NEXT_PUBLIC_REST_API_ENDPOINT=https://staging-api.example.com
+
+# Production
+NEXT_PUBLIC_REST_API_ENDPOINT=https://api.example.com
+```
+
+## 🏗️ Setup Provider
+
+### 1. در Next.js App Router
+
+```tsx
+// app/layout.tsx
+import { FrameworkProvider } from "@workspace/framework";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <FrameworkProvider>
+          {children}
+        </FrameworkProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### 2. در Next.js Pages Router
+
+```tsx
+// pages/_app.tsx
+import { FrameworkProvider } from "@workspace/framework";
+
+export default function App({ Component, pageProps }) {
+  return (
+    <FrameworkProvider>
+      <Component {...pageProps} />
+    </FrameworkProvider>
+  );
+}
+```
+
+### 3. با سایر Providers
+
+```tsx
+// app/layout.tsx
+import { FrameworkProvider } from "@workspace/framework";
+import { ThemeProvider } from "next-themes";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <FrameworkProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+          >
+            {children}
+          </ThemeProvider>
+        </FrameworkProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+## 🔧 Configuration پیشرفته
+
+### 1. Custom Query Client
+
+```tsx
+// app/layout.tsx
+import { FrameworkProvider } from "@workspace/framework";
+import { QueryClient } from "@tanstack/react-query";
+
+const customQueryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 15 * 60 * 1000, // 15 minutes
+      retry: 2,
+    },
+    mutations: {
+      retry: 1,
+    },
+  },
+});
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <FrameworkProvider queryClient={customQueryClient}>
+      {children}
+    </FrameworkProvider>
+  );
+}
+```
+
+### 2. Disable Devtools در Production
+
+```tsx
+// app/layout.tsx
+import { FrameworkProvider } from "@workspace/framework";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <FrameworkProvider 
+      enableDevtools={process.env.NODE_ENV === "development"}
+    >
+      {children}
+    </FrameworkProvider>
+  );
+}
+```
+
+## 🧪 تست Setup
+
+### 1. ایجاد کامپوننت تست
+
+```tsx
+// components/FrameworkTest.tsx
+"use client";
+
+import { useProductsQuery } from "@workspace/framework";
+
+export function FrameworkTest() {
+  const { data, isLoading, error } = useProductsQuery({
+    pageNo: 1,
+    rowCount: 1,
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div>
+      <h2>Framework Setup Successful!</h2>
+      <p>Products loaded: {data?.data?.entries.length || 0}</p>
+    </div>
+  );
+}
+```
+
+### 2. استفاده در صفحه
+
+```tsx
+// app/test/page.tsx
+import { FrameworkTest } from "@/components/FrameworkTest";
+
+export default function TestPage() {
+  return (
+    <div className="container mx-auto p-8">
+      <h1 className="text-2xl font-bold mb-4">Framework Test</h1>
+      <FrameworkTest />
+    </div>
+  );
+}
+```
+
+## 🔍 بررسی Setup
+
+### 1. بررسی Dependencies
+
+```bash
+# بررسی نصب package
+pnpm list @workspace/framework
+```
+
+### 2. بررسی Build
+
+```bash
+# Build پروژه
+pnpm build
+```
+
+### 3. بررسی TypeScript
+
+```bash
+# بررسی types
+pnpm typecheck
+```
+
+## 🚨 مشکلات رایج
+
+### 1. Module Not Found
+
+```bash
+# خطا: Module not found: Can't resolve '@workspace/framework'
+# راه‌حل: اطمینان از نصب package
+pnpm install
+```
+
+### 2. Environment Variables
+
+```bash
+# خطا: API endpoint not found
+# راه‌حل: بررسی .env.local
+echo $NEXT_PUBLIC_REST_API_ENDPOINT
+```
+
+### 3. Provider Setup
+
+```tsx
+// خطا: useQuery must be used within a QueryClient
+// راه‌حل: اطمینان از wrap کردن app با FrameworkProvider
+<FrameworkProvider>
+  <YourApp />
+</FrameworkProvider>
+```
+
+## ✅ چک‌لیست Setup
+
+- [ ] Package نصب شده
+- [ ] Environment variables تنظیم شده
+- [ ] FrameworkProvider اضافه شده
+- [ ] Build موفق
+- [ ] TypeScript errors برطرف شده
+- [ ] تست اولیه موفق
+
+## 🎯 مرحله بعدی
+
+بعد از تکمیل setup، می‌توانید:
+
+1. **[راهنمای Usage](./usage)** - نحوه استفاده از hooks
+2. **[Route Structure](./route-structure)** - ساختار API routes
+3. **[Adding Endpoints](./adding-endpoints)** - افزودن endpoint جدید
+
+---
+
+**Setup تکمیل شد؟ [راهنمای Usage](./usage) را مطالعه کنید! 🚀**

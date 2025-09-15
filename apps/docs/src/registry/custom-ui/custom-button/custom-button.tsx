@@ -44,7 +44,7 @@ export function CustomButtonDemo() {
         <h3 className="text-lg font-semibold">States</h3>
         <div className="flex gap-2">
           <CustomButton disabled>Disabled</CustomButton>
-          <CustomButton loading>Loading</CustomButton>
+          <CustomButton disabled>Loading</CustomButton>
         </div>
       </div>
 

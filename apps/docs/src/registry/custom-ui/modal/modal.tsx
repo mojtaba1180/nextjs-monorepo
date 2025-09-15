@@ -233,7 +233,7 @@ function ModalDemoContent() {
           <Button onClick={openLargeModal} variant="secondary" size="sm">
             Large Modal
           </Button>
-          <Button onClick={openDialogModal} variant="secondary" size="md">
+          <Button onClick={openDialogModal} variant="secondary">
             Medium Modal
           </Button>
         </div>
