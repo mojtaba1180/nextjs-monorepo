@@ -1,15 +1,15 @@
 ---
 title: Usage Guide
-description: راهنمای کامل استفاده از framework hooks و API calls
+description: Complete guide for using framework hooks and API calls
 ---
 
 # 📖 Usage Guide
 
-راهنمای کامل استفاده از framework package برای API calls و data management.
+Complete guide for using framework package for API calls and data management.
 
 ## 🔄 Query Hooks (GET Requests)
 
-### 1. استفاده پایه
+### 1. Basic Usage
 
 ```tsx
 import { useProductsQuery } from "@workspace/framework";
@@ -38,7 +38,7 @@ function ProductList() {
 }
 ```
 
-### 2. با Parameters
+### 2. With Parameters
 
 ```tsx
 import { useProductDetailQuery } from "@workspace/framework";
@@ -60,7 +60,7 @@ function ProductDetail({ productId }: { productId: string }) {
 }
 ```
 
-### 3. با Search و Filters
+### 3. With Search and Filters
 
 ```tsx
 import { useProductSearchQuery } from "@workspace/framework";
@@ -454,7 +454,7 @@ function ConditionalProductDetail({ productId, shouldLoad }: {
 
 ## 🔧 Custom Hooks
 
-### 1. ترکیب چندین Hooks
+### 1. Combining Multiple Hooks
 
 ```tsx
 import { 
@@ -483,7 +483,7 @@ function useProductManagement() {
   };
 }
 
-// استفاده در کامپوننت
+// Using in component
 function ProductManagement() {
   const { products, categories, createProduct, isLoading } = useProductManagement();
 
@@ -491,7 +491,7 @@ function ProductManagement() {
 
   return (
     <div>
-      {/* استفاده از products و categories */}
+      {/* Using products and categories */}
     </div>
   );
 }
@@ -558,14 +558,14 @@ function ProductList() {
 }
 ```
 
-## 🎯 مرحله بعدی
+## 🎯 Next Steps
 
-بعد از یادگیری usage، می‌توانید:
+After learning usage, you can:
 
-1. **[Route Structure](./route-structure)** - ساختار API routes
-2. **[Adding Endpoints](./adding-endpoints)** - افزودن endpoint جدید
-3. **[Examples](./examples)** - مثال‌های عملی
+1. **[Route Structure](./route-structure)** - API routes structure
+2. **[Adding Endpoints](./adding-endpoints)** - Adding new endpoints
+3. **[Examples](./examples)** - Practical examples
 
 ---
 
-**Usage یاد گرفتید؟ [Route Structure](./route-structure) را مطالعه کنید! 🚀**
+**Learned usage? Check out [Route Structure](./route-structure)! 🚀**

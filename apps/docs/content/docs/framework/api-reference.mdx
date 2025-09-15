@@ -1,11 +1,11 @@
 ---
 title: API Reference
-description: مرجع کامل API و types در framework package
+description: Complete API reference and types in framework package
 ---
 
 # 📋 API Reference
 
-مرجع کامل API، types و interfaces در framework package.
+Complete reference for API, types and interfaces in framework package.
 
 ## 🏗️ Core Types
 
@@ -75,7 +75,7 @@ export interface MutationOptions<TData, TVariables> {
 ### API Endpoints
 
 ```typescript
-// تمام endpointها در یک فایل مرکزی
+// All endpoints in a central file
 const API_ENDPOINTS = {
   AUTH: {
     LOGIN: "/auth/login",
@@ -102,7 +102,7 @@ const API_ENDPOINTS = {
 ### HTTP Client
 
 ```typescript
-// HTTP Client با interceptors
+// HTTP Client with interceptors
 const APIHttp = axios.create({
   baseURL: process.env.NEXT_PUBLIC_REST_API_ENDPOINT || "/api",
   timeout: 70000,
@@ -111,8 +111,8 @@ const APIHttp = axios.create({
   },
 });
 
-// Request interceptor: اضافه کردن token
-// Response interceptor: مدیریت خطاها
+// Request interceptor: Adding token
+// Response interceptor: Error management
 ```
 
 ### Generic Query Hooks
@@ -636,14 +636,14 @@ await createProduct.mutateAsync({
 });
 ```
 
-## 🎯 مرحله بعدی
+## 🎯 Next Steps
 
-بعد از مطالعه API Reference، می‌توانید:
+After studying API Reference, you can:
 
-1. **[Usage Guide](./usage)** - راهنمای استفاده
-2. **[Examples](./examples)** - مثال‌های عملی
-3. **[Adding Endpoints](./adding-endpoints)** - افزودن endpoint جدید
+1. **[Usage Guide](./usage)** - Usage guide
+2. **[Examples](./examples)** - Practical examples
+3. **[Adding Endpoints](./adding-endpoints)** - Adding new endpoints
 
 ---
 
-**API Reference کامل شد! حالا می‌توانید از framework package استفاده کنید! 🚀**
+**API Reference completed! Now you can use the framework package! 🚀**

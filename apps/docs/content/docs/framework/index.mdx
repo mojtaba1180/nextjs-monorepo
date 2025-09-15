@@ -1,59 +1,59 @@
 ---
 title: Framework Package
-description: پکیج framework کامل برای مدیریت API calls، data fetching و state management در monorepo
+description: Complete framework package for API calls management, data fetching and state management in monorepo
 ---
 
 # 🚀 Framework Package
 
-پکیج framework یک راه‌حل کامل و استاندارد برای مدیریت API calls، data fetching و state management در تمام پروژه‌های monorepo است.
+The framework package is a complete and standard solution for managing API calls, data fetching, and state management in all monorepo projects.
 
-## ✨ ویژگی‌های کلیدی
+## ✨ Key Features
 
-- **🔧 TypeScript کامل** - تمام تایپ‌ها و interfaceها
-- **⚡ React Query integration** - کش هوشمند و background updates
-- **🌐 HTTP Client مرکزی** - مدیریت token و error handling
-- **🔄 Generic Hooks** - قابلیت استفاده مجدد
-- **📦 Provider Pattern** - آسان برای setup
-- **🗂️ Route Structure** - سازماندهی منظم API calls
+- **🔧 Full TypeScript** - All types and interfaces
+- **⚡ React Query integration** - Smart caching and background updates
+- **🌐 Centralized HTTP Client** - Token management and error handling
+- **🔄 Generic Hooks** - Reusable functionality
+- **📦 Provider Pattern** - Easy setup
+- **🗂️ Route Structure** - Organized API calls structure
 
-## 🏗️ ساختار کلی
+## 🏗️ Overall Structure
 
 ```
 packages/framework/
 ├── src/
-│   ├── types/           # Core types و base response types
-│   ├── utils/           # HTTP client، endpoints، generic hooks
-│   ├── providers/       # Framework provider اصلی
+│   ├── types/           # Core types and base response types
+│   ├── utils/           # HTTP client, endpoints, generic hooks
+│   ├── providers/       # Main framework provider
 │   ├── routes/          # API route implementations
-│   │   └── products/    # مثال کامل route structure
+│   │   └── products/    # Complete route structure example
 │   └── index.ts         # Main exports
 ├── dist/                # Built files
 └── README.md
 ```
 
-## 🎯 مزایای استفاده
+## 🎯 Benefits of Using
 
-### 1. **مرکزی‌سازی**
-تمام endpointها در یک فایل مرکزی (`api-endpoints.ts`) تعریف می‌شوند و هیچ endpoint هاردکد نمی‌شود.
+ 1. **Centralization**
+All endpoints are defined in a central file (`api-endpoints.ts`) and no endpoint is hardcoded.
 
-### 2. **تایپ‌سفتی**
-تمام API calls با TypeScript کامل پوشش داده شده‌اند و هیچ `any` type استفاده نمی‌شود.
+ 2. **Type Safety**
+All API calls are fully covered with TypeScript and no `any` type is used.
 
-### 3. **قابلیت استفاده مجدد**
-Generic hooks برای تمام انواع API calls (GET, POST, PUT, DELETE) قابل استفاده مجدد هستند.
+3. **Reusability**
+Generic hooks are reusable for all types of API calls (GET, POST, PUT, DELETE).
 
-### 4. **مدیریت خطا**
-Interceptors مرکزی برای مدیریت خطاها، token handling و notifications.
+4. **Error Management**
+Central interceptors for error management, token handling, and notifications.
 
-### 5. **کش هوشمند**
-React Query برای کش هوشمند، background updates و optimistic updates.
+5. **Smart Caching**
+React Query for smart caching, background updates, and optimistic updates.
 
-### 6. **سازماندهی**
-ساختار منظم و قابل پیش‌بینی برای تمام API routes.
+6. **Organization**
+Structured and predictable organization for all API routes.
 
-## 🚀 شروع سریع
+## 🚀 Quick Start
 
-### 1. نصب
+### 1. Installation
 ```bash
 pnpm add @workspace/framework
 ```
@@ -71,7 +71,7 @@ export default function RootLayout({ children }) {
 }
 ```
 
-### 3. استفاده از Hooks
+### 3. Using Hooks
 ```tsx
 import { useProductsQuery, useCreateProductMutation } from "@workspace/framework";
 
@@ -83,31 +83,31 @@ function ProductList() {
 
   const createProduct = useCreateProductMutation();
 
-  // استفاده از data و mutations...
+  // Using data and mutations...
 }
 ```
 
-## 📚 بخش‌های مختلف
+## 📚 Different Sections
 
-### [🔧 Setup & Installation](./setup)
-راهنمای کامل نصب و راه‌اندازی framework package
+### [🔧 Setup & Installation](./framework/setup)
+Complete guide for installing and setting up framework package
 
-### [📖 Usage Guide](./usage)
-راهنمای استفاده از hooks و API calls
+### [📖 Usage Guide](./framework/usage)
+Guide for using hooks and API calls
 
-### [🏗️ Route Structure](./route-structure)
-ساختار و سازماندهی API routes
+### [🏗️ Route Structure](./framework/route-structure)
+Structure and organization of API routes
 
-### [➕ Adding New Endpoints](./adding-endpoints)
-راهنمای افزودن endpoint جدید
+### [➕ Adding New Endpoints](./framework/adding-endpoints)
+Guide for adding new endpoints
 
-### [🎯 Examples](./examples)
-مثال‌های عملی و کاربردی
+### [🎯 Examples](./framework/examples)
+Practical and real-world examples
 
-### [📋 API Reference](./api-reference)
-مرجع کامل API و types
+### [📋 API Reference](./framework/api-reference)
+Complete API reference and types
 
-## 🎨 مثال کامل
+## 🎨 Complete Example
 
 ```tsx
 "use client"
@@ -119,7 +119,7 @@ import { useState } from "react"
 export default function ProductManagement() {
   const [showProducts, setShowProducts] = useState(false)
   
-  // استفاده از framework hooks
+  // Using framework hooks
   const { data: products, isLoading, error } = useProductsQuery({
     pageNo: 1,
     rowCount: 5,
@@ -186,25 +186,25 @@ export default function ProductManagement() {
 }
 ```
 
-## 🔄 قوانین استفاده
+## 🔄 Usage Rules
 
-### ✅ باید انجام دهید:
-1. **همیشه از `API_ENDPOINTS` استفاده کنید**
-2. **توابع خام در `get.ts`/`post.ts`**
-3. **هوک‌ها در `query.ts`**
-4. **تایپ‌ها در `type.ts`**
-5. **استفاده از generic hooks**
+### ✅ You Should Do:
+1. **Always use `API_ENDPOINTS`**
+2. **Raw functions in `get.ts`/`post.ts`**
+3. **Hooks in `query.ts`**
+4. **Types in `type.ts`**
+5. **Use generic hooks**
 
-### ❌ نباید انجام دهید:
-1. **هاردکد endpoint** - `APIHttp.get("/users")` ❌
-2. **مستقیم APIHttp در UI** - فقط از hooks استفاده کنید
-3. **تایپ any** - همیشه interface تعریف کنید
-4. **Query key تکراری**
+### ❌ You Should Not Do:
+1. **Hardcode endpoints** - `APIHttp.get("/users")` ❌
+2. **Direct APIHttp in UI** - Only use hooks
+3. **Any type** - Always define interfaces
+4. **Duplicate query keys**
 
-## 🎯 نتیجه
+## 🎯 Conclusion
 
-Framework package یک راه‌حل کامل و استاندارد برای مدیریت API calls در monorepo است که باعث می‌شود کد تمیز، قابل نگهداری و قابل توسعه باشد.
+The framework package is a complete and standard solution for managing API calls in monorepo that makes code clean, maintainable, and scalable.
 
 ---
 
-**آماده‌اید شروع کنید؟ [راهنمای Setup](./setup) را مطالعه کنید! 🚀**
+**Ready to get started? Check out the [Setup Guide](./setup)! 🚀**

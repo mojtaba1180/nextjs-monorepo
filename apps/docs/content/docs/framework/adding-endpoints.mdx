@@ -1,24 +1,24 @@
 ---
 title: Adding New Endpoints
-description: راهنمای کامل افزودن endpoint جدید به framework package
+description: Complete guide for adding new endpoints to framework package
 ---
 
 # ➕ Adding New Endpoints
 
-راهنمای گام به گام برای افزودن endpoint جدید به framework package.
+Step-by-step guide for adding new endpoints to framework package.
 
-## 🎯 مراحل کلی
+## 🎯 General Steps
 
-1. **افزودن Endpoint به API_ENDPOINTS**
-2. **ایجاد Route Structure**
-3. **تعریف Types**
-4. **ایجاد توابع API**
-5. **ایجاد React Query Hooks**
-6. **Export و Build**
+1. **Add Endpoint to API_ENDPOINTS**
+2. **Create Route Structure**
+3. **Define Types**
+4. **Create API Functions**
+5. **Create React Query Hooks**
+6. **Export and Build**
 
-## 📝 مثال کامل - Orders Route
+## 📝 Complete Example - Orders Route
 
-### مرحله 1: افزودن Endpoint
+### Step 1: Adding Endpoint
 
 ```typescript
 // src/utils/api-endpoints.ts
@@ -32,7 +32,7 @@ const ORDERS = {
   BULK_UPDATE: "/orders/bulk",
 } as const;
 
-// اضافه کردن به API_ENDPOINTS
+// Adding to API_ENDPOINTS
 const API_ENDPOINTS = {
   AUTH,
   USER,
@@ -43,18 +43,18 @@ const API_ENDPOINTS = {
   DOCTORS,
   PRODUCTS,
   CATEGORIES,
-  ORDERS, // ← اضافه کردن
+  ORDERS, // ← Adding
 } as const;
 ```
 
-### مرحله 2: ایجاد Route Structure
+### Step 2: Creating Route Structure
 
 ```bash
-# ایجاد فولدر
+# Creating folder
 mkdir -p packages/framework/src/routes/orders
 ```
 
-### مرحله 3: تعریف Types
+### Step 3: Defining Types
 
 ```typescript
 // src/routes/orders/type.ts
@@ -187,7 +187,7 @@ export interface IBulkOrderUpdateRequest {
 }
 ```
 
-### مرحله 4: ایجاد توابع GET
+### Step 4: Creating GET Functions
 
 ```typescript
 // src/routes/orders/get.ts
@@ -253,7 +253,7 @@ export function GetCustomerOrders(
 }
 ```
 
-### مرحله 5: ایجاد توابع POST/PUT
+### Step 5: Creating POST/PUT Functions
 
 ```typescript
 // src/routes/orders/post.ts
@@ -320,7 +320,7 @@ export function DuplicateOrder(
 }
 ```
 
-### مرحله 6: ایجاد توابع DELETE
+### Step 6: Creating DELETE Functions
 
 ```typescript
 // src/routes/orders/delete.ts
@@ -356,7 +356,7 @@ export function CancelOrder(
 }
 ```
 
-### مرحله 7: ایجاد React Query Hooks
+### Step 7: Creating React Query Hooks
 
 ```typescript
 // src/routes/orders/query.ts
@@ -557,7 +557,7 @@ export const useDuplicateOrderMutation = () =>
   );
 ```
 
-### مرحله 8: Export در index.ts
+### Step 8: Export in index.ts
 
 ```typescript
 // src/routes/orders/index.ts
@@ -577,7 +577,7 @@ export * from "./delete";
 export * from "./query";
 ```
 
-### مرحله 9: Export در main index.ts
+### Step 9: Export in main index.ts
 
 ```typescript
 // src/index.ts
@@ -592,22 +592,22 @@ export * from "./providers";
 
 // Export example routes
 export * from "./routes/products";
-export * from "./routes/orders"; // ← اضافه کردن
+export * from "./routes/orders"; // ← Adding
 ```
 
-### مرحله 10: Build و Test
+### Step 10: Build and Test
 
 ```bash
 # Build framework package
 cd packages/framework
 pnpm build
 
-# Build کل پروژه
+# Build entire project
 cd ../..
 pnpm build
 ```
 
-## 🎯 مثال استفاده
+## 🎯 Usage Example
 
 ```tsx
 // components/OrderManagement.tsx
@@ -678,56 +678,56 @@ export function OrderManagement() {
 }
 ```
 
-## 📋 چک‌لیست کامل
+## 📋 Complete Checklist
 
-### ✅ مراحل تکمیل شده:
+### ✅ Completed Steps:
 
-- [ ] Endpoint به API_ENDPOINTS اضافه شده
-- [ ] فولدر route ایجاد شده
-- [ ] فایل type.ts با تمام interfaceها
-- [ ] فایل get.ts با توابع GET
-- [ ] فایل post.ts با توابع POST/PUT
-- [ ] فایل delete.ts با توابع DELETE
-- [ ] فایل query.ts با React Query hooks
-- [ ] فایل index.ts با تمام exports
-- [ ] Route در main index.ts export شده
-- [ ] Build موفق
-- [ ] تست اولیه موفق
+- [ ] Endpoint added to API_ENDPOINTS
+- [ ] Route folder created
+- [ ] type.ts file with all interfaces
+- [ ] get.ts file with GET functions
+- [ ] post.ts file with POST/PUT functions
+- [ ] delete.ts file with DELETE functions
+- [ ] query.ts file with React Query hooks
+- [ ] index.ts file with all exports
+- [ ] Route exported in main index.ts
+- [ ] Build successful
+- [ ] Initial test successful
 
-## 🚨 نکات مهم
+## 🚨 Important Notes
 
-### 1. **نام‌گذاری**
-- فولدر: `kebab-case` (orders, user-profiles)
-- فایل‌ها: `kebab-case` (order-detail.tsx)
-- Interfaceها: `PascalCase` با prefix `I` (IOrder, ICreateOrderRequest)
-- Enumها: `PascalCase` (OrderStatus, PaymentStatus)
+### 1. **Naming**
+- Folder: `kebab-case` (orders, user-profiles)
+- Files: `kebab-case` (order-detail.tsx)
+- Interfaces: `PascalCase` with prefix `I` (IOrder, ICreateOrderRequest)
+- Enums: `PascalCase` (OrderStatus, PaymentStatus)
 
-### 2. **ساختار Types**
-- همیشه interface اصلی را تعریف کنید
-- Request/Response types جداگانه
+### 2. **Types Structure**
+- Always define main interface
+- Separate Request/Response types
 - Query parameters interface
-- Enum برای status ها
+- Enum for status values
 
 ### 3. **API Functions**
-- همیشه از API_ENDPOINTS استفاده کنید
+- Always use API_ENDPOINTS
 - Parameters validation
-- Error handling مناسب
-- Type safety کامل
+- Proper error handling
+- Complete type safety
 
 ### 4. **React Query Hooks**
-- Query keys معنادار
-- Stale time مناسب
+- Meaningful query keys
+- Appropriate stale time
 - Error handling
 - Success callbacks
 
-## 🎯 مرحله بعدی
+## 🎯 Next Steps
 
-بعد از افزودن endpoint جدید، می‌توانید:
+After adding new endpoint, you can:
 
-1. **[Examples](./examples)** - مثال‌های عملی
-2. **[API Reference](./api-reference)** - مرجع کامل API
-3. **[Usage Guide](./usage)** - راهنمای استفاده
+1. **[Examples](./examples)** - Practical examples
+2. **[API Reference](./api-reference)** - Complete API reference
+3. **[Usage Guide](./usage)** - Usage guide
 
 ---
 
-**Endpoint جدید اضافه شد؟ [Examples](./examples) را مطالعه کنید! 🚀**
+**New endpoint added? Check out [Examples](./examples)! 🚀**

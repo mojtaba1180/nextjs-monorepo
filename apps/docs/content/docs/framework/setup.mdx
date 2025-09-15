@@ -1,22 +1,22 @@
 ---
 title: Setup & Installation
-description: راهنمای کامل نصب و راه‌اندازی framework package
+description: Complete guide for installing and setting up framework package
 ---
 
 # 🔧 Setup & Installation
 
-راهنمای کامل برای نصب و راه‌اندازی framework package در پروژه‌های monorepo.
+Complete guide for installing and setting up framework package in monorepo projects.
 
-## 📦 نصب Package
+## 📦 Package Installation
 
-### 1. اضافه کردن به Dependencies
+### 1. Adding to Dependencies
 
 ```bash
-# در package.json پروژه خود
+# In your project's package.json
 pnpm add @workspace/framework
 ```
 
-### 2. نصب Dependencies
+### 2. Installing Dependencies
 
 ```bash
 pnpm install
@@ -24,27 +24,27 @@ pnpm install
 
 ## ⚙️ Environment Variables
 
-### 1. ایجاد فایل Environment
+### 1. Creating Environment File
 
 ```bash
-# در root پروژه خود فایل .env.local ایجاد کنید
+# Create .env.local file in your project root
 touch .env.local
 ```
 
-### 2. تنظیم متغیرهای محیطی
+### 2. Setting Environment Variables
 
 ```bash
 # .env.local
 NEXT_PUBLIC_REST_API_ENDPOINT=https://your-api-url.com
 
-# اختیاری: API Timeout (به میلی‌ثانیه)
+# Optional: API Timeout (in milliseconds)
 NEXT_PUBLIC_API_TIMEOUT=70000
 
-# اختیاری: فعال/غیرفعال کردن React Query Devtools
+# Optional: Enable/disable React Query Devtools
 NEXT_PUBLIC_ENABLE_QUERY_DEVTOOLS=true
 ```
 
-### 3. مثال‌های مختلف Environment
+### 3. Different Environment Examples
 
 ```bash
 # Development
@@ -59,7 +59,7 @@ NEXT_PUBLIC_REST_API_ENDPOINT=https://api.example.com
 
 ## 🏗️ Setup Provider
 
-### 1. در Next.js App Router
+### 1. In Next.js App Router
 
 ```tsx
 // app/layout.tsx
@@ -82,7 +82,7 @@ export default function RootLayout({
 }
 ```
 
-### 2. در Next.js Pages Router
+### 2. In Next.js Pages Router
 
 ```tsx
 // pages/_app.tsx
@@ -97,7 +97,7 @@ export default function App({ Component, pageProps }) {
 }
 ```
 
-### 3. با سایر Providers
+### 3. With Other Providers
 
 ```tsx
 // app/layout.tsx
@@ -127,7 +127,7 @@ export default function RootLayout({
 }
 ```
 
-## 🔧 Configuration پیشرفته
+## 🔧 Advanced Configuration
 
 ### 1. Custom Query Client
 
@@ -162,7 +162,7 @@ export default function RootLayout({
 }
 ```
 
-### 2. Disable Devtools در Production
+### 2. Disable Devtools in Production
 
 ```tsx
 // app/layout.tsx
@@ -183,9 +183,9 @@ export default function RootLayout({
 }
 ```
 
-## 🧪 تست Setup
+## 🧪 Testing Setup
 
-### 1. ایجاد کامپوننت تست
+### 1. Creating Test Component
 
 ```tsx
 // components/FrameworkTest.tsx
@@ -211,7 +211,7 @@ export function FrameworkTest() {
 }
 ```
 
-### 2. استفاده در صفحه
+### 2. Using in Page
 
 ```tsx
 // app/test/page.tsx
@@ -227,74 +227,74 @@ export default function TestPage() {
 }
 ```
 
-## 🔍 بررسی Setup
+## 🔍 Verifying Setup
 
-### 1. بررسی Dependencies
+### 1. Checking Dependencies
 
 ```bash
-# بررسی نصب package
+# Check package installation
 pnpm list @workspace/framework
 ```
 
-### 2. بررسی Build
+### 2. Checking Build
 
 ```bash
-# Build پروژه
+# Build project
 pnpm build
 ```
 
-### 3. بررسی TypeScript
+### 3. Checking TypeScript
 
 ```bash
-# بررسی types
+# Check types
 pnpm typecheck
 ```
 
-## 🚨 مشکلات رایج
+## 🚨 Common Issues
 
 ### 1. Module Not Found
 
 ```bash
-# خطا: Module not found: Can't resolve '@workspace/framework'
-# راه‌حل: اطمینان از نصب package
+# Error: Module not found: Can't resolve '@workspace/framework'
+# Solution: Ensure package is installed
 pnpm install
 ```
 
 ### 2. Environment Variables
 
 ```bash
-# خطا: API endpoint not found
-# راه‌حل: بررسی .env.local
+# Error: API endpoint not found
+# Solution: Check .env.local
 echo $NEXT_PUBLIC_REST_API_ENDPOINT
 ```
 
 ### 3. Provider Setup
 
 ```tsx
-// خطا: useQuery must be used within a QueryClient
-// راه‌حل: اطمینان از wrap کردن app با FrameworkProvider
+// Error: useQuery must be used within a QueryClient
+// Solution: Ensure app is wrapped with FrameworkProvider
 <FrameworkProvider>
   <YourApp />
 </FrameworkProvider>
 ```
 
-## ✅ چک‌لیست Setup
+## ✅ Setup Checklist
 
-- [ ] Package نصب شده
-- [ ] Environment variables تنظیم شده
-- [ ] FrameworkProvider اضافه شده
-- [ ] Build موفق
-- [ ] TypeScript errors برطرف شده
-- [ ] تست اولیه موفق
+- [ ] Package installed
+- [ ] Environment variables configured
+- [ ] FrameworkProvider added
+- [ ] Build successful
+- [ ] TypeScript errors resolved
+- [ ] Initial test successful
 
-## 🎯 مرحله بعدی
+## 🎯 Next Steps
 
-بعد از تکمیل setup، می‌توانید:
+After completing setup, you can:
 
-1. **[راهنمای Usage](./usage)** - نحوه استفاده از hooks
-2. **[Route Structure](./route-structure)** - ساختار API routes
-3. **[Adding Endpoints](./adding-endpoints)** - افزودن endpoint جدید
+1. **[Usage Guide](./usage)** - How to use hooks
+2. **[Route Structure](./route-structure)** - API routes structure
+3. **[Adding Endpoints](./adding-endpoints)** - Adding new endpoints
 
 ---
 
-**Setup تکمیل شد؟ [راهنمای Usage](./usage) را مطالعه کنید! 🚀**
+**Setup completed? Check out the [Usage Guide](./usage)! 🚀**

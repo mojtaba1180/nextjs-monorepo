@@ -1,31 +1,31 @@
 ---
 title: Route Structure
-description: ساختار و سازماندهی API routes در framework package
+description: Structure and organization of API routes in framework package
 ---
 
 # 🗂️ Route Structure
 
-راهنمای کامل ساختار و سازماندهی API routes در framework package.
+Complete guide for structure and organization of API routes in framework package.
 
-## 📁 ساختار کلی
+## 📁 Overall Structure
 
 ```
 packages/framework/src/routes/
-├── products/              # مثال کامل route
-│   ├── type.ts           # تمام interfaceها و types
-│   ├── get.ts            # توابع GET خام
-│   ├── post.ts           # توابع POST/PUT خام
-│   ├── delete.ts         # توابع DELETE خام
+├── products/              # Complete route example
+│   ├── type.ts           # All interfaces and types
+│   ├── get.ts            # Raw GET functions
+│   ├── post.ts           # Raw POST/PUT functions
+│   ├── delete.ts         # Raw DELETE functions
 │   ├── query.ts          # React Query hooks
 │   └── index.ts          # exports
-├── users/                # route جدید
+├── users/                # new route
 │   ├── type.ts
 │   ├── get.ts
 │   ├── post.ts
 │   ├── delete.ts
 │   ├── query.ts
 │   └── index.ts
-└── categories/           # route جدید
+└── categories/           # new route
     ├── type.ts
     ├── get.ts
     ├── post.ts
@@ -34,9 +34,9 @@ packages/framework/src/routes/
     └── index.ts
 ```
 
-## 📝 فایل‌های مورد نیاز
+## 📝 Required Files
 
-### 1. type.ts - تعریف Types
+### 1. type.ts - Type Definitions
 
 ```typescript
 // src/routes/products/type.ts
@@ -111,7 +111,7 @@ export interface IProductSearchParams extends QueryParams {
 }
 ```
 
-### 2. get.ts - توابع GET
+### 2. get.ts - GET Functions
 
 ```typescript
 // src/routes/products/get.ts
@@ -178,7 +178,7 @@ export function SearchProducts(
 }
 ```
 
-### 3. post.ts - توابع POST/PUT
+### 3. post.ts - POST/PUT Functions
 
 ```typescript
 // src/routes/products/post.ts
@@ -241,7 +241,7 @@ export function BulkCreateProducts(
 }
 ```
 
-### 4. delete.ts - توابع DELETE
+### 4. delete.ts - DELETE Functions
 
 ```typescript
 // src/routes/products/delete.ts
@@ -436,39 +436,39 @@ export * from "./delete";
 export * from "./query";
 ```
 
-## 🔧 قوانین Route Structure
+## 🔧 Route Structure Rules
 
-### ✅ باید انجام دهید:
+### ✅ You Should Do:
 
-1. **فولدرسازی** - هر route باید فولدر جداگانه داشته باشد
-2. **نام‌گذاری** - از kebab-case برای فولدرها استفاده کنید
-3. **ساختار ثابت** - همیشه 5 فایل اصلی داشته باشید
-4. **Export کامل** - تمام exports در index.ts
-5. **تایپ‌سفتی** - هیچ any type استفاده نکنید
+1. **Folder Structure** - Each route should have a separate folder
+2. **Naming** - Use kebab-case for folders
+3. **Fixed Structure** - Always have 5 main files
+4. **Complete Export** - All exports in index.ts
+5. **Type Safety** - Don't use any type
 
-### ❌ نباید انجام دهید:
+### ❌ You Should Not Do:
 
-1. **فایل‌های پراکنده** - همه چیز در فولدر route
-2. **نام‌گذاری نادرست** - camelCase برای فولدرها
-3. **ساختار متفاوت** - فایل‌های اضافی یا کم
-4. **Export ناقص** - فراموش کردن exports
-5. **تایپ any** - استفاده از any type
+1. **Scattered Files** - Everything in route folder
+2. **Wrong Naming** - camelCase for folders
+3. **Different Structure** - Extra or missing files
+4. **Incomplete Export** - Forgetting exports
+5. **Any Type** - Using any type
 
-## 📋 چک‌لیست Route
+## 📋 Route Checklist
 
-- [ ] فولدر route ایجاد شده
-- [ ] فایل type.ts با تمام interfaceها
-- [ ] فایل get.ts با توابع GET
-- [ ] فایل post.ts با توابع POST/PUT
-- [ ] فایل delete.ts با توابع DELETE
-- [ ] فایل query.ts با React Query hooks
-- [ ] فایل index.ts با تمام exports
-- [ ] API endpoints در api-endpoints.ts اضافه شده
-- [ ] Route در main index.ts export شده
+- [ ] Route folder created
+- [ ] type.ts file with all interfaces
+- [ ] get.ts file with GET functions
+- [ ] post.ts file with POST/PUT functions
+- [ ] delete.ts file with DELETE functions
+- [ ] query.ts file with React Query hooks
+- [ ] index.ts file with all exports
+- [ ] API endpoints added to api-endpoints.ts
+- [ ] Route exported in main index.ts
 
-## 🎯 مثال کامل - Users Route
+## 🎯 Complete Example - Users Route
 
-### 1. ایجاد فولدر
+### 1. Creating Folder
 
 ```bash
 mkdir -p packages/framework/src/routes/users
@@ -592,14 +592,14 @@ export * from "./delete";
 export * from "./query";
 ```
 
-## 🎯 مرحله بعدی
+## 🎯 Next Steps
 
-بعد از یادگیری Route Structure، می‌توانید:
+After learning Route Structure, you can:
 
-1. **[Adding Endpoints](./adding-endpoints)** - افزودن endpoint جدید
-2. **[Examples](./examples)** - مثال‌های عملی
-3. **[API Reference](./api-reference)** - مرجع کامل API
+1. **[Adding Endpoints](./adding-endpoints)** - Adding new endpoints
+2. **[Examples](./examples)** - Practical examples
+3. **[API Reference](./api-reference)** - Complete API reference
 
 ---
 
-**Route Structure یاد گرفتید؟ [Adding Endpoints](./adding-endpoints) را مطالعه کنید! 🚀**
+**Learned Route Structure? Check out [Adding Endpoints](./adding-endpoints)! 🚀**
